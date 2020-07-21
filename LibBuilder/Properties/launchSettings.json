@@ -1,8 +1,0 @@
-{
-  "profiles": {
-    "LibBuilder": {
-      "commandName": "Project",
-      "nativeDebugging": true
-    }
-  }
-}
