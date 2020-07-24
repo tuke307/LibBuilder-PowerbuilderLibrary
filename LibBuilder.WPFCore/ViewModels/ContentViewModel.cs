@@ -1,6 +1,10 @@
-﻿using Microsoft.Win32;
+﻿using Data.Models;
+using Microsoft.Win32;
 using MvvmCross.Commands;
+using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading.Tasks;
+using System.Windows.Data;
 
 namespace LibBuilder.WPFCore.ViewModels
 {
@@ -15,21 +19,34 @@ namespace LibBuilder.WPFCore.ViewModels
 
             //Laden
             WorkspaceSelectedCommand = new MvxAsyncCommand(async () => await LoadWorkspace());
+            TargetSelectedCommand = new MvxAsyncCommand(async () => await LoadTarget());
+            LibrarySelectedCommand = new MvxAsyncCommand(async () => await LoadLibrary());
 
             //UI bezogen
             OpenWorkspaceCommand = new MvxCommand(OpenWorkspace);
 
-            RunCommand = new MvxAsyncCommand(async () => await RunAsync());
+            RunProcedurCommand = new MvxCommand(RunProcedur);
+
+            //letzten modifizierten Workspace laden, mit zuletzt ausgewähltem Target
+            //if (Workspaces != null && Workspaces.Count > 0)
+            //    Workspace = Workspaces.OrderByDescending(w => w.UpdatedDate).FirstOrDefault();
         }
 
         protected void OpenWorkspace()
         {
-            OpenFileDialog dialog = new OpenFileDialog
-            {
-                Filter = "Powerbuilder Workspace (*.pbw)|*.pbw"
-            };
+            ContentLoadingAnimation = true;
 
-            base.OpenWorkspace(dialog.FileName);
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+
+            openFileDialog.Filter = "Powerbuilder Workspace (*.pbw)|*.pbw";
+            openFileDialog.RestoreDirectory = true;
+
+            if (openFileDialog.ShowDialog().HasValue)
+            {
+                base.OpenWorkspace(openFileDialog.FileName);
+            }
+
+            ContentLoadingAnimation = false;
         }
 
         private bool CheckWorkspace()
@@ -62,7 +79,7 @@ namespace LibBuilder.WPFCore.ViewModels
             return true;
         }
 
-        protected new async Task RunAsync()
+        protected void RunProcedur()
         {
             if (!CheckWorkspace())
                 return;
@@ -70,7 +87,16 @@ namespace LibBuilder.WPFCore.ViewModels
             if (!CheckRunnable())
                 return;
 
-            await base.RunAsync();
+            Processes = new ObservableCollection<Process>();
+            SecondTab = true; // auf zweiten tab switchen
+            ProcessLoadingAnimation = true;
+            ProcessSucess = false;
+            ProcessError = false;
+
+            object _lock = new object();
+            BindingOperations.EnableCollectionSynchronization(Processes, _lock);
+
+            base.RunProcedur(_lock);
         }
 
         protected override async Task LoadWorkspace()
@@ -78,7 +104,29 @@ namespace LibBuilder.WPFCore.ViewModels
             if (!CheckWorkspace())
                 return;
 
+            ContentLoadingAnimation = true;
+
             await base.LoadWorkspace();
+
+            ContentLoadingAnimation = false;
+        }
+
+        protected override async Task LoadLibrary()
+        {
+            ContentLoadingAnimation = true;
+
+            await base.LoadLibrary();
+
+            ContentLoadingAnimation = false;
+        }
+
+        protected override async Task LoadTarget()
+        {
+            ContentLoadingAnimation = true;
+
+            await base.LoadTarget();
+
+            ContentLoadingAnimation = false;
         }
     }
 }

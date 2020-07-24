@@ -17,8 +17,8 @@ namespace Data
 
         public DatabaseContext()
         {
-            Database.Migrate();
-            Database.EnsureCreated();
+            //Database.EnsureCreated();
+            Database.Migrate(); //migrate and create
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder options)

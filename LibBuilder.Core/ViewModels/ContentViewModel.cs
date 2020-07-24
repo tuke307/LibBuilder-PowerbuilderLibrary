@@ -16,8 +16,6 @@ namespace LibBuilder.Core.ViewModels
     {
         private readonly Orca libbuilder;
 
-        private object _lock;
-
         private Task SaveWorkspaceTask; //für Targets
         private Task SaveTargetTask; //für Librarys
         private Task SaveLibraryTask; //für Librarys
@@ -38,11 +36,6 @@ namespace LibBuilder.Core.ViewModels
             //Speichern
             SaveWorkspaceCommand = new MvxAsyncCommand(async () => await SaveWorkspace());
 
-            //Laden
-            //WorkspaceSelectedCommand = new MvxAsyncCommand(async () => await LoadWorkspace());
-            TargetSelectedCommand = new MvxAsyncCommand(async () => await LoadTarget());
-            LibrarySelectedCommand = new MvxAsyncCommand(async () => await LoadLibrary());
-
             //Kommunikation zwischen Powerbuilder und .Net(Datenbank)
             libbuilder = new Orca();
 
@@ -54,10 +47,6 @@ namespace LibBuilder.Core.ViewModels
                 //Workspace Liste laden
                 Workspaces = new ObservableCollection<WorkspaceModel>(db.Workspace.ToList());
             }
-
-            //letzten modifizierten Workspace laden, mit zuletzt ausgewähltem Target
-            //if (Workspaces != null && Workspaces.Count > 0)
-            //    Workspace = Workspaces.OrderByDescending(w => w.UpdatedDate).FirstOrDefault();
         }
 
         public IMvxAsyncCommand SaveWorkspaceCommand { get; set; }
@@ -69,7 +58,7 @@ namespace LibBuilder.Core.ViewModels
         public IMvxCommand DeselectAllLibrarysCommand { get; set; }
         public IMvxCommand SelectAllEntrysCommand { get; set; }
         public IMvxCommand DeselectAllEntrysCommand { get; set; }
-        public IMvxAsyncCommand RunCommand { get; set; }
+        public IMvxCommand RunProcedurCommand { get; set; }
 
         public override Task Initialize()
         {
@@ -80,6 +69,8 @@ namespace LibBuilder.Core.ViewModels
         {
             base.Prepare();
         }
+
+        #region Functions
 
         private async Task SaveWorkspace()
         {
@@ -136,117 +127,6 @@ namespace LibBuilder.Core.ViewModels
             });
 
             SaveLibraryTask.Wait();
-        }
-
-        protected virtual async Task LoadWorkspace()
-        {
-            if (LoadWorkspaceTask != null && LoadWorkspaceTask.Status == TaskStatus.Running)
-                LoadWorkspaceTask.Wait();
-
-            ContentLoadingAnimation = true;
-
-            //Worksapce(Targets) updaten
-            LoadWorkspaceTask = Task.Run(() =>
-            {
-                using (var db = new DatabaseContext())
-                {
-                    //Track Entitiy
-                    Workspace = db.Workspace.Find(Workspace.Id);
-
-                    //Load Targets
-                    db.Entry(Workspace).Collection(t => t.Target).Load();
-
-                    Workspace = libbuilder.UpdateWorkspaceTargets(Workspace);
-                }
-            });
-
-            //warten bis geladen
-            LoadWorkspaceTask.Wait();
-
-            //asynchron Updaten
-            await SaveWorkspace();
-
-            //Einfügen der DB Targets
-            await Task.Run(() => Targets = new ObservableCollection<TargetModel>(Workspace.Target.ToList()));
-
-            //string message = "Workspace " + Workspace.File + " wurde eingelesen";
-            //mainWindowViewModel.NotificationSnackbar.Enqueue(message);
-
-            ContentLoadingAnimation = false;
-        }
-
-        private async Task LoadTarget()
-        {
-            if (LoadTargetTask != null && LoadTargetTask.Status == TaskStatus.Running)
-                LoadTargetTask.Wait();
-
-            ContentLoadingAnimation = true;
-
-            LoadTargetTask = Task.Run(() =>
-            {
-                using (var db = new DatabaseContext())
-                {
-                    //Track Entitiy
-                    Target = db.Target.Find(Target.Id);
-
-                    //Load Collections
-                    db.Entry(Target).Collection(t => t.Librarys).Load();
-
-                    //Update Collections
-                    Target = libbuilder.UpdateTargetLibraries(Target, Workspace.PBVersion.Value);
-                }
-            });
-
-            LoadTargetTask.Wait();
-
-            await SaveTarget();
-
-            Librarys = new ObservableCollection<LibraryModel>(Target.Librarys.Where(l => l.File.EndsWith(".pbl")).ToList());
-
-            //string message = "Target " + Target.File + " erfolgreich geladen";
-            //mainWindowViewModel.NotificationSnackbar.Enqueue(message);
-
-            ContentLoadingAnimation = false;
-        }
-
-        //Asynchrones Updaten/Laden der Library-Objects
-        private async Task LoadLibrary()
-        {
-            if (LoadLibraryTask != null && LoadLibraryTask.Status == TaskStatus.Running)
-                LoadLibraryTask.Wait();
-
-            if (Library != null && Library.Objects == null)
-            {
-                ContentLoadingAnimation = true;
-
-                LoadLibraryTask = Task.Run(() =>
-                {
-                    using (var db = new DatabaseContext())
-                    {
-                        //Track Entitiy
-                        Library = db.Library.Find(Library.Id);
-
-                        //Load Collections
-                        db.Entry(Library).Collection(l => l.Objects).Load();
-
-                        //Update Objects
-                        Library = libbuilder.UpdateLibrayObjects(Library, Workspace.PBVersion.Value);
-                    }
-                });
-
-                //warten
-                LoadLibraryTask.Wait();
-
-                //Updaten
-                await SaveLibrary();
-
-                Objects = new ObservableCollection<ObjectModel>(Library.Objects.ToList());
-
-                //string message = "Objects von " + Library.File + " erfolgreich geladen";
-                //mainWindowViewModel.NotificationSnackbar.Enqueue(message);
-
-                ContentLoadingAnimation = false;
-            }
         }
 
         private void DeselectAllLibrarys()
@@ -350,18 +230,108 @@ namespace LibBuilder.Core.ViewModels
             }
         }
 
-        protected virtual async Task RunAsync()
+        protected virtual async Task LoadWorkspace()
         {
-            Processes = new ObservableCollection<Process>();
-            SecondTab = true; // auf zweiten tab switchen
-            ProcessLoadingAnimation = true;
-            ProcessSucess = false;
-            ProcessError = false;
+            if (LoadWorkspaceTask != null && LoadWorkspaceTask.Status == TaskStatus.Running)
+                LoadWorkspaceTask.Wait();
 
-            _lock = new object();
-            //BindingOperations.EnableCollectionSynchronization(Processes, _lock);
+            //Worksapce(Targets) updaten
+            LoadWorkspaceTask = Task.Run(() =>
+            {
+                using (var db = new DatabaseContext())
+                {
+                    //Track Entitiy
+                    Workspace = db.Workspace.Find(Workspace.Id);
 
-            await Task.Run(() =>
+                    //Load Targets
+                    db.Entry(Workspace).Collection(t => t.Target).Load();
+
+                    Workspace = libbuilder.UpdateWorkspaceTargets(Workspace);
+                }
+            });
+
+            //warten bis geladen
+            LoadWorkspaceTask.Wait();
+
+            //asynchron Updaten
+            await SaveWorkspace();
+
+            //Einfügen der DB Targets
+            await Task.Run(() => Targets = new ObservableCollection<TargetModel>(Workspace.Target.ToList()));
+
+            //string message = "Workspace " + Workspace.File + " wurde eingelesen";
+            //mainWindowViewModel.NotificationSnackbar.Enqueue(message);
+        }
+
+        protected virtual async Task LoadTarget()
+        {
+            if (LoadTargetTask != null && LoadTargetTask.Status == TaskStatus.Running)
+                LoadTargetTask.Wait();
+
+            LoadTargetTask = Task.Run(() =>
+            {
+                using (var db = new DatabaseContext())
+                {
+                    //Track Entitiy
+                    Target = db.Target.Find(Target.Id);
+
+                    //Load Collections
+                    db.Entry(Target).Collection(t => t.Librarys).Load();
+
+                    //Update Collections
+                    Target = libbuilder.UpdateTargetLibraries(Target, Workspace.PBVersion.Value);
+                }
+            });
+
+            LoadTargetTask.Wait();
+
+            await SaveTarget();
+
+            Librarys = new ObservableCollection<LibraryModel>(Target.Librarys.Where(l => l.File.EndsWith(".pbl")).ToList());
+
+            //string message = "Target " + Target.File + " erfolgreich geladen";
+            //mainWindowViewModel.NotificationSnackbar.Enqueue(message);
+        }
+
+        //Asynchrones Updaten/Laden der Library-Objects
+        protected virtual async Task LoadLibrary()
+        {
+            if (LoadLibraryTask != null && LoadLibraryTask.Status == TaskStatus.Running)
+                LoadLibraryTask.Wait();
+
+            if (Library != null && Library.Objects == null)
+            {
+                LoadLibraryTask = Task.Run(() =>
+                {
+                    using (var db = new DatabaseContext())
+                    {
+                        //Track Entitiy
+                        Library = db.Library.Find(Library.Id);
+
+                        //Load Collections
+                        db.Entry(Library).Collection(l => l.Objects).Load();
+
+                        //Update Objects
+                        Library = libbuilder.UpdateLibrayObjects(Library, Workspace.PBVersion.Value);
+                    }
+                });
+
+                //warten
+                LoadLibraryTask.Wait();
+
+                //Updaten
+                await SaveLibrary();
+
+                Objects = new ObservableCollection<ObjectModel>(Library.Objects.ToList());
+
+                //string message = "Objects von " + Library.File + " erfolgreich geladen";
+                //mainWindowViewModel.NotificationSnackbar.Enqueue(message);
+            }
+        }
+
+        protected virtual void RunProcedur(object _lock)
+        {
+            Task.Run(() =>
             {
                 var session = new PBDotNetLib.orca.Orca(Workspace.PBVersion.Value);
 
@@ -469,9 +439,9 @@ namespace LibBuilder.Core.ViewModels
                 }
 
                 session.SessionClose();
-            });
 
-            ProcessLoadingAnimation = false;
+                ProcessLoadingAnimation = false;
+            });
         }
 
         protected virtual void OpenWorkspace(string filePath)
@@ -498,6 +468,10 @@ namespace LibBuilder.Core.ViewModels
                 Workspace = Workspaces.Last();
             }
         }
+
+        #endregion Functions
+
+        #region Properties
 
         private ObjectModel _object;
 
@@ -645,5 +619,7 @@ namespace LibBuilder.Core.ViewModels
             get => _processSucess;
             set => SetProperty(ref _processSucess, value);
         }
+
+        #endregion Properties
     }
 }

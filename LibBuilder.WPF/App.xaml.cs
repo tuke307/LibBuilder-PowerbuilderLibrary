@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.IO;
 using System.Windows;
+using Data;
 
 namespace LibBuilder.WPF
 {
@@ -13,5 +9,12 @@ namespace LibBuilder.WPF
     /// </summary>
     public partial class App : Application
     {
+        public App()
+        {
+            Constants.DatabasePath = Path.Combine(Constants.FileDirectory, Data.Constants.DatabaseName);
+
+            if (!Directory.Exists(Constants.FileDirectory))
+                Directory.CreateDirectory(Constants.FileDirectory);
+        }
     }
 }
