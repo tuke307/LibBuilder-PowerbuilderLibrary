@@ -14,8 +14,6 @@ namespace LibBuilder.Core.ViewModels
 {
     public class ContentViewModel : MvxViewModel
     {
-        private readonly Orca libbuilder;
-
         private Task SaveWorkspaceTask; //für Targets
         private Task SaveTargetTask; //für Librarys
         private Task SaveLibraryTask; //für Librarys
@@ -23,6 +21,8 @@ namespace LibBuilder.Core.ViewModels
         private Task LoadWorkspaceTask; //für Targets
         private Task LoadTargetTask; //für Librarys
         private Task LoadLibraryTask; //für Objects
+
+        private Task RunProcedurTask;
 
         public ContentViewModel()
         {
@@ -35,9 +35,6 @@ namespace LibBuilder.Core.ViewModels
 
             //Speichern
             SaveWorkspaceCommand = new MvxAsyncCommand(async () => await SaveWorkspace());
-
-            //Kommunikation zwischen Powerbuilder und .Net(Datenbank)
-            libbuilder = new Orca();
 
             //VersionsListe
             PBVersions = Enum.GetValues(typeof(PBDotNetLib.orca.Orca.Version)).Cast<PBDotNetLib.orca.Orca.Version>().ToList();
@@ -72,6 +69,10 @@ namespace LibBuilder.Core.ViewModels
 
         #region Functions
 
+        /// <summary>
+        /// Speichert Workspace(Workspace-Targets) asynchron in Datenbank
+        /// </summary>
+        /// <returns></returns>
         private async Task SaveWorkspace()
         {
             if (SaveWorkspaceTask != null && SaveWorkspaceTask.Status == TaskStatus.Running)
@@ -91,6 +92,10 @@ namespace LibBuilder.Core.ViewModels
             SaveWorkspaceTask.Wait();
         }
 
+        /// <summary>
+        /// Speichert Target(Target-Librarys) asynchron in Datenbank
+        /// </summary>
+        /// <returns></returns>
         private async Task SaveTarget()
         {
             if (SaveTargetTask != null && SaveTargetTask.Status == TaskStatus.Running)
@@ -110,6 +115,10 @@ namespace LibBuilder.Core.ViewModels
             SaveTargetTask.Wait();
         }
 
+        /// <summary>
+        /// Speichert Library(Library-Objects) asynchron in Datenbank
+        /// </summary>
+        /// <returns></returns>
         private async Task SaveLibrary()
         {
             if (SaveLibraryTask != null && SaveLibraryTask.Status == TaskStatus.Running)
@@ -129,6 +138,9 @@ namespace LibBuilder.Core.ViewModels
             SaveLibraryTask.Wait();
         }
 
+        /// <summary>
+        /// Deselektiert alle Librarys
+        /// </summary>
         private void DeselectAllLibrarys()
         {
             if (Librarys == null)
@@ -155,6 +167,9 @@ namespace LibBuilder.Core.ViewModels
             }
         }
 
+        /// <summary>
+        /// Selektiert alle Librarys
+        /// </summary>
         private void SelectAllLibrarys()
         {
             if (Librarys == null)
@@ -180,6 +195,9 @@ namespace LibBuilder.Core.ViewModels
             }
         }
 
+        /// <summary>
+        /// Deselektiert alle Objects(Entrys)
+        /// </summary>
         private void DeselectAllEntrys()
         {
             if (Objects == null)
@@ -205,6 +223,9 @@ namespace LibBuilder.Core.ViewModels
             }
         }
 
+        /// <summary>
+        /// Selektiert alle Objects(Entrys)
+        /// </summary>
         private void SelectAllEntrys()
         {
             if (Objects == null)
@@ -230,6 +251,12 @@ namespace LibBuilder.Core.ViewModels
             }
         }
 
+        /// <summary>
+        /// Lädt Workspace aus Datenbank
+        /// Vergleich mit aktuellem Powerbuilder Workspace.
+        /// Gegenbenfalls werden neue Targets hinzugefügt oder alte gelöscht
+        /// </summary>
+        /// <returns></returns>
         protected virtual async Task LoadWorkspace()
         {
             if (LoadWorkspaceTask != null && LoadWorkspaceTask.Status == TaskStatus.Running)
@@ -246,7 +273,7 @@ namespace LibBuilder.Core.ViewModels
                     //Load Targets
                     db.Entry(Workspace).Collection(t => t.Target).Load();
 
-                    Workspace = libbuilder.UpdateWorkspaceTargets(Workspace);
+                    Workspace = LibBuilder.Core.Orca.UpdateWorkspaceTargets(Workspace);
                 }
             });
 
@@ -263,6 +290,12 @@ namespace LibBuilder.Core.ViewModels
             //mainWindowViewModel.NotificationSnackbar.Enqueue(message);
         }
 
+        /// <summary>
+        /// Lädt Target aus Datenbank
+        /// Vergleich mit aktuellem Powerbuilder Target
+        /// gegenbenfalls werden neue Librarys hinzugefügt oder alte gelöscht
+        /// </summary>
+        /// <returns></returns>
         protected virtual async Task LoadTarget()
         {
             if (LoadTargetTask != null && LoadTargetTask.Status == TaskStatus.Running)
@@ -279,7 +312,7 @@ namespace LibBuilder.Core.ViewModels
                     db.Entry(Target).Collection(t => t.Librarys).Load();
 
                     //Update Collections
-                    Target = libbuilder.UpdateTargetLibraries(Target, Workspace.PBVersion.Value);
+                    Target = LibBuilder.Core.Orca.UpdateTargetLibraries(Target, Workspace.PBVersion.Value);
                 }
             });
 
@@ -293,7 +326,12 @@ namespace LibBuilder.Core.ViewModels
             //mainWindowViewModel.NotificationSnackbar.Enqueue(message);
         }
 
-        //Asynchrones Updaten/Laden der Library-Objects
+        /// <summary>
+        /// Lädt Library aus Datenbank
+        /// Vergleich mit aktueller Powerbuilder Library
+        /// Gegebenfalls löschen oder hinzufügen neuer Objects(Entrys)
+        /// </summary>
+        /// <returns></returns>
         protected virtual async Task LoadLibrary()
         {
             if (LoadLibraryTask != null && LoadLibraryTask.Status == TaskStatus.Running)
@@ -312,7 +350,7 @@ namespace LibBuilder.Core.ViewModels
                         db.Entry(Library).Collection(l => l.Objects).Load();
 
                         //Update Objects
-                        Library = libbuilder.UpdateLibrayObjects(Library, Workspace.PBVersion.Value);
+                        Library = LibBuilder.Core.Orca.UpdateLibrayObjects(Library, Workspace.PBVersion.Value);
                     }
                 });
 
@@ -329,9 +367,13 @@ namespace LibBuilder.Core.ViewModels
             }
         }
 
+        /// <summary>
+        /// Startet die Orca-Prozeduren in einem asynchronen Task
+        /// </summary>
+        /// <param name="_lock"></param>
         protected virtual void RunProcedur(object _lock)
         {
-            Task.Run(() =>
+            RunProcedurTask = Task.Run(() =>
             {
                 var session = new PBDotNetLib.orca.Orca(Workspace.PBVersion.Value);
 
@@ -444,6 +486,11 @@ namespace LibBuilder.Core.ViewModels
             });
         }
 
+        /// <summary>
+        /// Verarbeitet gewählten Workspace aus dem OpenFileDialog
+        /// Fügt Workspace in Datenbank hinzu
+        /// </summary>
+        /// <param name="filePath"></param>
         protected virtual void OpenWorkspace(string filePath)
         {
             try

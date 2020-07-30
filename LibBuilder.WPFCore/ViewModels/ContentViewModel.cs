@@ -25,16 +25,17 @@ namespace LibBuilder.WPFCore.ViewModels
             //UI bezogen
             OpenWorkspaceCommand = new MvxCommand(OpenWorkspace);
 
-            RunProcedurCommand = new MvxCommand(RunProcedur);
+            RunProcedurCommand = new MvxAsyncCommand(RunProcedur);
 
             //letzten modifizierten Workspace laden, mit zuletzt ausgewähltem Target
             //if (Workspaces != null && Workspaces.Count > 0)
             //    Workspace = Workspaces.OrderByDescending(w => w.UpdatedDate).FirstOrDefault();
         }
 
-        protected void OpenWorkspace()
+        protected async void OpenWorkspace()
         {
             ContentLoadingAnimation = true;
+            await RaisePropertyChanged(() => ContentLoadingAnimation);
 
             OpenFileDialog openFileDialog = new OpenFileDialog();
 
@@ -47,6 +48,7 @@ namespace LibBuilder.WPFCore.ViewModels
             }
 
             ContentLoadingAnimation = false;
+            await RaisePropertyChanged(() => ContentLoadingAnimation);
         }
 
         private bool CheckWorkspace()
@@ -79,7 +81,7 @@ namespace LibBuilder.WPFCore.ViewModels
             return true;
         }
 
-        protected void RunProcedur()
+        protected async Task RunProcedur()
         {
             if (!CheckWorkspace())
                 return;
@@ -89,9 +91,11 @@ namespace LibBuilder.WPFCore.ViewModels
 
             Processes = new ObservableCollection<Process>();
             SecondTab = true; // auf zweiten tab switchen
-            ProcessLoadingAnimation = true;
             ProcessSucess = false;
             ProcessError = false;
+
+            ProcessLoadingAnimation = true;
+            await RaisePropertyChanged(() => ProcessLoadingAnimation);
 
             object _lock = new object();
             BindingOperations.EnableCollectionSynchronization(Processes, _lock);
@@ -105,28 +109,34 @@ namespace LibBuilder.WPFCore.ViewModels
                 return;
 
             ContentLoadingAnimation = true;
+            await RaisePropertyChanged(() => ContentLoadingAnimation);
 
             await base.LoadWorkspace();
 
             ContentLoadingAnimation = false;
+            await RaisePropertyChanged(() => ContentLoadingAnimation);
         }
 
         protected override async Task LoadLibrary()
         {
             ContentLoadingAnimation = true;
+            await RaisePropertyChanged(() => ContentLoadingAnimation);
 
             await base.LoadLibrary();
 
             ContentLoadingAnimation = false;
+            await RaisePropertyChanged(() => ContentLoadingAnimation);
         }
 
         protected override async Task LoadTarget()
         {
             ContentLoadingAnimation = true;
+            await RaisePropertyChanged(() => ContentLoadingAnimation);
 
             await base.LoadTarget();
 
             ContentLoadingAnimation = false;
+            await RaisePropertyChanged(() => ContentLoadingAnimation);
         }
     }
 }

@@ -7,14 +7,14 @@ using System.Linq;
 
 namespace LibBuilder.Core
 {
-    public class Orca
+    public static class Orca
     {
         /// <summary>
         /// Fügt neue, noch nicht vorhandene Targets für ein Workspace hinzu
         /// </summary>
         /// <param name="dbWorkspace">Der zu aktualisierende Workspace</param>
         /// <returns>Aktualisiert Workspace-Targets</returns>
-        public WorkspaceModel UpdateWorkspaceTargets(WorkspaceModel dbWorkspace)
+        public static WorkspaceModel UpdateWorkspaceTargets(WorkspaceModel dbWorkspace)
         {
             //Orca Workspace öffnen
             Workspace pbWorkspace = new Workspace(dbWorkspace.FilePath, dbWorkspace.PBVersion.Value);
@@ -47,7 +47,7 @@ namespace LibBuilder.Core
         /// <param name="dbTarget">Das zu aktualisierende Target</param>
         /// <param name="version">Orca Version zum starten der Session</param>
         /// <returns>Aktualisiert Target-Librarys</returns>
-        public TargetModel UpdateTargetLibraries(TargetModel dbTarget, PBDotNetLib.orca.Orca.Version version)
+        public static TargetModel UpdateTargetLibraries(TargetModel dbTarget, PBDotNetLib.orca.Orca.Version version)
         {
             Target pbTarget = new Target(dbTarget.FilePath, version);
 
@@ -95,7 +95,7 @@ namespace LibBuilder.Core
         /// <param name="dbLibrary">Die zu aktualisierende Library</param>
         /// <param name="version">Orca Version zum starten der Session</param>
         /// <returns>Aktualisiert Library-Objects</returns>
-        public LibraryModel UpdateLibrayObjects(LibraryModel dbLibrary, PBDotNetLib.orca.Orca.Version version)
+        public static LibraryModel UpdateLibrayObjects(LibraryModel dbLibrary, PBDotNetLib.orca.Orca.Version version)
         {
             //Powerbuilder-Objects für die selektierte Library holen
             List<LibEntry> pbObjects = new PBDotNetLib.orca.Orca(version).DirLibrary(dbLibrary.FilePath);
