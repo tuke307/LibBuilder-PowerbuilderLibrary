@@ -3,6 +3,8 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <Platforms>AnyCPU;x64;x86</Platforms>
+    <LangVersion>latest</LangVersion>
+    <CodeAnalysisRuleSet>$(SolutionDir)\Code Rules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
 
   <ItemGroup>
@@ -17,5 +19,4 @@
     <ProjectReference Include="..\Data\Data.csproj" />
     <ProjectReference Include="..\PBDotNetLib\PBDotNetLib.csproj" />
   </ItemGroup>
-
 </Project>
