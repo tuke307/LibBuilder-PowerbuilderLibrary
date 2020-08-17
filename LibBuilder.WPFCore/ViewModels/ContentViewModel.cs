@@ -1,24 +1,35 @@
 ﻿// project=LibBuilder.WPFCore, file=ContentViewModel.cs, creation=2020:7:21 Copyright (c)
 // 2020 Timeline Financials GmbH & Co. KG. All rights reserved.
-using Data.Models;
-using Microsoft.Win32;
-using MvvmCross.Commands;
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Windows.Data;
-
 namespace LibBuilder.WPFCore.ViewModels
 {
+    using Data.Models;
+    using LibBuilder.WPFCore.Views;
+    using Microsoft.Win32;
+    using MvvmCross.Commands;
+    using System;
+    using System.Collections.Generic;
+    using System.Collections.ObjectModel;
+    using System.IO;
+    using System.Linq;
+    using System.Threading;
+    using System.Threading.Tasks;
+    using System.Windows.Data;
+
+    /// <summary>
+    /// ContentViewModel.
+    /// </summary>
+    /// <seealso cref="LibBuilder.Core.ViewModels.ContentViewModel" />
     public class ContentViewModel : LibBuilder.Core.ViewModels.ContentViewModel
     {
         protected MainWindowViewModel mainWindowViewModel;
-        protected Dictionary<string, string> parameter;
+        protected Options parameter;
 
-        public ContentViewModel(MainWindowViewModel mainWindowViewModel = null, Dictionary<string, string> parameter = null)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ContentViewModel" /> class.
+        /// </summary>
+        /// <param name="mainWindowViewModel">The main window view model.</param>
+        /// <param name="parameter">The parameter.</param>
+        public ContentViewModel(MainWindowViewModel mainWindowViewModel = null, Options parameter = null)
         {
             this.mainWindowViewModel = mainWindowViewModel;
             this.parameter = parameter;
@@ -33,12 +44,40 @@ namespace LibBuilder.WPFCore.ViewModels
 
             RunProcedurCommand = new MvxAsyncCommand(RunProcedur);
 
-            if (parameter != null) { ParameterStartAsync(); }
+            if (parameter != null)
+            {
+                _ = ParameterStartAsync();
+            }
             //letzten modifizierten Workspace laden, mit zuletzt ausgewähltem Target
             //if (Workspaces != null && Workspaces.Count > 0)
             //    Workspace = Workspaces.OrderByDescending(w => w.UpdatedDate).FirstOrDefault();
         }
 
+        /// <summary>
+        /// Dotses this instance.
+        /// </summary>
+        public static void Dots()
+        {
+            while (true)
+            {
+                for (int i = 0; i < 3; i++)
+                {
+                    Console.Write('.');
+                    System.Threading.Thread.Sleep(1000);
+                    if (i == 2)
+                    {
+                        Console.Write("\r   \r");
+                        i = -1;
+                        System.Threading.Thread.Sleep(1000);
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Lädt Library aus Datenbank Vergleich mit aktueller Powerbuilder Library
+        /// Gegebenfalls löschen oder hinzufügen neuer Objects(Entrys)
+        /// </summary>
         protected override async Task LoadLibrary()
         {
             ContentLoadingAnimation = true;
@@ -50,6 +89,10 @@ namespace LibBuilder.WPFCore.ViewModels
             await RaisePropertyChanged(() => ContentLoadingAnimation);
         }
 
+        /// <summary>
+        /// Lädt Target aus Datenbank Vergleich mit aktuellem Powerbuilder Target
+        /// gegenbenfalls werden neue Librarys hinzugefügt oder alte gelöscht
+        /// </summary>
         protected override async Task LoadTarget()
         {
             ContentLoadingAnimation = true;
@@ -61,6 +104,10 @@ namespace LibBuilder.WPFCore.ViewModels
             await RaisePropertyChanged(() => ContentLoadingAnimation);
         }
 
+        /// <summary>
+        /// Lädt Workspace aus Datenbank Vergleich mit aktuellem Powerbuilder Workspace.
+        /// Gegenbenfalls werden neue Targets hinzugefügt oder alte gelöscht
+        /// </summary>
         protected override async Task LoadWorkspace()
         {
             if (!CheckWorkspace())
@@ -75,6 +122,9 @@ namespace LibBuilder.WPFCore.ViewModels
             await RaisePropertyChanged(() => ContentLoadingAnimation);
         }
 
+        /// <summary>
+        /// Opens the workspace.
+        /// </summary>
         protected async Task OpenWorkspace()
         {
             ContentLoadingAnimation = true;
@@ -99,95 +149,148 @@ namespace LibBuilder.WPFCore.ViewModels
         /// </summary>
         protected async Task ParameterStartAsync()
         {
-            string value = "";
-
-            if (parameter.ContainsKey("-w"))
+            // Workspace
+            if (parameter.Workspace != null)
             {
-                if (parameter.TryGetValue("-w", out value))
+                Workspace = Workspaces.Single(w => w.File.ToLower() == Path.GetFileName(parameter.Workspace).ToLower());
+
+                await LoadWorkspace();
+
+                Console.WriteLine("Workspace " + Workspace.FilePath + " erfolgreich eingelesen");
+            }
+            else
+            {
+                // ohne Workspace geht nicht
+                return;
+            }
+
+            // Target
+            if (parameter.Target != null)
+            {
+                Target = Targets.Single(t => t.File.ToLower() == Path.GetFileName(parameter.Target).ToLower());
+                await LoadTarget();
+                Console.WriteLine("Target " + Target.FilePath + " erfolgreich eingelesen");
+            }
+            else
+            {
+                // zuletzt ausgewähltes Target laden
+                Target = Targets.OrderByDescending(t => t.UpdatedDate).FirstOrDefault();
+                await LoadTarget();
+                Console.WriteLine("Target " + Target.FilePath + " erfolgreich eingelesen");
+            }
+
+            // Version
+            if (parameter.Version != null)
+            {
+                // Version parsen
+                PBDotNetLib.orca.Orca.Version version = (PBDotNetLib.orca.Orca.Version)Enum.Parse(typeof(PBDotNetLib.orca.Orca.Version), "PB" + parameter.Version);
+                Workspace.PBVersion = version;
+
+                await base.SaveWorkspace();
+                await LoadWorkspace();
+
+                Console.WriteLine("Version erfolgreich gesetzt");
+            }
+            else
+            {
+                // Version, die in DB gespeichert ist
+            }
+
+            // Librays
+            if (parameter.Librarys != null)
+            {
+                base.DeselectAllLibrarys();
+
+                Console.WriteLine("Librarys " + parameter.Librarys + " eingelesen");
+            }
+            else
+            {
+                // letzte Auswahl nehmen die in DB gespeichert ist
+            }
+
+            // Build
+            if (parameter.Build.HasValue)
+            {
+                if (!parameter.Build.Value)
                 {
-                    if (IsValidPath(value))
+                    foreach (var lib in parameter.Librarys)
                     {
-                        Workspace = Workspaces.Where(w => w.FilePath.ToLower() == value.ToLower()).First();
+                        Library = Librarys.Single(l => l.File.ToLower() == Path.GetFileName(lib).ToLower());
+                        if (Library != null)
+                        {
+                            Library.Build = false;
+
+                            await base.SaveLibrary();
+                        }
                     }
-                    else
+                }
+                else
+                {
+                    foreach (var lib in parameter.Librarys)
                     {
-                        Workspace = Workspaces.Where(w => w.File.ToLower() == value.ToLower()).First();
+                        Library = Librarys.Single(l => l.File.ToLower() == Path.GetFileName(lib).ToLower());
+                        if (Library != null)
+                        {
+                            Library.Build = true;
+
+                            await base.SaveLibrary();
+                        }
                     }
-
-                    await LoadWorkspace();
-                }
-                else
-                {
-                    // ohne Workspace geht nicht
-
-                    return;
                 }
             }
-
-            if (parameter.ContainsKey("-t"))
+            else
             {
-                if (parameter.TryGetValue("-t", out value))
+                // Letzte Auswahl die in DB gespeichert ist
+            }
+
+            // Regenerate
+            if (parameter.Regenerate.HasValue)
+            {
+                if (!parameter.Regenerate.Value)
                 {
-                    if (IsValidPath(value))
+                    foreach (var lib in parameter.Librarys)
                     {
-                        Target = Targets.Where(t => t.FilePath.ToLower() == value.ToLower()).First();
+                        Library = Librarys.Single(l => l.File.ToLower() == Path.GetFileName(lib).ToLower());
+                        if (Library != null)
+                        {
+                            // Library Objects laden
+                            await LoadLibrary();
+                            base.DeselectAllEntrys();
+                            await base.SaveLibrary();
+                        }
                     }
-                    else
+                }
+                else
+                {
+                    foreach (var lib in parameter.Librarys)
                     {
-                        Target = Targets.Where(t => t.File.ToLower() == value.ToLower()).First();
+                        Library = Librarys.Single(l => l.File.ToLower() == Path.GetFileName(lib).ToLower());
+                        if (Library != null)
+                        {
+                            // Library Objects laden
+                            await LoadLibrary();
+                            base.SelectAllEntrys();
+                            await base.SaveLibrary();
+                        }
                     }
-
-                    await LoadTarget();
-                }
-                else
-                {
-                    // ohne Target geht nicht
-
-                    return;
                 }
             }
-
-            if (parameter.ContainsKey("-v"))
+            else
             {
-                if (parameter.TryGetValue("-v", out value))
-                {
-                    PBDotNetLib.orca.Orca.Version version = (PBDotNetLib.orca.Orca.Version)Enum.Parse(typeof(PBDotNetLib.orca.Orca.Version), "PB" + value);
-                    Workspace.PBVersion = version;
-
-                    await base.SaveWorkspace();
-                    await LoadWorkspace();
-                }
-                else
-                {
-                    // in DB gespeicherte Version nehmen
-                }
+                // Letzte Auswahl die in DB gespeichert ist
             }
 
-            if (parameter.ContainsKey("-o"))
-            {
-                if (parameter.TryGetValue("-o", out value))
-                {
-                    //Console.WriteLine("For key = \"tif\", value = {0}.", value);
-                }
-                else
-                {
-                    //Console.WriteLine("Key = \"tif\" is not found.");
-                }
-            }
-
-            if (parameter.ContainsKey("-l"))
-            {
-                if (parameter.TryGetValue("-l", out value))
-                {
-                    //Console.WriteLine("For key = \"tif\", value = {0}.", value);
-                }
-                else
-                {
-                    //Console.WriteLine("Key = \"tif\" is not found.");
-                }
-            }
+            // Run
+            Console.WriteLine("Ausführen der Prozedur");
+            Thread thread1 = new Thread(Dots);
+            thread1.Start();
+            await RunProcedur();
+            thread1.Abort();
         }
 
+        /// <summary>
+        /// Runs the procedur.
+        /// </summary>
         protected async Task RunProcedur()
         {
             if (!CheckWorkspace())
@@ -210,6 +313,10 @@ namespace LibBuilder.WPFCore.ViewModels
             base.RunProcedur(_lock);
         }
 
+        /// <summary>
+        /// Checks the runnable.
+        /// </summary>
+        /// <returns></returns>
         private bool CheckRunnable()
         {
             if (Target == null)
@@ -221,6 +328,10 @@ namespace LibBuilder.WPFCore.ViewModels
             return true;
         }
 
+        /// <summary>
+        /// Checks the workspace.
+        /// </summary>
+        /// <returns></returns>
         private bool CheckWorkspace()
         {
             if (Workspace == null)
@@ -238,32 +349,6 @@ namespace LibBuilder.WPFCore.ViewModels
             }
 
             return true;
-        }
-
-        private bool IsValidPath(string path, bool allowRelativePaths = false)
-        {
-            bool isValid = true;
-
-            try
-            {
-                string fullPath = Path.GetFullPath(path);
-
-                if (allowRelativePaths)
-                {
-                    isValid = Path.IsPathRooted(path);
-                }
-                else
-                {
-                    string root = Path.GetPathRoot(path);
-                    isValid = string.IsNullOrEmpty(root.Trim(new char[] { '\\', '/' })) == false;
-                }
-            }
-            catch (Exception ex)
-            {
-                isValid = false;
-            }
-
-            return isValid;
         }
     }
 }

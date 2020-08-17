@@ -1,5 +1,6 @@
 ﻿// project=LibBuilder.WPFCore, file=MainWindow.xaml.cs, creation=2020:7:21 Copyright (c)
 // 2020 Timeline Financials GmbH & Co. KG. All rights reserved.
+using AutoUpdaterDotNET;
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Input;
@@ -11,11 +12,13 @@ namespace LibBuilder.WPFCore.Views
     /// </summary>
     public partial class MainWindow : Window
     {
-        public MainWindow(Dictionary<string, string> parameter = null)
+        public MainWindow(Options parameter = null)
         {
             InitializeComponent();
 
             DataContext = new LibBuilder.WPFCore.ViewModels.MainWindowViewModel(parameter);
+
+            AutoUpdater.Start(@"file://///tlfi.de\Freigaben\lwi\TL_Tools\LibBuilder\.NET\AutoUpdater.xml");
         }
 
         private void GridTop_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)

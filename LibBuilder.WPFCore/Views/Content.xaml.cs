@@ -9,7 +9,7 @@ namespace LibBuilder.WPFCore.Views
 {
     public partial class Content : UserControl
     {
-        public Content(WPFCore.ViewModels.MainWindowViewModel mainWindowViewModel, Dictionary<string, string> parameter = null)
+        public Content(WPFCore.ViewModels.MainWindowViewModel mainWindowViewModel, Options parameter = null)
         {
             InitializeComponent();
 

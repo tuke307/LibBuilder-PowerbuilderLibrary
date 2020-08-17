@@ -15,7 +15,7 @@ namespace LibBuilder.WPFCore.ViewModels
     {
         private readonly ApplicationChanges settings = new ApplicationChanges();
         private SnackbarMessageQueue _notificationSnackbar;
-        private Dictionary<string, string> parameter;
+        private Options parameter;
 
         public SnackbarMessageQueue NotificationSnackbar
         {
@@ -23,7 +23,7 @@ namespace LibBuilder.WPFCore.ViewModels
             set => SetProperty(ref _notificationSnackbar, value);
         }
 
-        public MainWindowViewModel(Dictionary<string, string> parameter = null)
+        public MainWindowViewModel(Options parameter = null)
         {
             this.parameter = parameter;
             OpenSettingsCommand = new MvxCommand(OpenSettings);

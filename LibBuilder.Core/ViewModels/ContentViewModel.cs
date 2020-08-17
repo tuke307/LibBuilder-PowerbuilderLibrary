@@ -63,6 +63,63 @@ namespace LibBuilder.Core.ViewModels
         }
 
         /// <summary>
+        /// Deselektiert alle Objects(Entrys)
+        /// </summary>
+        protected void DeselectAllEntrys()
+        {
+            if (Objects == null)
+                return;
+
+            List<ObjectModel> temp = new List<ObjectModel>();
+            temp = Objects.ToList();
+            Objects.Clear();
+
+            for (int i = 0; i < temp.Count; i++)
+            {
+                temp[i].Regenerate = false;
+            }
+
+            Objects = new ObservableCollection<ObjectModel>(temp.ToList());
+
+            using (var db = new DatabaseContext())
+            {
+                if (Objects != null)
+                    db.Object.UpdateRange(Objects);
+
+                db.SaveChanges();
+            }
+        }
+
+        /// <summary>
+        /// Deselektiert alle Librarys
+        /// </summary>
+        protected void DeselectAllLibrarys()
+        {
+            if (Librarys == null)
+                return;
+
+            List<LibraryModel> temp = new List<LibraryModel>();
+            temp = Librarys.ToList();
+            Librarys.Clear();
+
+            for (int i = 0; i < temp.Count; i++)
+            {
+                //temp[i].Regenerate = false;
+                temp[i].Build = false;
+            }
+
+            Librarys = new ObservableCollection<LibraryModel>(temp.ToList());
+
+            using (var db = new DatabaseContext())
+            {
+                if (Librarys != null)
+                    db.Library.UpdateRange(Librarys);
+
+                db.SaveChanges();
+            }
+        }
+
+        /// <summary>
         /// Lädt Library aus Datenbank Vergleich mit aktueller Powerbuilder Library
         /// Gegebenfalls löschen oder hinzufügen neuer Objects(Entrys)
         /// </summary>
@@ -325,6 +382,52 @@ namespace LibBuilder.Core.ViewModels
         }
 
         /// <summary>
+        /// Speichert Library(Library-Objects) asynchron in Datenbank
+        /// </summary>
+        /// <returns></returns>
+        protected async Task SaveLibrary()
+        {
+            if (SaveLibraryTask != null && SaveLibraryTask.Status == TaskStatus.Running)
+                await SaveLibraryTask;
+
+            SaveLibraryTask = Task.Run(async () =>
+            {
+                using (var db = new DatabaseContext())
+                {
+                    if (Library != null)
+                        db.Library.Update(Library);
+
+                    await db.SaveChangesAsync();
+                }
+            });
+
+            await SaveLibraryTask;
+        }
+
+        /// <summary>
+        /// Speichert Target(Target-Librarys) asynchron in Datenbank
+        /// </summary>
+        /// <returns></returns>
+        protected async Task SaveTarget()
+        {
+            if (SaveTargetTask != null && SaveTargetTask.Status == TaskStatus.Running)
+                await SaveTargetTask;
+
+            SaveTargetTask = Task.Run(async () =>
+            {
+                using (var db = new DatabaseContext())
+                {
+                    if (Target != null)
+                        db.Target.Update(Target);
+
+                    await db.SaveChangesAsync();
+                }
+            });
+
+            await SaveTargetTask;
+        }
+
+        /// <summary>
         /// Speichert Workspace(Workspace-Targets) asynchron in Datenbank
         /// </summary>
         /// <returns></returns>
@@ -348,112 +451,9 @@ namespace LibBuilder.Core.ViewModels
         }
 
         /// <summary>
-        /// Deselektiert alle Objects(Entrys)
-        /// </summary>
-        private void DeselectAllEntrys()
-        {
-            if (Objects == null)
-                return;
-
-            List<ObjectModel> temp = new List<ObjectModel>();
-            temp = Objects.ToList();
-            Objects.Clear();
-
-            for (int i = 0; i < temp.Count; i++)
-            {
-                temp[i].Regenerate = false;
-            }
-
-            Objects = new ObservableCollection<ObjectModel>(temp.ToList());
-
-            using (var db = new DatabaseContext())
-            {
-                if (Objects != null)
-                    db.Object.UpdateRange(Objects);
-
-                db.SaveChanges();
-            }
-        }
-
-        /// <summary>
-        /// Deselektiert alle Librarys
-        /// </summary>
-        private void DeselectAllLibrarys()
-        {
-            if (Librarys == null)
-                return;
-
-            List<LibraryModel> temp = new List<LibraryModel>();
-            temp = Librarys.ToList();
-            Librarys.Clear();
-
-            for (int i = 0; i < temp.Count; i++)
-            {
-                //temp[i].Regenerate = false;
-                temp[i].Build = false;
-            }
-
-            Librarys = new ObservableCollection<LibraryModel>(temp.ToList());
-
-            using (var db = new DatabaseContext())
-            {
-                if (Librarys != null)
-                    db.Library.UpdateRange(Librarys);
-
-                db.SaveChanges();
-            }
-        }
-
-        /// <summary>
-        /// Speichert Library(Library-Objects) asynchron in Datenbank
-        /// </summary>
-        /// <returns></returns>
-        private async Task SaveLibrary()
-        {
-            if (SaveLibraryTask != null && SaveLibraryTask.Status == TaskStatus.Running)
-                await SaveLibraryTask;
-
-            SaveLibraryTask = Task.Run(async () =>
-            {
-                using (var db = new DatabaseContext())
-                {
-                    if (Library != null)
-                        db.Library.Update(Library);
-
-                    await db.SaveChangesAsync();
-                }
-            });
-
-            await SaveLibraryTask;
-        }
-
-        /// <summary>
-        /// Speichert Target(Target-Librarys) asynchron in Datenbank
-        /// </summary>
-        /// <returns></returns>
-        private async Task SaveTarget()
-        {
-            if (SaveTargetTask != null && SaveTargetTask.Status == TaskStatus.Running)
-                await SaveTargetTask;
-
-            SaveTargetTask = Task.Run(async () =>
-            {
-                using (var db = new DatabaseContext())
-                {
-                    if (Target != null)
-                        db.Target.Update(Target);
-
-                    await db.SaveChangesAsync();
-                }
-            });
-
-            await SaveTargetTask;
-        }
-
-        /// <summary>
         /// Selektiert alle Objects(Entrys)
         /// </summary>
-        private void SelectAllEntrys()
+        protected void SelectAllEntrys()
         {
             if (Objects == null)
                 return;
@@ -481,7 +481,7 @@ namespace LibBuilder.Core.ViewModels
         /// <summary>
         /// Selektiert alle Librarys
         /// </summary>
-        private void SelectAllLibrarys()
+        protected void SelectAllLibrarys()
         {
             if (Librarys == null)
                 return;

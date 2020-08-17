@@ -1,8 +1,10 @@
 ﻿// project=LibBuilder.WPFCore, file=App.xaml.cs, creation=2020:7:21 Copyright (c) 2020
 // Timeline Financials GmbH & Co. KG. All rights reserved.
+using CommandLine;
+using CommandLine.Text;
 using Data;
-using LibBuilder.Core.ViewModels;
 using LibBuilder.WPFCore.Views;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -15,38 +17,49 @@ namespace LibBuilder.WPFCore
     /// </summary>
     public partial class App : Application
     {
-        private Dictionary<string, string> parameter = new Dictionary<string, string>();
+        private static void HandleErrors(IEnumerable<Error> errs)
+        {
+            Console.WriteLine("Fehler beim einlesen der Parameter");
+        }
+
+        private static void Run(Options options)
+        {
+            Console.WriteLine(HeadingInfo.Default);
+
+            if (options.Application.Value)
+            {
+                Console.WriteLine("Start mit Fenster");
+                new MainWindow(options).Show();
+            }
+            else
+            {
+                new ViewModels.ContentViewModel(parameter: options);
+            }
+        }
 
         private void Application_Startup(object sender, StartupEventArgs e)
         {
             Constants.DatabasePath = Path.Combine(Constants.FileDirectory, Data.Constants.DatabaseName);
 
             if (!Directory.Exists(Constants.FileDirectory))
-                Directory.CreateDirectory(Constants.FileDirectory);
-
-            var args = e.Args;
-            if (args != null && args.Count() > 0)
             {
-                // einlesen der Parameter
-                for (int index = 0; index < args.Length; index += 2)
-                {
-                    parameter.Add(args[index], args[index + 1]);
-                }
-
-                if (parameter.ContainsKey("-a"))
-                {
-                    new MainWindow(parameter).Show();
-                    return;
-                }
-                else
-                {
-                    new ViewModels.ContentViewModel(parameter: parameter);
-                    return;
-                }
+                Directory.CreateDirectory(Constants.FileDirectory);
             }
 
-            // normaler start
-            new MainWindow().Show();
+            if (e.Args.Count() > 0 && e.Args != null)
+            {
+                //var parser = new Parser(with => with.EnableDashDash = true);
+                //var result = parser.ParseArguments<Options>(e.Args);
+
+                var result = Parser.Default.ParseArguments<Options>(e.Args)
+               .WithParsed(Run)
+               .WithNotParsed(errs => HandleErrors(errs));
+            }
+            else
+            {
+                // normaler start
+                new MainWindow().Show();
+            }
         }
     }
 }
