@@ -1,4 +1,6 @@
-﻿using Data;
+﻿// project=LibBuilder.WPFCore, file=ApplicationChanges.cs, creation=2020:7:21 Copyright
+// (c) 2020 Timeline Financials GmbH & Co. KG. All rights reserved.
+using Data;
 using System;
 using System.Linq;
 using System.Windows;
@@ -22,23 +24,6 @@ namespace LibBuilder.WPFCore.Business
 
                     Uri basetheme = new Uri($"pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme." + StringBaseTheme(settings.DarkMode) + ".xaml");
                     NewResourceDictionary(2, basetheme);
-                }
-            }
-        }
-
-        public void SetPrimary(object primary_color)
-        {
-            using (var db = new DatabaseContext())
-            {
-                var settings = db.Settings.ToList().Last(); //zuletzt hinzugefügter Datensatz
-                if (settings != null)
-                {
-                    Uri primary = new Uri($"pack://application:,,,/MaterialDesignColors;component/Themes/Recommended/Primary/MaterialDesignColor." + primary_color.ToString() + ".xaml");
-                    NewResourceDictionary(0, primary);
-
-                    settings.PrimaryColor = primary_color.ToString();
-
-                    db.SaveChanges();
                 }
             }
         }
@@ -71,6 +56,23 @@ namespace LibBuilder.WPFCore.Business
                     NewResourceDictionary(2, basetheme);
 
                     settings.DarkMode = (bool)base_color;
+
+                    db.SaveChanges();
+                }
+            }
+        }
+
+        public void SetPrimary(object primary_color)
+        {
+            using (var db = new DatabaseContext())
+            {
+                var settings = db.Settings.ToList().Last(); //zuletzt hinzugefügter Datensatz
+                if (settings != null)
+                {
+                    Uri primary = new Uri($"pack://application:,,,/MaterialDesignColors;component/Themes/Recommended/Primary/MaterialDesignColor." + primary_color.ToString() + ".xaml");
+                    NewResourceDictionary(0, primary);
+
+                    settings.PrimaryColor = primary_color.ToString();
 
                     db.SaveChanges();
                 }

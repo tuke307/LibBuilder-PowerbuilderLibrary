@@ -1,25 +1,32 @@
-﻿using System;
+﻿// project=PBDotNetLib, file=VirtualLibEntry.cs, creation=2020:6:28 Copyright (c) 2020
+// Timeline Financials GmbH & Co. KG. All rights reserved.
+using System;
 using System.IO;
 
 namespace PBDotNetLib.orca
 {
     /// <summary>
-    /// This class represents a file based Lib Entry. The behaviour
-    /// should be similar to the entry of a PBL.
+    /// This class represents a file based Lib Entry. The behaviour should be similar to
+    /// the entry of a PBL.
     /// </summary>
     public class VirtualLibEntry : ILibEntry
     {
         private FileInfo fileInfo = null;
         private string source;
 
+        public string Comment
+        {
+            get { return ""; }
+        }
+
         public DateTime Createtime
         {
             get { return this.fileInfo.CreationTime; }
         }
 
-        public string Comment
+        public string Library
         {
-            get { return ""; }
+            get { return this.fileInfo.FullName; }
         }
 
         public string Name
@@ -30,6 +37,28 @@ namespace PBDotNetLib.orca
         public int Size
         {
             get { return (int)this.fileInfo.Length; }
+        }
+
+        public string Source
+        {
+            get
+            {
+                if (String.IsNullOrEmpty(this.source))
+                {
+                    this.source = this.source = new StreamReader(new FileStream(this.fileInfo.FullName, FileMode.Open)).ReadToEnd();
+
+                    if (this.fileInfo.Name.EndsWith(".psr"))
+                    {
+                        this.source = util.PsrCleaner.Clean(this.source);
+                    }
+                }
+
+                return this.source;
+            }
+            set
+            {
+                this.source = value;
+            }
         }
 
         public Objecttype Type
@@ -66,33 +95,6 @@ namespace PBDotNetLib.orca
                     default:
                         return Objecttype.None;
                 }
-            }
-        }
-
-        public string Library
-        {
-            get { return this.fileInfo.FullName; }
-        }
-
-        public string Source
-        {
-            get
-            {
-                if (String.IsNullOrEmpty(this.source))
-                {
-                    this.source = this.source = new StreamReader(new FileStream(this.fileInfo.FullName, FileMode.Open)).ReadToEnd();
-
-                    if (this.fileInfo.Name.EndsWith(".psr"))
-                    {
-                        this.source = util.PsrCleaner.Clean(this.source);
-                    }
-                }
-
-                return this.source;
-            }
-            set
-            {
-                this.source = value;
             }
         }
 

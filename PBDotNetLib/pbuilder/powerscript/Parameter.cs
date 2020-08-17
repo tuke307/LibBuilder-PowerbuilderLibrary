@@ -1,4 +1,6 @@
-﻿using System;
+﻿// project=PBDotNetLib, file=Parameter.cs, creation=2020:6:28 Copyright (c) 2020 Timeline
+// Financials GmbH & Co. KG. All rights reserved.
+using System;
 using System.Collections.Generic;
 
 namespace PBDotNetLib.pbuilder.powerscript
@@ -8,11 +10,9 @@ namespace PBDotNetLib.pbuilder.powerscript
     /// </summary>
     public class Parameter : Variable
     {
-        private static char[] variableSeparators = new char[2] { ' ', '=' };
-
         /// <summary>
-        /// enum to set the "call by" of a variable if it
-        /// is used for a paramater in a method or an event
+        /// enum to set the "call by" of a variable if it is used for a paramater in a
+        /// method or an event
         /// </summary>
         public enum CallBy
         {
@@ -21,6 +21,7 @@ namespace PBDotNetLib.pbuilder.powerscript
             ReadOnly
         }
 
+        private static char[] variableSeparators = new char[2] { ' ', '=' };
         private CallBy callby = CallBy.Value;
 
         /// <summary>

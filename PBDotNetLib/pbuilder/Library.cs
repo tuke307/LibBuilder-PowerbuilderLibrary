@@ -1,4 +1,6 @@
-﻿using PBDotNetLib.common;
+﻿// project=PBDotNetLib, file=Library.cs, creation=2020:6:28 Copyright (c) 2020 Timeline
+// Financials GmbH & Co. KG. All rights reserved.
+using PBDotNetLib.common;
 using PBDotNetLib.orca;
 using System.IO;
 
@@ -45,6 +47,14 @@ namespace PBDotNetLib.pbuilder
 
         #endregion properties
 
+        public ILibEntry[] EntryList
+        {
+            get
+            {
+                return orca.DirLibrary(FilePath).ToArray();
+            }
+        }
+
         /// <summary>
         /// constructor
         /// </summary>
@@ -55,14 +65,6 @@ namespace PBDotNetLib.pbuilder
             this.orca = new Orca(version);
             this.dir = Path.GetDirectoryName(file);
             this.file = Path.GetFileName(file);
-        }
-
-        public ILibEntry[] EntryList
-        {
-            get
-            {
-                return orca.DirLibrary(FilePath).ToArray();
-            }
         }
     }
 }

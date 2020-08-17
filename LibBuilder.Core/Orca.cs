@@ -1,43 +1,49 @@
-﻿using Data.Models;
-using PBDotNetLib.orca;
-using PBDotNetLib.pbuilder;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-
+﻿// project=LibBuilder.Core, file=Orca.cs, creation=2020:7:21 Copyright (c) 2020 Timeline
+// Financials GmbH & Co. KG. All rights reserved.
 namespace LibBuilder.Core
 {
+    using Data.Models;
+    using PBDotNetLib.orca;
+    using PBDotNetLib.pbuilder;
+    using System.Collections.Generic;
+    using System.IO;
+    using System.Linq;
+
+    /// <summary>
+    /// PB zu Datenbank.
+    /// </summary>
     public static class Orca
     {
         /// <summary>
-        /// Fügt neue, noch nicht vorhandene Targets für ein Workspace hinzu
+        /// Fügt neue, noch nicht vorhandene Objects für eine Library hinzu
         /// </summary>
-        /// <param name="dbWorkspace">Der zu aktualisierende Workspace</param>
-        /// <returns>Aktualisiert Workspace-Targets</returns>
-        public static WorkspaceModel UpdateWorkspaceTargets(WorkspaceModel dbWorkspace)
+        /// <param name="dbLibrary">Die zu aktualisierende Library</param>
+        /// <param name="version">Orca Version zum starten der Session</param>
+        /// <returns>Aktualisiert Library-Objects</returns>
+        public static LibraryModel UpdateLibrayObjects(LibraryModel dbLibrary, PBDotNetLib.orca.Orca.Version version)
         {
-            //Orca Workspace öffnen
-            Workspace pbWorkspace = new Workspace(dbWorkspace.FilePath, dbWorkspace.PBVersion.Value);
+            //Powerbuilder-Objects für die selektierte Library holen
+            List<LibEntry> pbObjects = new PBDotNetLib.orca.Orca(version).DirLibrary(dbLibrary.FilePath);
 
-            //neue Targets werden gesucht
-            var newTargets = pbWorkspace.Targets.Select(t => t.File).ToList().Except(dbWorkspace.Target.Select(t => t.File).ToList()).ToList();
+            //neue Objekte werden gesucht
+            var newObjects = pbObjects.Select(l => l.Name).ToList().Except(dbLibrary.Objects.Select(l => l.Name).ToList()).ToList();
 
-            //neue Targets hinzufügen
-            if (newTargets != null && newTargets.Count > 0)
+            //neue Objekte hinzufügen
+            if (newObjects != null && newObjects.Count > 0)
             {
-                for (int count = 0; count < newTargets.Count; count++)
+                for (int count = 0; count < newObjects.Count; count++)
                 {
-                    Target temp = pbWorkspace.Targets.Where(t => t.File == newTargets[count]).First();
+                    LibEntry temp = pbObjects.Where(o => o.Name == newObjects[count]).First();
 
-                    dbWorkspace.Target.Add(new TargetModel()
+                    dbLibrary.Objects.Add(new ObjectModel()
                     {
-                        File = temp.File,
-                        Directory = temp.Dir
+                        Name = temp.Name,
+                        ObjectType = temp.Type
                     });
                 }
             }
 
-            return dbWorkspace;
+            return dbLibrary;
         }
 
         /// <summary>
@@ -90,35 +96,34 @@ namespace LibBuilder.Core
         }
 
         /// <summary>
-        /// Fügt neue, noch nicht vorhandene Objects für eine Library hinzu
+        /// Fügt neue, noch nicht vorhandene Targets für ein Workspace hinzu
         /// </summary>
-        /// <param name="dbLibrary">Die zu aktualisierende Library</param>
-        /// <param name="version">Orca Version zum starten der Session</param>
-        /// <returns>Aktualisiert Library-Objects</returns>
-        public static LibraryModel UpdateLibrayObjects(LibraryModel dbLibrary, PBDotNetLib.orca.Orca.Version version)
+        /// <param name="dbWorkspace">Der zu aktualisierende Workspace</param>
+        /// <returns>Aktualisiert Workspace-Targets</returns>
+        public static WorkspaceModel UpdateWorkspaceTargets(WorkspaceModel dbWorkspace)
         {
-            //Powerbuilder-Objects für die selektierte Library holen
-            List<LibEntry> pbObjects = new PBDotNetLib.orca.Orca(version).DirLibrary(dbLibrary.FilePath);
+            //Orca Workspace öffnen
+            Workspace pbWorkspace = new Workspace(dbWorkspace.FilePath, dbWorkspace.PBVersion.Value);
 
-            //neue Objekte werden gesucht
-            var newObjects = pbObjects.Select(l => l.Name).ToList().Except(dbLibrary.Objects.Select(l => l.Name).ToList()).ToList();
+            //neue Targets werden gesucht
+            var newTargets = pbWorkspace.Targets.Select(t => t.File).ToList().Except(dbWorkspace.Target.Select(t => t.File).ToList()).ToList();
 
-            //neue Objekte hinzufügen
-            if (newObjects != null && newObjects.Count > 0)
+            //neue Targets hinzufügen
+            if (newTargets != null && newTargets.Count > 0)
             {
-                for (int count = 0; count < newObjects.Count; count++)
+                for (int count = 0; count < newTargets.Count; count++)
                 {
-                    LibEntry temp = pbObjects.Where(o => o.Name == newObjects[count]).First();
+                    Target temp = pbWorkspace.Targets.Where(t => t.File == newTargets[count]).First();
 
-                    dbLibrary.Objects.Add(new ObjectModel()
+                    dbWorkspace.Target.Add(new TargetModel()
                     {
-                        Name = temp.Name,
-                        ObjectType = temp.Type
+                        File = temp.File,
+                        Directory = temp.Dir
                     });
                 }
             }
 
-            return dbLibrary;
+            return dbWorkspace;
         }
     }
 }

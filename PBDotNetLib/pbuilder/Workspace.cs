@@ -1,6 +1,9 @@
-﻿using PBDotNetLib.common;
+﻿// project=PBDotNetLib, file=Workspace.cs, creation=2020:6:28 Copyright (c) 2020 Timeline
+// Financials GmbH & Co. KG. All rights reserved.
+using PBDotNetLib.common;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text.RegularExpressions;
 
 namespace PBDotNetLib.pbuilder
@@ -12,9 +15,9 @@ namespace PBDotNetLib.pbuilder
     {
         #region private
 
-        private List<Tuple<string, int, bool, bool>> targets = new List<Tuple<string, int, bool, bool>>();
-        private string defaultTarget;
         private string defaultRemoteTarget;
+        private string defaultTarget;
+        private List<Tuple<string, int, bool, bool>> targets = new List<Tuple<string, int, bool, bool>>();
 
         #endregion private
 
@@ -109,7 +112,7 @@ namespace PBDotNetLib.pbuilder
                 if (path.IndexOf(':') < 0)
                     path = Dir + "\\" + path;
 
-                path = path.Replace(@"\\", @"\").Trim();
+                path = Path.GetFullPath(path);
 
                 targets.Add(new Tuple<string, int, bool, bool>(path, Int32.Parse(matchesTarget[0].Groups["order"].Value), defTargetFlag, defRemTarFlag));
             }

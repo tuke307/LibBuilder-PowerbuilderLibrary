@@ -1,7 +1,12 @@
-﻿using Data.Models;
+﻿// project=LibBuilder.WPFCore, file=ContentViewModel.cs, creation=2020:7:21 Copyright (c)
+// 2020 Timeline Financials GmbH & Co. KG. All rights reserved.
+using Data.Models;
 using Microsoft.Win32;
 using MvvmCross.Commands;
+using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Data;
@@ -11,11 +16,12 @@ namespace LibBuilder.WPFCore.ViewModels
     public class ContentViewModel : LibBuilder.Core.ViewModels.ContentViewModel
     {
         protected MainWindowViewModel mainWindowViewModel;
+        protected Dictionary<string, string> parameter;
 
-        public ContentViewModel(MainWindowViewModel mainWindowViewModel)
+        public ContentViewModel(MainWindowViewModel mainWindowViewModel = null, Dictionary<string, string> parameter = null)
         {
-            //für Snackbar Message
             this.mainWindowViewModel = mainWindowViewModel;
+            this.parameter = parameter;
 
             //Laden
             WorkspaceSelectedCommand = new MvxAsyncCommand(async () => await LoadWorkspace());
@@ -23,16 +29,53 @@ namespace LibBuilder.WPFCore.ViewModels
             LibrarySelectedCommand = new MvxAsyncCommand(async () => await LoadLibrary());
 
             //UI bezogen
-            OpenWorkspaceCommand = new MvxCommand(OpenWorkspace);
+            OpenWorkspaceCommand = new MvxAsyncCommand(OpenWorkspace);
 
             RunProcedurCommand = new MvxAsyncCommand(RunProcedur);
 
+            if (parameter != null) { ParameterStartAsync(); }
             //letzten modifizierten Workspace laden, mit zuletzt ausgewähltem Target
             //if (Workspaces != null && Workspaces.Count > 0)
             //    Workspace = Workspaces.OrderByDescending(w => w.UpdatedDate).FirstOrDefault();
         }
 
-        protected async void OpenWorkspace()
+        protected override async Task LoadLibrary()
+        {
+            ContentLoadingAnimation = true;
+            await RaisePropertyChanged(() => ContentLoadingAnimation);
+
+            await base.LoadLibrary();
+
+            ContentLoadingAnimation = false;
+            await RaisePropertyChanged(() => ContentLoadingAnimation);
+        }
+
+        protected override async Task LoadTarget()
+        {
+            ContentLoadingAnimation = true;
+            await RaisePropertyChanged(() => ContentLoadingAnimation);
+
+            await base.LoadTarget();
+
+            ContentLoadingAnimation = false;
+            await RaisePropertyChanged(() => ContentLoadingAnimation);
+        }
+
+        protected override async Task LoadWorkspace()
+        {
+            if (!CheckWorkspace())
+                return;
+
+            ContentLoadingAnimation = true;
+            await RaisePropertyChanged(() => ContentLoadingAnimation);
+
+            await base.LoadWorkspace();
+
+            ContentLoadingAnimation = false;
+            await RaisePropertyChanged(() => ContentLoadingAnimation);
+        }
+
+        protected async Task OpenWorkspace()
         {
             ContentLoadingAnimation = true;
             await RaisePropertyChanged(() => ContentLoadingAnimation);
@@ -51,34 +94,98 @@ namespace LibBuilder.WPFCore.ViewModels
             await RaisePropertyChanged(() => ContentLoadingAnimation);
         }
 
-        private bool CheckWorkspace()
+        /// <summary>
+        /// Parameters the start asynchronous.
+        /// </summary>
+        protected async Task ParameterStartAsync()
         {
-            if (Workspace == null)
+            string value = "";
+
+            if (parameter.ContainsKey("-w"))
             {
-                mainWindowViewModel.NotificationSnackbar.Enqueue("Bitte Workspace auswählen");
-                return false;
-            }
-            else
-            {
-                if (Workspace.PBVersion == null)
+                if (parameter.TryGetValue("-w", out value))
                 {
-                    mainWindowViewModel.NotificationSnackbar.Enqueue("Bitte Powerbuilder-Version angeben");
-                    return false;
+                    if (IsValidPath(value))
+                    {
+                        Workspace = Workspaces.Where(w => w.FilePath.ToLower() == value.ToLower()).First();
+                    }
+                    else
+                    {
+                        Workspace = Workspaces.Where(w => w.File.ToLower() == value.ToLower()).First();
+                    }
+
+                    await LoadWorkspace();
+                }
+                else
+                {
+                    // ohne Workspace geht nicht
+
+                    return;
                 }
             }
 
-            return true;
-        }
-
-        private bool CheckRunnable()
-        {
-            if (Target == null)
+            if (parameter.ContainsKey("-t"))
             {
-                mainWindowViewModel.NotificationSnackbar.Enqueue("Bitte Target auswählen");
-                return false;
+                if (parameter.TryGetValue("-t", out value))
+                {
+                    if (IsValidPath(value))
+                    {
+                        Target = Targets.Where(t => t.FilePath.ToLower() == value.ToLower()).First();
+                    }
+                    else
+                    {
+                        Target = Targets.Where(t => t.File.ToLower() == value.ToLower()).First();
+                    }
+
+                    await LoadTarget();
+                }
+                else
+                {
+                    // ohne Target geht nicht
+
+                    return;
+                }
             }
 
-            return true;
+            if (parameter.ContainsKey("-v"))
+            {
+                if (parameter.TryGetValue("-v", out value))
+                {
+                    PBDotNetLib.orca.Orca.Version version = (PBDotNetLib.orca.Orca.Version)Enum.Parse(typeof(PBDotNetLib.orca.Orca.Version), "PB" + value);
+                    Workspace.PBVersion = version;
+
+                    await base.SaveWorkspace();
+                    await LoadWorkspace();
+                }
+                else
+                {
+                    // in DB gespeicherte Version nehmen
+                }
+            }
+
+            if (parameter.ContainsKey("-o"))
+            {
+                if (parameter.TryGetValue("-o", out value))
+                {
+                    //Console.WriteLine("For key = \"tif\", value = {0}.", value);
+                }
+                else
+                {
+                    //Console.WriteLine("Key = \"tif\" is not found.");
+                }
+            }
+
+            if (parameter.ContainsKey("-l"))
+            {
+                if (parameter.TryGetValue("-l", out value))
+                {
+                    //Console.WriteLine("For key = \"tif\", value = {0}.", value);
+                }
+                else
+                {
+                    //Console.WriteLine("Key = \"tif\" is not found.");
+                }
+            }
         }
 
         protected async Task RunProcedur()
@@ -103,40 +210,60 @@ namespace LibBuilder.WPFCore.ViewModels
             base.RunProcedur(_lock);
         }
 
-        protected override async Task LoadWorkspace()
+        private bool CheckRunnable()
         {
-            if (!CheckWorkspace())
-                return;
+            if (Target == null)
+            {
+                mainWindowViewModel.NotificationSnackbar.Enqueue("Bitte Target auswählen");
+                return false;
+            }
 
-            ContentLoadingAnimation = true;
-            await RaisePropertyChanged(() => ContentLoadingAnimation);
-
-            await base.LoadWorkspace();
-
-            ContentLoadingAnimation = false;
-            await RaisePropertyChanged(() => ContentLoadingAnimation);
+            return true;
         }
 
-        protected override async Task LoadLibrary()
+        private bool CheckWorkspace()
         {
-            ContentLoadingAnimation = true;
-            await RaisePropertyChanged(() => ContentLoadingAnimation);
+            if (Workspace == null)
+            {
+                mainWindowViewModel.NotificationSnackbar.Enqueue("Bitte Workspace auswählen");
+                return false;
+            }
+            else
+            {
+                if (Workspace.PBVersion == null)
+                {
+                    mainWindowViewModel.NotificationSnackbar.Enqueue("Bitte Powerbuilder-Version angeben");
+                    return false;
+                }
+            }
 
-            await base.LoadLibrary();
-
-            ContentLoadingAnimation = false;
-            await RaisePropertyChanged(() => ContentLoadingAnimation);
+            return true;
         }
 
-        protected override async Task LoadTarget()
+        private bool IsValidPath(string path, bool allowRelativePaths = false)
         {
-            ContentLoadingAnimation = true;
-            await RaisePropertyChanged(() => ContentLoadingAnimation);
+            bool isValid = true;
 
-            await base.LoadTarget();
+            try
+            {
+                string fullPath = Path.GetFullPath(path);
 
-            ContentLoadingAnimation = false;
-            await RaisePropertyChanged(() => ContentLoadingAnimation);
+                if (allowRelativePaths)
+                {
+                    isValid = Path.IsPathRooted(path);
+                }
+                else
+                {
+                    string root = Path.GetPathRoot(path);
+                    isValid = string.IsNullOrEmpty(root.Trim(new char[] { '\\', '/' })) == false;
+                }
+            }
+            catch (Exception ex)
+            {
+                isValid = false;
+            }
+
+            return isValid;
         }
     }
 }

@@ -1,0 +1,17 @@
+﻿extensions: designer.cs generated.cs
+extensions: .cs .cpp .h
+// project=%Project%, file=%FileName%, creation=%CreationYear%:%CreationMonth%:%CreationDay%
+// Copyright (c) %CurrentYear% Timeline Financials GmbH & Co. KG. All rights reserved.
+extensions: .aspx .ascx
+<%-- 
+project=%Project%, file=%FileName%, creation=%CreationYear%:%CreationMonth%:%CreationDay%
+Copyright (c) %CurrentYear% Timeline Financials GmbH & Co. KG. All rights reserved.
+--%>
+extensions: .vb
+'project=%Project%, file=%FileName%, creation=%CreationYear%:%CreationMonth%:%CreationDay%
+'Copyright (c) %CurrentYear% Timeline Financials GmbH & Co. KG. All rights reserved.
+extensions:  .xml .config .xsd
+<!--
+project=%Project%, file=%FileName%, creation=%CreationYear%:%CreationMonth%:%CreationDay%
+Copyright (c) %CurrentYear% Timeline Financials GmbH & Co. KG. All rights reserved.
+-->

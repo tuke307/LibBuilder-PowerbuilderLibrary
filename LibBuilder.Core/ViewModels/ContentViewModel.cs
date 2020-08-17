@@ -1,4 +1,6 @@
-﻿namespace LibBuilder.Core.ViewModels
+﻿// project=LibBuilder.Core, file=ContentViewModel.cs, creation=2020:7:21 Copyright (c)
+// 2020 Timeline Financials GmbH & Co. KG. All rights reserved.
+namespace LibBuilder.Core.ViewModels
 {
     using Data;
     using Data.Models;
@@ -323,6 +325,29 @@
         }
 
         /// <summary>
+        /// Speichert Workspace(Workspace-Targets) asynchron in Datenbank
+        /// </summary>
+        /// <returns></returns>
+        protected async Task SaveWorkspace()
+        {
+            if (SaveWorkspaceTask != null && SaveWorkspaceTask.Status == TaskStatus.Running)
+                await SaveWorkspaceTask;
+
+            SaveWorkspaceTask = Task.Run(async () =>
+            {
+                using (var db = new DatabaseContext())
+                {
+                    if (Workspace != null)
+                        db.Workspace.Update(Workspace);
+
+                    await db.SaveChangesAsync();
+                }
+            });
+
+            await SaveWorkspaceTask;
+        }
+
+        /// <summary>
         /// Deselektiert alle Objects(Entrys)
         /// </summary>
         private void DeselectAllEntrys()
@@ -426,29 +451,6 @@
         }
 
         /// <summary>
-        /// Speichert Workspace(Workspace-Targets) asynchron in Datenbank
-        /// </summary>
-        /// <returns></returns>
-        private async Task SaveWorkspace()
-        {
-            if (SaveWorkspaceTask != null && SaveWorkspaceTask.Status == TaskStatus.Running)
-                await SaveWorkspaceTask;
-
-            SaveWorkspaceTask = Task.Run(async () =>
-            {
-                using (var db = new DatabaseContext())
-                {
-                    if (Workspace != null)
-                        db.Workspace.Update(Workspace);
-
-                    await db.SaveChangesAsync();
-                }
-            });
-
-            await SaveWorkspaceTask;
-        }
-
-        /// <summary>
         /// Selektiert alle Objects(Entrys)
         /// </summary>
         private void SelectAllEntrys()
@@ -532,13 +534,13 @@
         /// Gets or sets the open workspace command.
         /// </summary>
         /// <value>The open workspace command.</value>
-        public IMvxCommand OpenWorkspaceCommand { get; set; }
+        public IMvxAsyncCommand OpenWorkspaceCommand { get; set; }
 
         /// <summary>
         /// Gets or sets the run procedur command.
         /// </summary>
         /// <value>The run procedur command.</value>
-        public IMvxCommand RunProcedurCommand { get; set; }
+        public IMvxAsyncCommand RunProcedurCommand { get; set; }
 
         /// <summary>
         /// Gets or sets the save workspace command.

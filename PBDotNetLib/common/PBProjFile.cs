@@ -1,4 +1,6 @@
-﻿using System.IO;
+﻿// project=PBDotNetLib, file=PBProjFile.cs, creation=2020:6:28 Copyright (c) 2020 Timeline
+// Financials GmbH & Co. KG. All rights reserved.
+using System.IO;
 using System.Text.RegularExpressions;
 
 namespace PBDotNetLib.common
@@ -10,38 +12,30 @@ namespace PBDotNetLib.common
     {
         #region private
 
-        private string minorVersion;
-        private string majorVersion;
-        private string dir;
-        private string file;
-        private bool exists;
         protected orca.Orca.Version version;
+        private string dir;
+        private bool exists;
+        private string file;
+        private string majorVersion;
+        private string minorVersion;
 
         #endregion private
 
         #region properties
-
-        public string MinorVersion
-        {
-            get
-            {
-                return minorVersion;
-            }
-        }
-
-        public string MajorVersion
-        {
-            get
-            {
-                return majorVersion;
-            }
-        }
 
         public string Dir
         {
             get
             {
                 return dir;
+            }
+        }
+
+        public bool Exists
+        {
+            get
+            {
+                return exists;
             }
         }
 
@@ -53,11 +47,19 @@ namespace PBDotNetLib.common
             }
         }
 
-        public bool Exists
+        public string MajorVersion
         {
             get
             {
-                return exists;
+                return majorVersion;
+            }
+        }
+
+        public string MinorVersion
+        {
+            get
+            {
+                return minorVersion;
             }
         }
 
@@ -88,8 +90,8 @@ namespace PBDotNetLib.common
         }
 
         /// <summary>
-        /// Parse method can be extened in ancestor for reading liblist
-        /// or containing targets etc.
+        /// Parse method can be extened in ancestor for reading liblist or containing
+        /// targets etc.
         /// </summary>
         /// <param name="source">source to parse</param>
         protected virtual void Parse(string source)

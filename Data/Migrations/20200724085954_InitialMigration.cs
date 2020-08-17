@@ -1,10 +1,33 @@
-﻿using System;
+﻿// project=Data, file=20200724085954_InitialMigration.cs, create=10:59 Copyright (c) 2020
+// tuke productions. All rights reserved.
 using Microsoft.EntityFrameworkCore.Migrations;
+using System;
 
 namespace Data.Migrations
 {
     public partial class InitialMigration : Migration
     {
+        protected override void Down(MigrationBuilder migrationBuilder)
+        {
+            migrationBuilder.DropTable(
+                name: "Object");
+
+            migrationBuilder.DropTable(
+                name: "Process");
+
+            migrationBuilder.DropTable(
+                name: "Settings");
+
+            migrationBuilder.DropTable(
+                name: "Library");
+
+            migrationBuilder.DropTable(
+                name: "Target");
+
+            migrationBuilder.DropTable(
+                name: "Workspace");
+        }
+
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
@@ -159,27 +182,6 @@ namespace Data.Migrations
                 name: "IX_Target_WorkspaceId",
                 table: "Target",
                 column: "WorkspaceId");
-        }
-
-        protected override void Down(MigrationBuilder migrationBuilder)
-        {
-            migrationBuilder.DropTable(
-                name: "Object");
-
-            migrationBuilder.DropTable(
-                name: "Process");
-
-            migrationBuilder.DropTable(
-                name: "Settings");
-
-            migrationBuilder.DropTable(
-                name: "Library");
-
-            migrationBuilder.DropTable(
-                name: "Target");
-
-            migrationBuilder.DropTable(
-                name: "Workspace");
         }
     }
 }

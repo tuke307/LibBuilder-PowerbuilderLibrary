@@ -1,4 +1,6 @@
-﻿using Data;
+﻿// project=LibBuilder.Core, file=AussehenViewModel.cs, creation=2020:7:21 Copyright (c)
+// 2020 Timeline Financials GmbH & Co. KG. All rights reserved.
+using Data;
 using MvvmCross.Commands;
 using MvvmCross.ViewModels;
 using System.Linq;
@@ -9,6 +11,22 @@ namespace LibBuilder.Core.ViewModels
     public class AussehenViewModel : MvxViewModel
     {
         //private readonly ApplicationChanges color = new ApplicationChanges();
+
+        private bool _toogleDarkmode;
+
+        public IMvxCommand ApplyAccentCommand { get; set; }
+
+        public IMvxCommand ApplyPrimaryCommand { get; set; }
+
+        public virtual bool ToogleDarkmode
+        {
+            get => _toogleDarkmode;
+            set
+            {
+                SetProperty(ref _toogleDarkmode, value);
+                //color.SetBaseTheme(value);
+            }
+        }
 
         public AussehenViewModel()
         {
@@ -21,10 +39,6 @@ namespace LibBuilder.Core.ViewModels
         }
 
         //public IEnumerable<Swatch> Swatches { get; }
-
-        public IMvxCommand ApplyPrimaryCommand { get; set; }
-        public IMvxCommand ApplyAccentCommand { get; set; }
-
         public override Task Initialize()
         {
             return base.Initialize();
@@ -35,26 +49,14 @@ namespace LibBuilder.Core.ViewModels
             base.Prepare();
         }
 
-        protected virtual void ApplyPrimary(object parameter)
-        {
-            //color.SetPrimary(parameter);
-        }
-
         protected virtual void ApplyAccent(object parameter)
         {
             //color.SetAccent(parameter);
         }
 
-        private bool _toogleDarkmode;
-
-        public virtual bool ToogleDarkmode
+        protected virtual void ApplyPrimary(object parameter)
         {
-            get => _toogleDarkmode;
-            set
-            {
-                SetProperty(ref _toogleDarkmode, value);
-                //color.SetBaseTheme(value);
-            }
+            //color.SetPrimary(parameter);
         }
     }
 }

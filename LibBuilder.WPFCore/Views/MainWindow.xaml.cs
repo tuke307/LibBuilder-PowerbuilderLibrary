@@ -1,4 +1,7 @@
-﻿using System.Windows;
+﻿// project=LibBuilder.WPFCore, file=MainWindow.xaml.cs, creation=2020:7:21 Copyright (c)
+// 2020 Timeline Financials GmbH & Co. KG. All rights reserved.
+using System.Collections.Generic;
+using System.Windows;
 using System.Windows.Input;
 
 namespace LibBuilder.WPFCore.Views
@@ -8,11 +11,11 @@ namespace LibBuilder.WPFCore.Views
     /// </summary>
     public partial class MainWindow : Window
     {
-        public MainWindow()
+        public MainWindow(Dictionary<string, string> parameter = null)
         {
             InitializeComponent();
 
-            DataContext = new LibBuilder.WPFCore.ViewModels.MainWindowViewModel();
+            DataContext = new LibBuilder.WPFCore.ViewModels.MainWindowViewModel(parameter);
         }
 
         private void GridTop_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -20,9 +23,9 @@ namespace LibBuilder.WPFCore.Views
             this.DragMove();
         }
 
-        private void WindowMinimize_Click(object sender, RoutedEventArgs e)
+        private void WindowClose_Click(object sender, RoutedEventArgs e)
         {
-            this.WindowState = WindowState.Minimized;
+            Application.Current.Shutdown();
         }
 
         private void WindowMaximize_Click(object sender, RoutedEventArgs e)
@@ -31,9 +34,9 @@ namespace LibBuilder.WPFCore.Views
             else if (this.WindowState == WindowState.Normal) { this.WindowState = WindowState.Maximized; }
         }
 
-        private void WindowClose_Click(object sender, RoutedEventArgs e)
+        private void WindowMinimize_Click(object sender, RoutedEventArgs e)
         {
-            Application.Current.Shutdown();
+            this.WindowState = WindowState.Minimized;
         }
     }
 }

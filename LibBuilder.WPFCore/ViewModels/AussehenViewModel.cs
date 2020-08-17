@@ -1,4 +1,6 @@
-﻿using LibBuilder.WPFCore.Business;
+﻿// project=LibBuilder.WPFCore, file=AussehenViewModel.cs, creation=2020:7:21 Copyright (c)
+// 2020 Timeline Financials GmbH & Co. KG. All rights reserved.
+using LibBuilder.WPFCore.Business;
 using MaterialDesignColors;
 using System.Collections.Generic;
 
@@ -8,24 +10,9 @@ namespace LibBuilder.WPFCore.ViewModels
     {
         private readonly ApplicationChanges color = new ApplicationChanges();
 
-        public AussehenViewModel()
-        {
-            Swatches = new SwatchesProvider().Swatches;
-        }
+        private bool _toogleDarkmode;
 
         public IEnumerable<Swatch> Swatches { get; }
-
-        protected override void ApplyPrimary(object parameter)
-        {
-            color.SetPrimary(parameter);
-        }
-
-        protected override void ApplyAccent(object parameter)
-        {
-            color.SetAccent(parameter);
-        }
-
-        private bool _toogleDarkmode;
 
         public override bool ToogleDarkmode
         {
@@ -35,6 +22,21 @@ namespace LibBuilder.WPFCore.ViewModels
                 SetProperty(ref _toogleDarkmode, value);
                 color.SetBaseTheme(value);
             }
+        }
+
+        public AussehenViewModel()
+        {
+            Swatches = new SwatchesProvider().Swatches;
+        }
+
+        protected override void ApplyAccent(object parameter)
+        {
+            color.SetAccent(parameter);
+        }
+
+        protected override void ApplyPrimary(object parameter)
+        {
+            color.SetPrimary(parameter);
         }
     }
 }

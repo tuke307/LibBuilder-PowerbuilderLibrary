@@ -1,4 +1,6 @@
-﻿using PBDotNetLib.common;
+﻿// project=PBDotNetLib, file=Target.cs, creation=2020:6:28 Copyright (c) 2020 Timeline
+// Financials GmbH & Co. KG. All rights reserved.
+using PBDotNetLib.common;
 using System.Collections.Generic;
 using System.IO;
 using System.Text.RegularExpressions;
@@ -12,13 +14,14 @@ namespace PBDotNetLib.pbuilder
     {
         #region private
 
-        private int order;
-        private bool defaultTarget;
         private bool defaultRemoteTarget;
+        private bool defaultTarget;
 
         //private string applLibName;
         //private string applName;
         private List<string> libs = new List<string>();
+
+        private int order;
 
         #endregion private
 
@@ -82,25 +85,6 @@ namespace PBDotNetLib.pbuilder
         //}
 
         /// <summary>
-        /// parse liblist from source
-        /// </summary>
-        /// <param name="source">source of pbt</param>
-        private void ParseLibList(string source)
-        {
-            string liblist;
-            MatchCollection matches = null;
-
-            matches = Regex.Matches(source, "LibList \"(?<liblist>[^\"]*)", RegexOptions.IgnoreCase | RegexOptions.Singleline);
-
-            if (matches.Count == 0) return;
-
-            liblist = matches[0].Groups["liblist"].Value;
-            libs = new List<string>();
-
-            libs = CompletePath(liblist.Split(new char[] { ';' }));
-        }
-
-        /// <summary>
         /// complete path to get a absolute path of pbls in pbt
         /// </summary>
         /// <param name="list">list of pbls (relativ)</param>
@@ -122,6 +106,25 @@ namespace PBDotNetLib.pbuilder
             }
 
             return resList;
+        }
+
+        /// <summary>
+        /// parse liblist from source
+        /// </summary>
+        /// <param name="source">source of pbt</param>
+        private void ParseLibList(string source)
+        {
+            string liblist;
+            MatchCollection matches = null;
+
+            matches = Regex.Matches(source, "LibList \"(?<liblist>[^\"]*)", RegexOptions.IgnoreCase | RegexOptions.Singleline);
+
+            if (matches.Count == 0) return;
+
+            liblist = matches[0].Groups["liblist"].Value;
+            libs = new List<string>();
+
+            libs = CompletePath(liblist.Split(new char[] { ';' }));
         }
     }
 }

@@ -1,4 +1,6 @@
-﻿namespace PBDotNetLib.pbuilder.powerscript
+﻿// project=PBDotNetLib, file=Event.cs, creation=2020:6:28 Copyright (c) 2020 Timeline
+// Financials GmbH & Co. KG. All rights reserved.
+namespace PBDotNetLib.pbuilder.powerscript
 {
     /// <summary>
     /// event in pb
@@ -7,29 +9,33 @@
     {
         #region private
 
+        private bool extended = false;
         private string name;
+        private Parameter[] parameter;
         private string returntype;
         private string source;
-        private Parameter[] parameter;
-        private bool extended = false;
 
         #endregion private
 
         #region properties
+
+        public bool Extended
+        {
+            get
+            {
+                return extended;
+            }
+            set
+            {
+                extended = value;
+            }
+        }
 
         public string Name
         {
             get
             {
                 return name;
-            }
-        }
-
-        public string Returntype
-        {
-            get
-            {
-                return returntype;
             }
         }
 
@@ -41,23 +47,19 @@
             }
         }
 
+        public string Returntype
+        {
+            get
+            {
+                return returntype;
+            }
+        }
+
         public string Source
         {
             get
             {
                 return source;
-            }
-        }
-
-        public bool Extended
-        {
-            get
-            {
-                return extended;
-            }
-            set
-            {
-                extended = value;
             }
         }
 

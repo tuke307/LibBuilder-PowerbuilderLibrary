@@ -1,4 +1,6 @@
-﻿using System;
+﻿// project=PBDotNetLib, file=Orca.cs, creation=2020:6:28 Copyright (c) 2020 Timeline
+// Financials GmbH & Co. KG. All rights reserved.
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.InteropServices;
@@ -11,16 +13,6 @@ namespace PBDotNetLib.orca
     /// </summary>
     public class Orca
     {
-        public enum Version
-        {
-            PB105,
-            PB125,
-            PB170,
-            PB190
-        }
-
-        private Version currentVersion;
-
         public enum Result
         {
             [Description("Operation successful")]
@@ -123,22 +115,12 @@ namespace PBDotNetLib.orca
             PBORCA_PBCFILE_REQ = -32,
         }
 
-        private Result result;
-
-        #region private
-
-        private List<LibEntry> libEntries;
-        private string currentLibrary = null;
-        private static int session = 0;
-
-        #endregion private
-
-        private enum PBORCA_REBLD_TYPE
+        public enum Version
         {
-            PBORCA_FULL_REBUILD,
-            PBORCA_INCREMENTAL_REBUILD,
-            PBORCA_MIGRATE,
-            PBORCA_3PASS
+            PB105,
+            PB125,
+            PB170,
+            PB190
         }
 
         private enum PBORCA_ENTRY_TYPE
@@ -157,31 +139,53 @@ namespace PBDotNetLib.orca
             PBORCA_BINARY
         }
 
+        private enum PBORCA_REBLD_TYPE
+        {
+            PBORCA_FULL_REBUILD,
+            PBORCA_INCREMENTAL_REBUILD,
+            PBORCA_MIGRATE,
+            PBORCA_3PASS
+        }
+
+        private Version currentVersion;
+        private Result result;
+
+        #region private
+
+        private static int session = 0;
+        private string currentLibrary = null;
+        private List<LibEntry> libEntries;
+
+        #endregion private
+
         #region PB10.5
 
-        [DllImport("pborc105.dll", EntryPoint = "PBORCA_SessionOpen", CharSet = CharSet.Unicode, SetLastError = true)]
-        private static unsafe extern int PBORCA_SessionOpen105();
+        [DllImport("pborc105.dll", EntryPoint = "PBORCA_ApplicationRebuild", CharSet = CharSet.Unicode, SetLastError = true)]
+        private static extern int PBORCA_ApplicationRebuild105(
+           int hORCASession,
+           PBORCA_REBLD_TYPE eRebldType,
+           [MarshalAs(UnmanagedType.FunctionPtr)] PBORCA_CALLBACK pCompErrorProc,
+           IntPtr pUserData);
 
-        [DllImport("pborc105.dll", EntryPoint = "PBORCA_SessionSetCurrentAppl", CharSet = CharSet.Unicode, SetLastError = true)]
-        private static unsafe extern int PBORCA_SessionSetCurrentAppl105(int hORCASession, [MarshalAs(UnmanagedType.LPTStr)] string pLibName, [MarshalAs(UnmanagedType.LPWStr)] string lpstApplName);
-
-        [DllImport("pborc105.dll", EntryPoint = "PBORCA_SessionSetLibraryList", CharSet = CharSet.Unicode, SetLastError = true)]
-        private static unsafe extern int PBORCA_SessionSetLibraryList105(int hORCASession, [MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.LPWStr)] string[] lpszLibraryName, System.Int32 iNumberOfLibs);
-
-        [DllImport("pborc105.dll", EntryPoint = "PBORCA_SessionClose", CharSet = CharSet.Unicode, SetLastError = true)]
-        private static unsafe extern void PBORCA_SessionClose105(int hORCASession);
-
-        [DllImport("pborc105.dll", EntryPoint = "PBORCA_LibraryCreate", CharSet = CharSet.Unicode, SetLastError = true)]
-        private static unsafe extern int PBORCA_LibraryCreate105(int hORCASession, [MarshalAs(UnmanagedType.LPTStr)] string lpszLibName, [MarshalAs(UnmanagedType.LPTStr)] string lpszLibComment);
-
-        [DllImport("pborc105.dll", EntryPoint = "PBORCA_LibraryEntryExport", CharSet = CharSet.Auto)]
-        private static extern int PBORCA_LibraryEntryExport105(
+        [DllImport("pborc105.dll", EntryPoint = "PBORCA_CompileEntryRegenerate", CharSet = CharSet.Unicode, SetLastError = true)]
+        private static extern int PBORCA_CompileEntryRegenerate105(
             int hORCASession,
             [MarshalAs(UnmanagedType.LPWStr)] string lpszLibraryName,
             [MarshalAs(UnmanagedType.LPWStr)] string lpszEntryName,
             PBORCA_ENTRY_TYPE otEntryType,
-            [MarshalAs(UnmanagedType.LPWStr)] StringBuilder lpszExportBuffer,
-            System.Int32 lExportBufferSize);
+            [MarshalAs(UnmanagedType.FunctionPtr)] PBORCA_CALLBACK pCompErrorProc,
+            IntPtr pUserData);
+
+        [DllImport("pborc105.dll", EntryPoint = "PBORCA_DynamicLibraryCreate", CharSet = CharSet.Unicode, SetLastError = true)]
+        private static extern int PBORCA_DynamicLibraryCreate105(
+            int hORCASession,
+            [MarshalAs(UnmanagedType.LPTStr)] string lpszLibName,
+            [MarshalAs(UnmanagedType.LPTStr)] string lpszPbrName,
+            IntPtr lFlags,
+            IntPtr pbcPara);
+
+        [DllImport("pborc105.dll", EntryPoint = "PBORCA_LibraryCreate", CharSet = CharSet.Unicode, SetLastError = true)]
+        private static unsafe extern int PBORCA_LibraryCreate105(int hORCASession, [MarshalAs(UnmanagedType.LPTStr)] string lpszLibName, [MarshalAs(UnmanagedType.LPTStr)] string lpszLibComment);
 
         [DllImport("pborc105.dll", EntryPoint = "PBORCA_LibraryDirectory", CharSet = CharSet.Unicode, SetLastError = true)]
         private static extern int PBORCA_LibraryDirectory105(
@@ -193,16 +197,40 @@ namespace PBDotNetLib.orca
             IntPtr pUserData
         );
 
-        [DllImport("pborc105.dll", EntryPoint = "PBORCA_DynamicLibraryCreate", CharSet = CharSet.Unicode, SetLastError = true)]
-        private static extern int PBORCA_DynamicLibraryCreate105(
+        [DllImport("pborc105.dll", EntryPoint = "PBORCA_LibraryEntryExport", CharSet = CharSet.Auto)]
+        private static extern int PBORCA_LibraryEntryExport105(
             int hORCASession,
-            [MarshalAs(UnmanagedType.LPTStr)] string lpszLibName,
-            [MarshalAs(UnmanagedType.LPTStr)] string lpszPbrName,
-            IntPtr lFlags,
-            IntPtr pbcPara);
+            [MarshalAs(UnmanagedType.LPWStr)] string lpszLibraryName,
+            [MarshalAs(UnmanagedType.LPWStr)] string lpszEntryName,
+            PBORCA_ENTRY_TYPE otEntryType,
+            [MarshalAs(UnmanagedType.LPWStr)] StringBuilder lpszExportBuffer,
+            System.Int32 lExportBufferSize);
 
-        [DllImport("pborc105.dll", EntryPoint = "PBORCA_CompileEntryRegenerate", CharSet = CharSet.Unicode, SetLastError = true)]
-        private static extern int PBORCA_CompileEntryRegenerate105(
+        [DllImport("pborc105.dll", EntryPoint = "PBORCA_SessionClose", CharSet = CharSet.Unicode, SetLastError = true)]
+        private static unsafe extern void PBORCA_SessionClose105(int hORCASession);
+
+        [DllImport("pborc105.dll", EntryPoint = "PBORCA_SessionOpen", CharSet = CharSet.Unicode, SetLastError = true)]
+        private static unsafe extern int PBORCA_SessionOpen105();
+
+        [DllImport("pborc105.dll", EntryPoint = "PBORCA_SessionSetCurrentAppl", CharSet = CharSet.Unicode, SetLastError = true)]
+        private static unsafe extern int PBORCA_SessionSetCurrentAppl105(int hORCASession, [MarshalAs(UnmanagedType.LPTStr)] string pLibName, [MarshalAs(UnmanagedType.LPWStr)] string lpstApplName);
+
+        [DllImport("pborc105.dll", EntryPoint = "PBORCA_SessionSetLibraryList", CharSet = CharSet.Unicode, SetLastError = true)]
+        private static unsafe extern int PBORCA_SessionSetLibraryList105(int hORCASession, [MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.LPWStr)] string[] lpszLibraryName, System.Int32 iNumberOfLibs);
+
+        #endregion PB10.5
+
+        #region PB12.5
+
+        [DllImport("pborc125.dll", EntryPoint = "PBORCA_ApplicationRebuild", CharSet = CharSet.Unicode, SetLastError = true)]
+        private static extern int PBORCA_ApplicationRebuild125(
+           int hORCASession,
+           PBORCA_REBLD_TYPE eRebldType,
+           [MarshalAs(UnmanagedType.FunctionPtr)] PBORCA_CALLBACK pCompErrorProc,
+           IntPtr pUserData);
+
+        [DllImport("pborc125.dll", EntryPoint = "PBORCA_CompileEntryRegenerate", CharSet = CharSet.Unicode, SetLastError = true)]
+        private static extern int PBORCA_CompileEntryRegenerate125(
             int hORCASession,
             [MarshalAs(UnmanagedType.LPWStr)] string lpszLibraryName,
             [MarshalAs(UnmanagedType.LPWStr)] string lpszEntryName,
@@ -210,40 +238,16 @@ namespace PBDotNetLib.orca
             [MarshalAs(UnmanagedType.FunctionPtr)] PBORCA_CALLBACK pCompErrorProc,
             IntPtr pUserData);
 
-        [DllImport("pborc105.dll", EntryPoint = "PBORCA_ApplicationRebuild", CharSet = CharSet.Unicode, SetLastError = true)]
-        private static extern int PBORCA_ApplicationRebuild105(
-           int hORCASession,
-           PBORCA_REBLD_TYPE eRebldType,
-           [MarshalAs(UnmanagedType.FunctionPtr)] PBORCA_CALLBACK pCompErrorProc,
-           IntPtr pUserData);
-
-        #endregion PB10.5
-
-        #region PB12.5
-
-        [DllImport("pborc125.dll", EntryPoint = "PBORCA_SessionOpen", CharSet = CharSet.Unicode, SetLastError = true)]
-        private static unsafe extern int PBORCA_SessionOpen125();
-
-        [DllImport("pborc125.dll", EntryPoint = "PBORCA_SessionSetCurrentAppl", CharSet = CharSet.Unicode, SetLastError = true)]
-        private static unsafe extern int PBORCA_SessionSetCurrentAppl125(int hORCASession, [MarshalAs(UnmanagedType.LPTStr)] string pLibNames, [MarshalAs(UnmanagedType.LPWStr)] string lpstApplName);
-
-        [DllImport("pborc125.dll", EntryPoint = "PBORCA_SessionSetLibraryList", CharSet = CharSet.Unicode, SetLastError = true)]
-        private static unsafe extern int PBORCA_SessionSetLibraryList125(int hORCASession, [MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.LPWStr)] string[] lpszLibraryName, System.Int32 iNumberOfLibs);
-
-        [DllImport("pborc125.dll", EntryPoint = "PBORCA_SessionClose", CharSet = CharSet.Unicode, SetLastError = true)]
-        private static unsafe extern void PBORCA_SessionClose125(int hORCASession);
+        [DllImport("pborc125.dll", EntryPoint = "PBORCA_DynamicLibraryCreate", CharSet = CharSet.Unicode, SetLastError = true)]
+        private static extern int PBORCA_DynamicLibraryCreate125(
+            int hORCASession,
+            [MarshalAs(UnmanagedType.LPTStr)] string lpszLibName,
+            [MarshalAs(UnmanagedType.LPTStr)] string lpszPbrName,
+            IntPtr lFlags,
+            IntPtr pbcPara);
 
         [DllImport("pborc125.dll", EntryPoint = "PBORCA_LibraryCreate", CharSet = CharSet.Unicode, SetLastError = true)]
         private static unsafe extern int PBORCA_LibraryCreate125(int hORCASession, [MarshalAs(UnmanagedType.LPTStr)] string lpszLibName, [MarshalAs(UnmanagedType.LPTStr)] string lpszLibComment);
-
-        [DllImport("pborc125.dll", CharSet = CharSet.Auto)]
-        private static extern int PBORCA_LibraryEntryExport125(
-            int hORCASession,
-            [MarshalAs(UnmanagedType.LPWStr)] string lpszLibraryName,
-            [MarshalAs(UnmanagedType.LPWStr)] string lpszEntryName,
-            PBORCA_ENTRY_TYPE otEntryType,
-            [MarshalAs(UnmanagedType.LPWStr)] StringBuilder lpszExportBuffer,
-            System.Int32 lExportBufferSize);
 
         [DllImport("pborc125.dll", EntryPoint = "PBORCA_LibraryDirectory", CharSet = CharSet.Unicode, SetLastError = true)]
         private static extern int PBORCA_LibraryDirectory125(
@@ -255,16 +259,40 @@ namespace PBDotNetLib.orca
             IntPtr pUserData
         );
 
-        [DllImport("pborc125.dll", EntryPoint = "PBORCA_DynamicLibraryCreate", CharSet = CharSet.Unicode, SetLastError = true)]
-        private static extern int PBORCA_DynamicLibraryCreate125(
+        [DllImport("pborc125.dll", CharSet = CharSet.Auto)]
+        private static extern int PBORCA_LibraryEntryExport125(
             int hORCASession,
-            [MarshalAs(UnmanagedType.LPTStr)] string lpszLibName,
-            [MarshalAs(UnmanagedType.LPTStr)] string lpszPbrName,
-            IntPtr lFlags,
-            IntPtr pbcPara);
+            [MarshalAs(UnmanagedType.LPWStr)] string lpszLibraryName,
+            [MarshalAs(UnmanagedType.LPWStr)] string lpszEntryName,
+            PBORCA_ENTRY_TYPE otEntryType,
+            [MarshalAs(UnmanagedType.LPWStr)] StringBuilder lpszExportBuffer,
+            System.Int32 lExportBufferSize);
 
-        [DllImport("pborc125.dll", EntryPoint = "PBORCA_CompileEntryRegenerate", CharSet = CharSet.Unicode, SetLastError = true)]
-        private static extern int PBORCA_CompileEntryRegenerate125(
+        [DllImport("pborc125.dll", EntryPoint = "PBORCA_SessionClose", CharSet = CharSet.Unicode, SetLastError = true)]
+        private static unsafe extern void PBORCA_SessionClose125(int hORCASession);
+
+        [DllImport("pborc125.dll", EntryPoint = "PBORCA_SessionOpen", CharSet = CharSet.Unicode, SetLastError = true)]
+        private static unsafe extern int PBORCA_SessionOpen125();
+
+        [DllImport("pborc125.dll", EntryPoint = "PBORCA_SessionSetCurrentAppl", CharSet = CharSet.Unicode, SetLastError = true)]
+        private static unsafe extern int PBORCA_SessionSetCurrentAppl125(int hORCASession, [MarshalAs(UnmanagedType.LPTStr)] string pLibNames, [MarshalAs(UnmanagedType.LPWStr)] string lpstApplName);
+
+        [DllImport("pborc125.dll", EntryPoint = "PBORCA_SessionSetLibraryList", CharSet = CharSet.Unicode, SetLastError = true)]
+        private static unsafe extern int PBORCA_SessionSetLibraryList125(int hORCASession, [MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.LPWStr)] string[] lpszLibraryName, System.Int32 iNumberOfLibs);
+
+        #endregion PB12.5
+
+        #region PB17.0
+
+        [DllImport("pborc170.dll", EntryPoint = "PBORCA_ApplicationRebuild", CharSet = CharSet.Unicode, SetLastError = true)]
+        private static extern int PBORCA_ApplicationRebuild170(
+         int hORCASession,
+         PBORCA_REBLD_TYPE eRebldType,
+         [MarshalAs(UnmanagedType.FunctionPtr)] PBORCA_CALLBACK pCompErrorProc,
+         IntPtr pUserData);
+
+        [DllImport("pborc170.dll", EntryPoint = "PBORCA_CompileEntryRegenerate", CharSet = CharSet.Unicode, SetLastError = true)]
+        private static extern int PBORCA_CompileEntryRegenerate170(
             int hORCASession,
             [MarshalAs(UnmanagedType.LPWStr)] string lpszLibraryName,
             [MarshalAs(UnmanagedType.LPWStr)] string lpszEntryName,
@@ -272,40 +300,16 @@ namespace PBDotNetLib.orca
             [MarshalAs(UnmanagedType.FunctionPtr)] PBORCA_CALLBACK pCompErrorProc,
             IntPtr pUserData);
 
-        [DllImport("pborc125.dll", EntryPoint = "PBORCA_ApplicationRebuild", CharSet = CharSet.Unicode, SetLastError = true)]
-        private static extern int PBORCA_ApplicationRebuild125(
-           int hORCASession,
-           PBORCA_REBLD_TYPE eRebldType,
-           [MarshalAs(UnmanagedType.FunctionPtr)] PBORCA_CALLBACK pCompErrorProc,
-           IntPtr pUserData);
-
-        #endregion PB12.5
-
-        #region PB17.0
-
-        [DllImport("pborc170.dll", EntryPoint = "PBORCA_SessionOpen", CharSet = CharSet.Unicode, SetLastError = true)]
-        private static unsafe extern int PBORCA_SessionOpen170();
-
-        [DllImport("pborc170.dll", EntryPoint = "PBORCA_SessionSetCurrentAppl", CharSet = CharSet.Unicode, SetLastError = true)]
-        private static unsafe extern int PBORCA_SessionSetCurrentAppl170(int hORCASession, [MarshalAs(UnmanagedType.LPTStr)] string pLibNames, [MarshalAs(UnmanagedType.LPWStr)] string lpstApplName);
-
-        [DllImport("pborc170.dll", EntryPoint = "PBORCA_SessionSetLibraryList", CharSet = CharSet.Unicode, SetLastError = true)]
-        private static unsafe extern int PBORCA_SessionSetLibraryList170(int hORCASession, [MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.LPWStr)] string[] lpszLibraryName, System.Int32 iNumberOfLibs);
-
-        [DllImport("pborc170.dll", EntryPoint = "PBORCA_SessionClose", CharSet = CharSet.Unicode, SetLastError = true)]
-        private static unsafe extern void PBORCA_SessionClose170(int hORCASession);
+        [DllImport("pborc170.dll", EntryPoint = "PBORCA_DynamicLibraryCreate", CharSet = CharSet.Unicode, SetLastError = true)]
+        private static extern int PBORCA_DynamicLibraryCreate170(
+            int hORCASession,
+            [MarshalAs(UnmanagedType.LPTStr)] string lpszLibName,
+            [MarshalAs(UnmanagedType.LPTStr)] string lpszPbrName,
+            IntPtr lFlags,
+            IntPtr pbcPara);
 
         [DllImport("pborc170.dll", EntryPoint = "PBORCA_LibraryCreate", CharSet = CharSet.Unicode, SetLastError = true)]
         private static unsafe extern int PBORCA_LibraryCreate170(int hORCASession, [MarshalAs(UnmanagedType.LPTStr)] string lpszLibName, [MarshalAs(UnmanagedType.LPTStr)] string lpszLibComment);
-
-        [DllImport("pborc170.dll", CharSet = CharSet.Auto, EntryPoint = "PBORCA_LibraryEntryExport")]
-        private static extern int PBORCA_LibraryEntryExport170(
-            int hORCASession,
-            [MarshalAs(UnmanagedType.LPWStr)] string lpszLibraryName,
-            [MarshalAs(UnmanagedType.LPWStr)] string lpszEntryName,
-            PBORCA_ENTRY_TYPE otEntryType,
-            [MarshalAs(UnmanagedType.LPWStr)] StringBuilder lpszExportBuffer,
-            System.Int32 lExportBufferSize);
 
         [DllImport("pborc170.dll", EntryPoint = "PBORCA_LibraryDirectory", CharSet = CharSet.Unicode, SetLastError = true)]
         private static extern int PBORCA_LibraryDirectory170(
@@ -317,16 +321,40 @@ namespace PBDotNetLib.orca
             IntPtr pUserData
         );
 
-        [DllImport("pborc170.dll", EntryPoint = "PBORCA_DynamicLibraryCreate", CharSet = CharSet.Unicode, SetLastError = true)]
-        private static extern int PBORCA_DynamicLibraryCreate170(
+        [DllImport("pborc170.dll", CharSet = CharSet.Auto, EntryPoint = "PBORCA_LibraryEntryExport")]
+        private static extern int PBORCA_LibraryEntryExport170(
             int hORCASession,
-            [MarshalAs(UnmanagedType.LPTStr)] string lpszLibName,
-            [MarshalAs(UnmanagedType.LPTStr)] string lpszPbrName,
-            IntPtr lFlags,
-            IntPtr pbcPara);
+            [MarshalAs(UnmanagedType.LPWStr)] string lpszLibraryName,
+            [MarshalAs(UnmanagedType.LPWStr)] string lpszEntryName,
+            PBORCA_ENTRY_TYPE otEntryType,
+            [MarshalAs(UnmanagedType.LPWStr)] StringBuilder lpszExportBuffer,
+            System.Int32 lExportBufferSize);
 
-        [DllImport("pborc170.dll", EntryPoint = "PBORCA_CompileEntryRegenerate", CharSet = CharSet.Unicode, SetLastError = true)]
-        private static extern int PBORCA_CompileEntryRegenerate170(
+        [DllImport("pborc170.dll", EntryPoint = "PBORCA_SessionClose", CharSet = CharSet.Unicode, SetLastError = true)]
+        private static unsafe extern void PBORCA_SessionClose170(int hORCASession);
+
+        [DllImport("pborc170.dll", EntryPoint = "PBORCA_SessionOpen", CharSet = CharSet.Unicode, SetLastError = true)]
+        private static unsafe extern int PBORCA_SessionOpen170();
+
+        [DllImport("pborc170.dll", EntryPoint = "PBORCA_SessionSetCurrentAppl", CharSet = CharSet.Unicode, SetLastError = true)]
+        private static unsafe extern int PBORCA_SessionSetCurrentAppl170(int hORCASession, [MarshalAs(UnmanagedType.LPTStr)] string pLibNames, [MarshalAs(UnmanagedType.LPWStr)] string lpstApplName);
+
+        [DllImport("pborc170.dll", EntryPoint = "PBORCA_SessionSetLibraryList", CharSet = CharSet.Unicode, SetLastError = true)]
+        private static unsafe extern int PBORCA_SessionSetLibraryList170(int hORCASession, [MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.LPWStr)] string[] lpszLibraryName, System.Int32 iNumberOfLibs);
+
+        #endregion PB17.0
+
+        #region PB19.0
+
+        [DllImport("pborc190.dll", EntryPoint = "PBORCA_ApplicationRebuild", CharSet = CharSet.Unicode, SetLastError = true)]
+        private static extern int PBORCA_ApplicationRebuild190(
+         int hORCASession,
+         PBORCA_REBLD_TYPE eRebldType,
+         [MarshalAs(UnmanagedType.FunctionPtr)] PBORCA_CALLBACK pCompErrorProc,
+         IntPtr pUserData);
+
+        [DllImport("pborc190.dll", EntryPoint = "PBORCA_CompileEntryRegenerate", CharSet = CharSet.Unicode, SetLastError = true)]
+        private static extern int PBORCA_CompileEntryRegenerate190(
             int hORCASession,
             [MarshalAs(UnmanagedType.LPWStr)] string lpszLibraryName,
             [MarshalAs(UnmanagedType.LPWStr)] string lpszEntryName,
@@ -334,40 +362,16 @@ namespace PBDotNetLib.orca
             [MarshalAs(UnmanagedType.FunctionPtr)] PBORCA_CALLBACK pCompErrorProc,
             IntPtr pUserData);
 
-        [DllImport("pborc170.dll", EntryPoint = "PBORCA_ApplicationRebuild", CharSet = CharSet.Unicode, SetLastError = true)]
-        private static extern int PBORCA_ApplicationRebuild170(
-         int hORCASession,
-         PBORCA_REBLD_TYPE eRebldType,
-         [MarshalAs(UnmanagedType.FunctionPtr)] PBORCA_CALLBACK pCompErrorProc,
-         IntPtr pUserData);
-
-        #endregion PB17.0
-
-        #region PB19.0
-
-        [DllImport("pborc190.dll", EntryPoint = "PBORCA_SessionOpen", CharSet = CharSet.Unicode, SetLastError = true)]
-        private static unsafe extern int PBORCA_SessionOpen190();
-
-        [DllImport("pborc190.dll", EntryPoint = "PBORCA_SessionSetCurrentAppl", CharSet = CharSet.Unicode, SetLastError = true)]
-        private static unsafe extern int PBORCA_SessionSetCurrentAppl190(int hORCASession, [MarshalAs(UnmanagedType.LPTStr)] string pLibNames, [MarshalAs(UnmanagedType.LPWStr)] string lpstApplName);
-
-        [DllImport("pborc190.dll", EntryPoint = "PBORCA_SessionSetLibraryList", CharSet = CharSet.Unicode, SetLastError = true)]
-        private static unsafe extern int PBORCA_SessionSetLibraryList190(int hORCASession, [MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.LPWStr)] string[] lpszLibraryName, System.Int32 iNumberOfLibs);
-
-        [DllImport("pborc190.dll", EntryPoint = "PBORCA_SessionClose", CharSet = CharSet.Unicode, SetLastError = true)]
-        private static unsafe extern void PBORCA_SessionClose190(int hORCASession);
+        [DllImport("pborc190.dll", EntryPoint = "PBORCA_DynamicLibraryCreate", CharSet = CharSet.Unicode, SetLastError = true)]
+        private static extern int PBORCA_DynamicLibraryCreate190(
+            int hORCASession,
+            [MarshalAs(UnmanagedType.LPTStr)] string lpszLibName,
+            [MarshalAs(UnmanagedType.LPTStr)] string lpszPbrName,
+            IntPtr lFlags,
+            IntPtr pbcPara);
 
         [DllImport("pborc190.dll", EntryPoint = "PBORCA_LibraryCreate", CharSet = CharSet.Unicode, SetLastError = true)]
         private static unsafe extern int PBORCA_LibraryCreate190(int hORCASession, [MarshalAs(UnmanagedType.LPTStr)] string lpszLibName, [MarshalAs(UnmanagedType.LPTStr)] string lpszLibComment);
-
-        [DllImport("pborc190.dll", CharSet = CharSet.Auto, EntryPoint = "PBORCA_LibraryEntryExport")]
-        private static extern int PBORCA_LibraryEntryExport190(
-            int hORCASession,
-            [MarshalAs(UnmanagedType.LPWStr)] string lpszLibraryName,
-            [MarshalAs(UnmanagedType.LPWStr)] string lpszEntryName,
-            PBORCA_ENTRY_TYPE otEntryType,
-            [MarshalAs(UnmanagedType.LPWStr)] StringBuilder lpszExportBuffer,
-            System.Int32 lExportBufferSize);
 
         [DllImport("pborc190.dll", EntryPoint = "PBORCA_LibraryDirectory", CharSet = CharSet.Unicode, SetLastError = true)]
         private static extern int PBORCA_LibraryDirectory190(
@@ -379,36 +383,30 @@ namespace PBDotNetLib.orca
             IntPtr pUserData
         );
 
-        [DllImport("pborc190.dll", EntryPoint = "PBORCA_DynamicLibraryCreate", CharSet = CharSet.Unicode, SetLastError = true)]
-        private static extern int PBORCA_DynamicLibraryCreate190(
-            int hORCASession,
-            [MarshalAs(UnmanagedType.LPTStr)] string lpszLibName,
-            [MarshalAs(UnmanagedType.LPTStr)] string lpszPbrName,
-            IntPtr lFlags,
-            IntPtr pbcPara);
-
-        [DllImport("pborc190.dll", EntryPoint = "PBORCA_CompileEntryRegenerate", CharSet = CharSet.Unicode, SetLastError = true)]
-        private static extern int PBORCA_CompileEntryRegenerate190(
+        [DllImport("pborc190.dll", CharSet = CharSet.Auto, EntryPoint = "PBORCA_LibraryEntryExport")]
+        private static extern int PBORCA_LibraryEntryExport190(
             int hORCASession,
             [MarshalAs(UnmanagedType.LPWStr)] string lpszLibraryName,
             [MarshalAs(UnmanagedType.LPWStr)] string lpszEntryName,
             PBORCA_ENTRY_TYPE otEntryType,
-            [MarshalAs(UnmanagedType.FunctionPtr)] PBORCA_CALLBACK pCompErrorProc,
-            IntPtr pUserData);
+            [MarshalAs(UnmanagedType.LPWStr)] StringBuilder lpszExportBuffer,
+            System.Int32 lExportBufferSize);
 
-        [DllImport("pborc190.dll", EntryPoint = "PBORCA_ApplicationRebuild", CharSet = CharSet.Unicode, SetLastError = true)]
-        private static extern int PBORCA_ApplicationRebuild190(
-         int hORCASession,
-         PBORCA_REBLD_TYPE eRebldType,
-         [MarshalAs(UnmanagedType.FunctionPtr)] PBORCA_CALLBACK pCompErrorProc,
-         IntPtr pUserData);
+        [DllImport("pborc190.dll", EntryPoint = "PBORCA_SessionClose", CharSet = CharSet.Unicode, SetLastError = true)]
+        private static unsafe extern void PBORCA_SessionClose190(int hORCASession);
+
+        [DllImport("pborc190.dll", EntryPoint = "PBORCA_SessionOpen", CharSet = CharSet.Unicode, SetLastError = true)]
+        private static unsafe extern int PBORCA_SessionOpen190();
+
+        [DllImport("pborc190.dll", EntryPoint = "PBORCA_SessionSetCurrentAppl", CharSet = CharSet.Unicode, SetLastError = true)]
+        private static unsafe extern int PBORCA_SessionSetCurrentAppl190(int hORCASession, [MarshalAs(UnmanagedType.LPTStr)] string pLibNames, [MarshalAs(UnmanagedType.LPWStr)] string lpstApplName);
+
+        [DllImport("pborc190.dll", EntryPoint = "PBORCA_SessionSetLibraryList", CharSet = CharSet.Unicode, SetLastError = true)]
+        private static unsafe extern int PBORCA_SessionSetLibraryList190(int hORCASession, [MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.LPWStr)] string[] lpszLibraryName, System.Int32 iNumberOfLibs);
 
         #endregion PB19.0
 
         #region extern and unsafe
-
-        //allgemeine callback
-        private delegate void PBORCA_CALLBACK(IntPtr pDirEntry, IntPtr lpUserData);
 
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
         private struct PBORCA_COMPERR
@@ -425,11 +423,6 @@ namespace PBDotNetLib.orca
             public int iLineNumber;                         /* Line number */
         }
 
-        private static void PBORCA_COMPERRCallback(IntPtr pDirEntry, IntPtr lpUserData)
-        {
-            PBORCA_COMPERR error = (PBORCA_COMPERR)Marshal.PtrToStructure(pDirEntry, typeof(PBORCA_COMPERR));
-        }
-
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
         private struct PBORCA_DIRENTRY
         {
@@ -440,6 +433,14 @@ namespace PBDotNetLib.orca
             public int lEntrySize;
             public string lpszEntryName;
             public PBORCA_ENTRY_TYPE otEntryType;
+        }
+
+        //allgemeine callback
+        private delegate void PBORCA_CALLBACK(IntPtr pDirEntry, IntPtr lpUserData);
+
+        private static void PBORCA_COMPERRCallback(IntPtr pDirEntry, IntPtr lpUserData)
+        {
+            PBORCA_COMPERR error = (PBORCA_COMPERR)Marshal.PtrToStructure(pDirEntry, typeof(PBORCA_COMPERR));
         }
 
         private void PBORCA_DIRENTRYCallback(IntPtr pDirEntry, IntPtr lpUserData)
@@ -464,130 +465,31 @@ namespace PBDotNetLib.orca
                 SessionOpen();
         }
 
-        /// <summary>
-        /// converts the Objecttype to PBORCA_ENTRY_TYPE
-        /// </summary>
-        /// <param name="type">Objecttype</param>
-        /// <returns></returns>
-        private PBORCA_ENTRY_TYPE GetEntryType(Objecttype type)
+        public Result ApplicationRebuild(int type)
         {
-            PBORCA_ENTRY_TYPE entryType = PBORCA_ENTRY_TYPE.PBORCA_BINARY;
+            PBORCA_CALLBACK staticCallbackDel = new PBORCA_CALLBACK(PBORCA_COMPERRCallback);
+            IntPtr dummy = new IntPtr();
 
-            switch (type)
+            switch (this.currentVersion)
             {
-                case Objecttype.Application:
-                    entryType = PBORCA_ENTRY_TYPE.PBORCA_APPLICATION;
+                case Version.PB105:
+                    result = (Result)PBORCA_ApplicationRebuild105(session, (PBORCA_REBLD_TYPE)type, staticCallbackDel, dummy);
                     break;
 
-                case Objecttype.Binary:
-                    entryType = PBORCA_ENTRY_TYPE.PBORCA_BINARY;
+                case Version.PB125:
+                    result = (Result)PBORCA_ApplicationRebuild125(session, (PBORCA_REBLD_TYPE)type, staticCallbackDel, dummy);
                     break;
 
-                case Objecttype.Datawindow:
-                    entryType = PBORCA_ENTRY_TYPE.PBORCA_DATAWINDOW;
+                case Version.PB170:
+                    result = (Result)PBORCA_ApplicationRebuild170(session, (PBORCA_REBLD_TYPE)type, staticCallbackDel, dummy);
                     break;
 
-                case Objecttype.Function:
-                    entryType = PBORCA_ENTRY_TYPE.PBORCA_FUNCTION;
-                    break;
-
-                case Objecttype.Menu:
-                    entryType = PBORCA_ENTRY_TYPE.PBORCA_MENU;
-                    break;
-
-                case Objecttype.Pipeline:
-                    entryType = PBORCA_ENTRY_TYPE.PBORCA_PIPELINE;
-                    break;
-
-                case Objecttype.Project:
-                    entryType = PBORCA_ENTRY_TYPE.PBORCA_PROJECT;
-                    break;
-
-                case Objecttype.Proxyobject:
-                    entryType = PBORCA_ENTRY_TYPE.PBORCA_PROXYOBJECT;
-                    break;
-
-                case Objecttype.Query:
-                    entryType = PBORCA_ENTRY_TYPE.PBORCA_QUERY;
-                    break;
-
-                case Objecttype.Structure:
-                    entryType = PBORCA_ENTRY_TYPE.PBORCA_STRUCTURE;
-                    break;
-
-                case Objecttype.Userobject:
-                    entryType = PBORCA_ENTRY_TYPE.PBORCA_USEROBJECT;
-                    break;
-
-                case Objecttype.Window:
-                    entryType = PBORCA_ENTRY_TYPE.PBORCA_WINDOW;
+                case Version.PB190:
+                    result = (Result)PBORCA_ApplicationRebuild190(session, (PBORCA_REBLD_TYPE)type, staticCallbackDel, dummy);
                     break;
             }
 
-            return entryType;
-        }
-
-        /// <summary>
-        /// converts the PBORCA_ENTRY_TYPE to Objecttype
-        /// </summary>
-        /// <param name="entryType"></param>
-        /// <returns></returns>
-        private Objecttype GetObjecttype(PBORCA_ENTRY_TYPE entryType)
-        {
-            Objecttype type = Objecttype.None;
-
-            switch (entryType)
-            {
-                case PBORCA_ENTRY_TYPE.PBORCA_APPLICATION:
-                    type = Objecttype.Application;
-                    break;
-
-                case PBORCA_ENTRY_TYPE.PBORCA_BINARY:
-                    type = Objecttype.Binary;
-                    break;
-
-                case PBORCA_ENTRY_TYPE.PBORCA_DATAWINDOW:
-                    type = Objecttype.Datawindow;
-                    break;
-
-                case PBORCA_ENTRY_TYPE.PBORCA_FUNCTION:
-                    type = Objecttype.Function;
-                    break;
-
-                case PBORCA_ENTRY_TYPE.PBORCA_MENU:
-                    type = Objecttype.Menu;
-                    break;
-
-                case PBORCA_ENTRY_TYPE.PBORCA_PIPELINE:
-                    type = Objecttype.Pipeline;
-                    break;
-
-                case PBORCA_ENTRY_TYPE.PBORCA_PROJECT:
-                    type = Objecttype.Project;
-                    break;
-
-                case PBORCA_ENTRY_TYPE.PBORCA_PROXYOBJECT:
-                    type = Objecttype.Proxyobject;
-                    break;
-
-                case PBORCA_ENTRY_TYPE.PBORCA_QUERY:
-                    type = Objecttype.Query;
-                    break;
-
-                case PBORCA_ENTRY_TYPE.PBORCA_STRUCTURE:
-                    type = Objecttype.Structure;
-                    break;
-
-                case PBORCA_ENTRY_TYPE.PBORCA_USEROBJECT:
-                    type = Objecttype.Userobject;
-                    break;
-
-                case PBORCA_ENTRY_TYPE.PBORCA_WINDOW:
-                    type = Objecttype.Window;
-                    break;
-            }
-
-            return type;
+            return result;
         }
 
         public Result CreateDynamicLibrary(string file, string pbrFile)
@@ -852,26 +754,31 @@ namespace PBDotNetLib.orca
             return result;
         }
 
-        public void SessionOpen()
+        public Result RegenerateObject(string library, string objectName, Objecttype objecttype)
         {
+            PBORCA_CALLBACK staticCallbackDel = new PBORCA_CALLBACK(PBORCA_COMPERRCallback);
+            IntPtr dummy = new IntPtr();
+
             switch (this.currentVersion)
             {
                 case Version.PB105:
-                    session = PBORCA_SessionOpen105();
+                    result = (Result)PBORCA_CompileEntryRegenerate105(session, library, objectName, GetEntryType(objecttype), staticCallbackDel, dummy);
                     break;
 
                 case Version.PB125:
-                    session = PBORCA_SessionOpen125();
+                    result = (Result)PBORCA_CompileEntryRegenerate125(session, library, objectName, GetEntryType(objecttype), staticCallbackDel, dummy);
                     break;
 
                 case Version.PB170:
-                    session = PBORCA_SessionOpen170();
+                    result = (Result)PBORCA_CompileEntryRegenerate170(session, library, objectName, GetEntryType(objecttype), staticCallbackDel, dummy);
                     break;
 
                 case Version.PB190:
-                    session = PBORCA_SessionOpen190();
+                    result = (Result)PBORCA_CompileEntryRegenerate190(session, library, objectName, GetEntryType(objecttype), staticCallbackDel, dummy);
                     break;
             }
+
+            return result;
         }
 
         public void SessionClose()
@@ -896,6 +803,28 @@ namespace PBDotNetLib.orca
             }
 
             session = 0;
+        }
+
+        public void SessionOpen()
+        {
+            switch (this.currentVersion)
+            {
+                case Version.PB105:
+                    session = PBORCA_SessionOpen105();
+                    break;
+
+                case Version.PB125:
+                    session = PBORCA_SessionOpen125();
+                    break;
+
+                case Version.PB170:
+                    session = PBORCA_SessionOpen170();
+                    break;
+
+                case Version.PB190:
+                    session = PBORCA_SessionOpen190();
+                    break;
+            }
         }
 
         public Result SetCurrentAppl(string applLibName, string applName)
@@ -946,58 +875,130 @@ namespace PBDotNetLib.orca
             return result;
         }
 
-        public Result RegenerateObject(string library, string objectName, Objecttype objecttype)
+        /// <summary>
+        /// converts the Objecttype to PBORCA_ENTRY_TYPE
+        /// </summary>
+        /// <param name="type">Objecttype</param>
+        /// <returns></returns>
+        private PBORCA_ENTRY_TYPE GetEntryType(Objecttype type)
         {
-            PBORCA_CALLBACK staticCallbackDel = new PBORCA_CALLBACK(PBORCA_COMPERRCallback);
-            IntPtr dummy = new IntPtr();
+            PBORCA_ENTRY_TYPE entryType = PBORCA_ENTRY_TYPE.PBORCA_BINARY;
 
-            switch (this.currentVersion)
+            switch (type)
             {
-                case Version.PB105:
-                    result = (Result)PBORCA_CompileEntryRegenerate105(session, library, objectName, GetEntryType(objecttype), staticCallbackDel, dummy);
+                case Objecttype.Application:
+                    entryType = PBORCA_ENTRY_TYPE.PBORCA_APPLICATION;
                     break;
 
-                case Version.PB125:
-                    result = (Result)PBORCA_CompileEntryRegenerate125(session, library, objectName, GetEntryType(objecttype), staticCallbackDel, dummy);
+                case Objecttype.Binary:
+                    entryType = PBORCA_ENTRY_TYPE.PBORCA_BINARY;
                     break;
 
-                case Version.PB170:
-                    result = (Result)PBORCA_CompileEntryRegenerate170(session, library, objectName, GetEntryType(objecttype), staticCallbackDel, dummy);
+                case Objecttype.Datawindow:
+                    entryType = PBORCA_ENTRY_TYPE.PBORCA_DATAWINDOW;
                     break;
 
-                case Version.PB190:
-                    result = (Result)PBORCA_CompileEntryRegenerate190(session, library, objectName, GetEntryType(objecttype), staticCallbackDel, dummy);
+                case Objecttype.Function:
+                    entryType = PBORCA_ENTRY_TYPE.PBORCA_FUNCTION;
+                    break;
+
+                case Objecttype.Menu:
+                    entryType = PBORCA_ENTRY_TYPE.PBORCA_MENU;
+                    break;
+
+                case Objecttype.Pipeline:
+                    entryType = PBORCA_ENTRY_TYPE.PBORCA_PIPELINE;
+                    break;
+
+                case Objecttype.Project:
+                    entryType = PBORCA_ENTRY_TYPE.PBORCA_PROJECT;
+                    break;
+
+                case Objecttype.Proxyobject:
+                    entryType = PBORCA_ENTRY_TYPE.PBORCA_PROXYOBJECT;
+                    break;
+
+                case Objecttype.Query:
+                    entryType = PBORCA_ENTRY_TYPE.PBORCA_QUERY;
+                    break;
+
+                case Objecttype.Structure:
+                    entryType = PBORCA_ENTRY_TYPE.PBORCA_STRUCTURE;
+                    break;
+
+                case Objecttype.Userobject:
+                    entryType = PBORCA_ENTRY_TYPE.PBORCA_USEROBJECT;
+                    break;
+
+                case Objecttype.Window:
+                    entryType = PBORCA_ENTRY_TYPE.PBORCA_WINDOW;
                     break;
             }
 
-            return result;
+            return entryType;
         }
 
-        public Result ApplicationRebuild(int type)
+        /// <summary>
+        /// converts the PBORCA_ENTRY_TYPE to Objecttype
+        /// </summary>
+        /// <param name="entryType"></param>
+        /// <returns></returns>
+        private Objecttype GetObjecttype(PBORCA_ENTRY_TYPE entryType)
         {
-            PBORCA_CALLBACK staticCallbackDel = new PBORCA_CALLBACK(PBORCA_COMPERRCallback);
-            IntPtr dummy = new IntPtr();
+            Objecttype type = Objecttype.None;
 
-            switch (this.currentVersion)
+            switch (entryType)
             {
-                case Version.PB105:
-                    result = (Result)PBORCA_ApplicationRebuild105(session, (PBORCA_REBLD_TYPE)type, staticCallbackDel, dummy);
+                case PBORCA_ENTRY_TYPE.PBORCA_APPLICATION:
+                    type = Objecttype.Application;
                     break;
 
-                case Version.PB125:
-                    result = (Result)PBORCA_ApplicationRebuild125(session, (PBORCA_REBLD_TYPE)type, staticCallbackDel, dummy);
+                case PBORCA_ENTRY_TYPE.PBORCA_BINARY:
+                    type = Objecttype.Binary;
                     break;
 
-                case Version.PB170:
-                    result = (Result)PBORCA_ApplicationRebuild170(session, (PBORCA_REBLD_TYPE)type, staticCallbackDel, dummy);
+                case PBORCA_ENTRY_TYPE.PBORCA_DATAWINDOW:
+                    type = Objecttype.Datawindow;
                     break;
 
-                case Version.PB190:
-                    result = (Result)PBORCA_ApplicationRebuild190(session, (PBORCA_REBLD_TYPE)type, staticCallbackDel, dummy);
+                case PBORCA_ENTRY_TYPE.PBORCA_FUNCTION:
+                    type = Objecttype.Function;
+                    break;
+
+                case PBORCA_ENTRY_TYPE.PBORCA_MENU:
+                    type = Objecttype.Menu;
+                    break;
+
+                case PBORCA_ENTRY_TYPE.PBORCA_PIPELINE:
+                    type = Objecttype.Pipeline;
+                    break;
+
+                case PBORCA_ENTRY_TYPE.PBORCA_PROJECT:
+                    type = Objecttype.Project;
+                    break;
+
+                case PBORCA_ENTRY_TYPE.PBORCA_PROXYOBJECT:
+                    type = Objecttype.Proxyobject;
+                    break;
+
+                case PBORCA_ENTRY_TYPE.PBORCA_QUERY:
+                    type = Objecttype.Query;
+                    break;
+
+                case PBORCA_ENTRY_TYPE.PBORCA_STRUCTURE:
+                    type = Objecttype.Structure;
+                    break;
+
+                case PBORCA_ENTRY_TYPE.PBORCA_USEROBJECT:
+                    type = Objecttype.Userobject;
+                    break;
+
+                case PBORCA_ENTRY_TYPE.PBORCA_WINDOW:
+                    type = Objecttype.Window;
                     break;
             }
 
-            return result;
+            return type;
         }
     }
 }

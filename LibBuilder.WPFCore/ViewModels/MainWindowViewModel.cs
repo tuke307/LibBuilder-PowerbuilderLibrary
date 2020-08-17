@@ -1,4 +1,6 @@
-﻿using LibBuilder.WPFCore.Business;
+﻿// project=LibBuilder.WPFCore, file=MainWindowViewModel.cs, creation=2020:7:21 Copyright
+// (c) 2020 Timeline Financials GmbH & Co. KG. All rights reserved.
+using LibBuilder.WPFCore.Business;
 using LibBuilder.WPFCore.Views;
 using MaterialDesignThemes.Wpf;
 using MvvmCross.Commands;
@@ -12,9 +14,18 @@ namespace LibBuilder.WPFCore.ViewModels
     public class MainWindowViewModel : LibBuilder.Core.ViewModels.MainWindowViewModel
     {
         private readonly ApplicationChanges settings = new ApplicationChanges();
+        private SnackbarMessageQueue _notificationSnackbar;
+        private Dictionary<string, string> parameter;
 
-        public MainWindowViewModel()
+        public SnackbarMessageQueue NotificationSnackbar
         {
+            get => _notificationSnackbar;
+            set => SetProperty(ref _notificationSnackbar, value);
+        }
+
+        public MainWindowViewModel(Dictionary<string, string> parameter = null)
+        {
+            this.parameter = parameter;
             OpenSettingsCommand = new MvxCommand(OpenSettings);
             OpenContentCommand = new MvxCommand(OpenContant);
             OpenProcessesCommand = new MvxCommand(OpenProcesses);
@@ -39,18 +50,10 @@ namespace LibBuilder.WPFCore.ViewModels
 
         private void OpenContant()
         {
-            HomeContent = new Content(this);
+            HomeContent = new Content(this, parameter);
             SettingsVis = true;
             ProcessesVis = true;
             ContentVis = false;
-        }
-
-        private void OpenSettings()
-        {
-            HomeContent = new Aussehen();
-            SettingsVis = false;
-            ProcessesVis = false;
-            ContentVis = true;
         }
 
         private void OpenProcesses()
@@ -61,12 +64,12 @@ namespace LibBuilder.WPFCore.ViewModels
             ContentVis = true;
         }
 
-        private SnackbarMessageQueue _notificationSnackbar;
-
-        public SnackbarMessageQueue NotificationSnackbar
+        private void OpenSettings()
         {
-            get => _notificationSnackbar;
-            set => SetProperty(ref _notificationSnackbar, value);
+            HomeContent = new Aussehen();
+            SettingsVis = false;
+            ProcessesVis = false;
+            ContentVis = true;
         }
     }
 }

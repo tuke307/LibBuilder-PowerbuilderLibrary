@@ -1,4 +1,6 @@
-﻿using Data;
+﻿// project=LibBuilder.Core, file=ProcessHistoryViewModel.cs, creation=2020:7:21 Copyright
+// (c) 2020 Timeline Financials GmbH & Co. KG. All rights reserved.
+using Data;
 using Data.Models;
 using Microsoft.EntityFrameworkCore;
 using MvvmCross.Commands;
@@ -11,6 +13,16 @@ namespace LibBuilder.Core.ViewModels
 {
     public class ProcessHistoryViewModel : MvxViewModel
     {
+        private ObservableCollection<ProcessModel> _processes;
+
+        public IMvxCommand ClearProcessesCommand { get; set; }
+
+        public ObservableCollection<ProcessModel> Processes
+        {
+            get => _processes;
+            set => SetProperty(ref _processes, value);
+        }
+
         public ProcessHistoryViewModel()
         {
             ClearProcessesCommand = new MvxCommand(ClearProcesses);
@@ -21,8 +33,6 @@ namespace LibBuilder.Core.ViewModels
                 Processes = new ObservableCollection<ProcessModel>(db.Process.Include(p => p.Target).ToList());
             }
         }
-
-        public IMvxCommand ClearProcessesCommand { get; set; }
 
         public override Task Initialize()
         {
@@ -43,14 +53,6 @@ namespace LibBuilder.Core.ViewModels
             }
 
             Processes.Clear();
-        }
-
-        private ObservableCollection<ProcessModel> _processes;
-
-        public ObservableCollection<ProcessModel> Processes
-        {
-            get => _processes;
-            set => SetProperty(ref _processes, value);
         }
     }
 }

@@ -1,4 +1,6 @@
-﻿using System.Text;
+﻿// project=PBDotNetLib, file=PsrCleaner.cs, creation=2020:6:28 Copyright (c) 2020 Timeline
+// Financials GmbH & Co. KG. All rights reserved.
+using System.Text;
 
 namespace PBDotNetLib.util
 {

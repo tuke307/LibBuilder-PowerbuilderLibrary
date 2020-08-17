@@ -1,4 +1,6 @@
-﻿using PBDotNetLib.orca;
+﻿// project=PBDotNetLib, file=VirtualLibrary.cs, creation=2020:6:28 Copyright (c) 2020
+// Timeline Financials GmbH & Co. KG. All rights reserved.
+using PBDotNetLib.orca;
 using System.IO;
 using System.Linq;
 
@@ -11,11 +13,6 @@ namespace PBDotNetLib.pbuilder
         public string Dir
         {
             get { return dirInfo.FullName; }
-        }
-
-        public string File
-        {
-            get { return dirInfo.Name; }
         }
 
         public orca.ILibEntry[] EntryList
@@ -36,6 +33,11 @@ namespace PBDotNetLib.pbuilder
 
                 return entries;
             }
+        }
+
+        public string File
+        {
+            get { return dirInfo.Name; }
         }
 
         public VirtualLibrary(string folder)

@@ -1,0 +1,7 @@
+{
+  "profiles": {
+    "LibBuilder.WPFCore": {
+      "commandName": "Project"
+    }
+  }
+}

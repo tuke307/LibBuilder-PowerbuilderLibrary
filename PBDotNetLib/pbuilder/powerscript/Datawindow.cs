@@ -1,4 +1,6 @@
-﻿using System;
+﻿// project=PBDotNetLib, file=Datawindow.cs, creation=2020:6:28 Copyright (c) 2020 Timeline
+// Financials GmbH & Co. KG. All rights reserved.
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -7,20 +9,120 @@ namespace PBDotNetLib.pbuilder.powerscript
 {
     public class Datawindow
     {
-        private string release;
-        private Element obj;
-
-        public string Release
+        public class Attribute
         {
-            get
+            private string name;
+            private object val;
+
+            public string Name
             {
-                return release;
+                get
+                {
+                    return name;
+                }
+                set
+                {
+                    name = value;
+                }
             }
-            set
+
+            public object Value
             {
-                release = value;
+                get
+                {
+                    return val;
+                }
+                set
+                {
+                    val = value;
+                }
+            }
+
+            public Attribute(string name, object value)
+            {
+                this.name = name;
+                this.val = value;
             }
         }
+
+        public class Element
+        {
+            private List<Attribute> attributes = new List<Attribute>();
+            private List<Element> childs = new List<Element>();
+            private string name;
+            private Element parent = null;
+            private string val;
+
+            public List<Attribute> Attributes
+            {
+                get
+                {
+                    return attributes;
+                }
+                set
+                {
+                    attributes = value;
+                }
+            }
+
+            public List<Element> Childs
+            {
+                get
+                {
+                    return childs;
+                }
+            }
+
+            public string Name
+            {
+                get
+                {
+                    return name;
+                }
+                set
+                {
+                    name = value;
+                }
+            }
+
+            public Element Parent
+            {
+                get
+                {
+                    return parent;
+                }
+                set
+                {
+                    parent = value;
+                }
+            }
+
+            public string Value
+            {
+                get
+                {
+                    return val;
+                }
+                set
+                {
+                    val = value;
+                }
+            }
+
+            public void AddAttribute(string name, object value)
+            {
+                attributes.Add(new Attribute(name, value));
+            }
+
+            public void AddChild(Element child)
+            {
+                child.Parent = this;
+                childs.Add(child);
+            }
+        }
+
+        private Element obj;
+        private string release;
 
         public Element Object
         {
@@ -31,6 +133,18 @@ namespace PBDotNetLib.pbuilder.powerscript
             set
             {
                 obj = value;
+            }
+        }
+
+        public string Release
+        {
+            get
+            {
+                return release;
+            }
+            set
+            {
+                release = value;
             }
         }
 
@@ -131,7 +245,8 @@ namespace PBDotNetLib.pbuilder.powerscript
                     }
                     else
                     {
-                        // if space or closing quote or closing quote without opened: value to attribute
+                        // if space or closing quote or closing quote without opened:
+                        // value to attribute
                         if (c == ' ' || (c == '"' && !quote) || (c == ')' && !sb.ToString().Contains("(")))
                         {
                             if (sb.Length > 0)
@@ -154,118 +269,6 @@ namespace PBDotNetLib.pbuilder.powerscript
             }
 
             return root;
-        }
-
-        public class Attribute
-        {
-            private string name;
-            private object val;
-
-            public string Name
-            {
-                get
-                {
-                    return name;
-                }
-                set
-                {
-                    name = value;
-                }
-            }
-
-            public object Value
-            {
-                get
-                {
-                    return val;
-                }
-                set
-                {
-                    val = value;
-                }
-            }
-
-            public Attribute(string name, object value)
-            {
-                this.name = name;
-                this.val = value;
-            }
-        }
-
-        public class Element
-        {
-            private string val;
-            private string name;
-            private List<Element> childs = new List<Element>();
-            private List<Attribute> attributes = new List<Attribute>();
-            private Element parent = null;
-
-            public string Value
-            {
-                get
-                {
-                    return val;
-                }
-                set
-                {
-                    val = value;
-                }
-            }
-
-            public string Name
-            {
-                get
-                {
-                    return name;
-                }
-                set
-                {
-                    name = value;
-                }
-            }
-
-            public List<Element> Childs
-            {
-                get
-                {
-                    return childs;
-                }
-            }
-
-            public List<Attribute> Attributes
-            {
-                get
-                {
-                    return attributes;
-                }
-                set
-                {
-                    attributes = value;
-                }
-            }
-
-            public Element Parent
-            {
-                get
-                {
-                    return parent;
-                }
-                set
-                {
-                    parent = value;
-                }
-            }
-
-            public void AddChild(Element child)
-            {
-                child.Parent = this;
-                childs.Add(child);
-            }
-
-            public void AddAttribute(string name, object value)
-            {
-                attributes.Add(new Attribute(name, value));
-            }
         }
     }
 }

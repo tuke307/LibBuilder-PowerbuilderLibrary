@@ -1,4 +1,6 @@
-﻿using System;
+﻿// project=LibBuilder.WPFCore, file=CombiningConverters.cs, creation=2020:7:21 Copyright
+// (c) 2020 Timeline Financials GmbH & Co. KG. All rights reserved.
+using System;
 using System.Windows.Data;
 
 namespace LibBuilder.WPFCore.Business
@@ -6,6 +8,7 @@ namespace LibBuilder.WPFCore.Business
     public class CombiningConverter : IValueConverter
     {
         public IValueConverter Converter1 { get; set; }
+
         public IValueConverter Converter2 { get; set; }
 
         #region IValueConverter Members

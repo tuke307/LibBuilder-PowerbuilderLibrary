@@ -1,4 +1,6 @@
-﻿namespace PBDotNetLib.pbuilder.powerscript
+﻿// project=PBDotNetLib, file=Variable.cs, creation=2020:6:28 Copyright (c) 2020 Timeline
+// Financials GmbH & Co. KG. All rights reserved.
+namespace PBDotNetLib.pbuilder.powerscript
 {
     /// <summary>
     /// variable in pb
@@ -7,22 +9,14 @@
     {
         #region private
 
-        private string name;
         private string datatype;
-        private string value;
         private string descriptor;
+        private string name;
+        private string value;
 
         #endregion private
 
         #region properties
-
-        public string Name
-        {
-            get
-            {
-                return name;
-            }
-        }
 
         public string Datatype
         {
@@ -32,19 +26,27 @@
             }
         }
 
-        public string Value
-        {
-            get
-            {
-                return value;
-            }
-        }
-
         public string Descriptor
         {
             get
             {
                 return descriptor;
+            }
+        }
+
+        public string Name
+        {
+            get
+            {
+                return name;
+            }
+        }
+
+        public string Value
+        {
+            get
+            {
+                return value;
             }
         }
 

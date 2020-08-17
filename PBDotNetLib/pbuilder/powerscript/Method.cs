@@ -1,4 +1,6 @@
-﻿namespace PBDotNetLib.pbuilder.powerscript
+﻿// project=PBDotNetLib, file=Method.cs, creation=2020:6:28 Copyright (c) 2020 Timeline
+// Financials GmbH & Co. KG. All rights reserved.
+namespace PBDotNetLib.pbuilder.powerscript
 {
     /// <summary>
     /// method (subroutine or function) in pb
@@ -7,29 +9,29 @@
     {
         #region private
 
+        private string modifier;
         private string name;
+        private Parameter[] parameter;
         private string returntype;
         private string source;
-        private string modifier;
-        private Parameter[] parameter;
 
         #endregion private
 
         #region properties
+
+        public string Modifier
+        {
+            get
+            {
+                return modifier;
+            }
+        }
 
         public string Name
         {
             get
             {
                 return name;
-            }
-        }
-
-        public string Returntype
-        {
-            get
-            {
-                return returntype;
             }
         }
 
@@ -41,19 +43,19 @@
             }
         }
 
+        public string Returntype
+        {
+            get
+            {
+                return returntype;
+            }
+        }
+
         public string Source
         {
             get
             {
                 return source;
-            }
-        }
-
-        public string Modifier
-        {
-            get
-            {
-                return modifier;
             }
         }
 

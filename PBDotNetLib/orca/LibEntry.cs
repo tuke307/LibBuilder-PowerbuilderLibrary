@@ -1,4 +1,6 @@
-﻿using System;
+﻿// project=PBDotNetLib, file=LibEntry.cs, creation=2020:6:28 Copyright (c) 2020 Timeline
+// Financials GmbH & Co. KG. All rights reserved.
+using System;
 
 namespace PBDotNetLib.orca
 {
@@ -9,18 +11,26 @@ namespace PBDotNetLib.orca
     {
         #region private
 
-        private DateTime createTime;
         private string comment;
-        private string name;
-        private int size;
-        private Objecttype type;
+        private DateTime createTime;
         private string library;
-        private string source;
+        private string name;
         private Orca.Version pbVersion;
+        private int size;
+        private string source;
+        private Objecttype type;
 
         #endregion private
 
         #region properties
+
+        public string Comment
+        {
+            get
+            {
+                return comment;
+            }
+        }
 
         public DateTime Createtime
         {
@@ -30,11 +40,11 @@ namespace PBDotNetLib.orca
             }
         }
 
-        public string Comment
+        public string Library
         {
             get
             {
-                return comment;
+                return library;
             }
         }
 
@@ -54,22 +64,6 @@ namespace PBDotNetLib.orca
             }
         }
 
-        public Objecttype Type
-        {
-            get
-            {
-                return type;
-            }
-        }
-
-        public string Library
-        {
-            get
-            {
-                return library;
-            }
-        }
-
         public string Source
         {
             get
@@ -84,6 +78,14 @@ namespace PBDotNetLib.orca
             set
             {
                 source = value;
+            }
+        }
+
+        public Objecttype Type
+        {
+            get
+            {
+                return type;
             }
         }
 
