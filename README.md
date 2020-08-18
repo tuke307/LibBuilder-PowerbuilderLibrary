@@ -22,5 +22,34 @@ Die Datenbank befindet sich im Roaming Verzeichnis; „C:\Users\%currentUser%\Ap
 ## Powerbuilder
 Es kann zu Problemen mit dem Powerbuilder kommen während das Target dort geöffnet ist. 
 
+## Ausführung
+| Erfolgreich              | Fehler      |
+| ------------------|:-------------:|
+| ![alt text](https://github.com/tuke307/LibBuilder/blob/master/Screenshots/run%20without%20errors.png "process success") | ![alt text](https://github.com/tuke307/LibBuilder/blob/master/Screenshots/run%20with%20errors.png "process with error")  | 
+
 ## Mehrere Prozeduren
 Es können mehrere Prozeduren auf einmal ausgeführt werden. Der LibBuilder muss lediglich ein zweites, drittes, viertes, … Mal ausgeführt werden. 
+![alt text](https://github.com/tuke307/LibBuilder/blob/master/Screenshots/multiple%20processes.gif "multiple processes")
+
+## Kommandozeile
+Der Start über die Kommandozeile ist möglich. Die Reihenfolge der Parameterangabe sowie die Groß-und Kleinschreibung ist egal.
+
+| Parameter | Erklärung                           | Typ                     | Eingabe                 |
+|-----------|:-----------------------------------:|-------------------------|:-----------------------:|
+|    -w     | Name oder Pfad des Workspace        | Zeichenkette            |                         | 
+|    -t     | Name oder Pfad des Targets          | Zeichenkette            |                         | 
+|    -v     | Powerbuilder Version des Workspace  | Nummer                  | 105, 125, 170 oder 190  | 
+|    -b     | Build der Librarys                  | Boolescher Wert	        | true oder false         | 
+|    -r     | Regenerate der Library Objects      | Boolescher Wert	        | true oder false         | 
+|    -l     | Auswahl der Librarys                | Liste von Zeichenketten |                         | 
+|    -a     | Ausführung über Fenster-Applikation | Boolescher Wert         | true oder false         | 
+
+Beispiele: 
+Öffnen des Fensters mit dem Target „C:\tl_kunden\TL_13_Suedguss\fakt3_v13.pbt“: 
+libbuilder.exe -t C:\tl_kunden\TL_13_Suedguss\fakt3_v13.pbt 
+
+Regenerieren aller PBL´s des Targets: 
+libbuilder.exe -o r -t C:\tl_kunden\TL_13_Suedguss\fakt3_v13.pbt 
+
+Regenerieren und bauen der Bibliotheken „client1“ u. „client2“ u. „client3“ in der Version 17.0: 
+libbuilder.exe -t C:\tl_kunden\TL_13_Suedguss\fakt3_v13.pbt -l client1;client2;client4.pbl -v 170 -o rb 
