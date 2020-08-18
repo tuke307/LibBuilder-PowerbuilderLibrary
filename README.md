@@ -17,8 +17,9 @@ Die Versionen werden vom LibBuilder unterstützt. Weitere Versionen können nat�
 | PowerBuilder 19.0 | PBORC190.DLL  |
 
 ## Dateien
-Die zweite Version des LibBuilders erstellt keine zusätzlichen Dateien wie in der ersten Version. Im Installationsverzeichnis befinden sich lediglich 2 Dateien.
-Die Datenbank befindet sich im Roaming Verzeichnis; „C:\Users\%currentUser%\AppData\Roaming\LibBuilder\libbuilder.db“
+Die zweite Version des LibBuilders erstellt keine zusätzlichen Dateien, alles wird in einer Datenbank gespeichert. Im Installationsverzeichnis befinden sich lediglich 2 Dateien;
+Die Datenbank befindet sich im Roaming Verzeichnis; „C:\Users\\%currentUser%\\AppData\Roaming\LibBuilder\libbuilder.db“
+
 
 ## Powerbuilder
 Es kann zu Problemen mit dem Powerbuilder kommen während das Target dort geöffnet ist. 
