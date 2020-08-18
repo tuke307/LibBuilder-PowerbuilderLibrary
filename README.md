@@ -1,5 +1,6 @@
 # LibBuilder
 Bauen und Regenerien von [Powerbuilder](https://www.appeon.com/products/powerbuilder)-Objects 
+![alt text](https://github.com/tuke307/LibBuilder/blob/master/Screenshots/workaround.gif "workaround")
 
 ## Erforderliche Software
 Das Programm wurde für Windows 10 - 32Bit getestet und entwickelt. Programmiert wurde in C# mit dem  .NET Core Framework, dieses wird benötigt um das Programm auszuführen. Falls das Framework noch nicht installiert ist, wird beim Start darauf hingewiesen. 
