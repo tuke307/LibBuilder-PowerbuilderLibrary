@@ -56,7 +56,8 @@ namespace Data
         public DatabaseContext()
         {
             // migrate and create
-            Database.Migrate();
+            //Database.Migrate();
+            Database.EnsureCreated();
         }
 
         /// <summary>
