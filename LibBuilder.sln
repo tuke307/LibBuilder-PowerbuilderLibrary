@@ -21,6 +21,19 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		CodeMaid.config = CodeMaid.config
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "screenshots", "screenshots", "{55312E17-062B-411A-A71F-E35CA3DF15AC}"
+	ProjectSection(SolutionItems) = preProject
+		Screenshots\colors.png = Screenshots\colors.png
+		Screenshots\history.png = Screenshots\history.png
+		Screenshots\installfiles.png = Screenshots\installfiles.png
+		Screenshots\library objects.png = Screenshots\library objects.png
+		Screenshots\multiple processes.gif = Screenshots\multiple processes.gif
+		Screenshots\mutiple processes.png = Screenshots\mutiple processes.png
+		Screenshots\run with errors.png = Screenshots\run with errors.png
+		Screenshots\run without errors.png = Screenshots\run without errors.png
+		Screenshots\update.png = Screenshots\update.png
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

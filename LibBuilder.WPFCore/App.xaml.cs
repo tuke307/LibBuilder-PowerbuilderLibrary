@@ -6,8 +6,10 @@ using Data;
 using LibBuilder.WPFCore.Views;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Windows;
 
 namespace LibBuilder.WPFCore
@@ -17,6 +19,9 @@ namespace LibBuilder.WPFCore
     /// </summary>
     public partial class App : Application
     {
+        [DllImport("Kernel32.dll")]
+        public static extern bool AttachConsole(int processId);
+
         private static void HandleErrors(IEnumerable<Error> errs)
         {
             Console.WriteLine("Fehler beim einlesen der Parameter");
@@ -50,6 +55,7 @@ namespace LibBuilder.WPFCore
             {
                 //var parser = new Parser(with => with.EnableDashDash = true);
                 //var result = parser.ParseArguments<Options>(e.Args);
+                AttachConsole(-1);
 
                 var result = Parser.Default.ParseArguments<Options>(e.Args)
                .WithParsed(Run)
