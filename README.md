@@ -2,7 +2,7 @@
 Bauen und Regenerien von [Powerbuilder](https://www.appeon.com/products/powerbuilder)-Objects 
 
 ## Erforderliche Software
-Das Programm wurde für Windows 10 - 32Bit getestet. Programmiert wurde in C# mit dem  .NET Core Framework, dieses wird benötigt um das Programm auszuführen. Falls das Framework noch nicht installiert ist, wird beim Start darauf hingewiesen. 
+Das Programm wurde für Windows 10 - 32Bit getestet und entwickelt. Programmiert wurde in C# mit dem  .NET Core Framework, dieses wird benötigt um das Programm auszuführen. Falls das Framework noch nicht installiert ist, wird beim Start darauf hingewiesen. 
 (Download x86 [hier](https://dotnet.microsoft.com/download/dotnet-core/current/runtime))
 
 Zum verwenden der ORCA Funktionen benötigt man die ORCA DLL, diese wird beim Installieren des Powerbuilders automatisch mit installiert. Für jede Powerbuilder Version gibt es eine andere DLL.
@@ -53,3 +53,8 @@ libbuilder.exe -o r -t C:\tl_kunden\TL_13_Suedguss\fakt3_v13.pbt
 
 Regenerieren und bauen der Bibliotheken „client1“ u. „client2“ u. „client3“ in der Version 17.0: 
 libbuilder.exe -t C:\tl_kunden\TL_13_Suedguss\fakt3_v13.pbt -l client1;client2;client4.pbl -v 170 -o rb 
+
+## Features
+| Applikations Farbe und Theme              | Prozess-History      | AutoUpdater      |
+| ------------------|:-------------:|:-------------:|
+| ![alt text](https://github.com/tuke307/LibBuilder/blob/master/Screenshots/colors.png "colors") | ![alt text](https://github.com/tuke307/LibBuilder/blob/master/Screenshots/history.png "history")  | ![alt text](https://github.com/tuke307/LibBuilder/blob/master/Screenshots/update.png "update")  | 
