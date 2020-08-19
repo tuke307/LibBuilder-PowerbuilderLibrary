@@ -66,6 +66,8 @@ libbuilder.exe --version
 Anzeige der Hilfe;  
 libbuilder.exe --help
 
+![alt text](https://github.com/tuke307/LibBuilder/blob/master/Screenshots/cmd%20example.gif "cmd-example")
+
 ## Features
 | Applikations Farbe und Theme              | Prozess-History      | AutoUpdater      |
 | ------------------|:-------------:|:-------------:|
