@@ -1,33 +1,10 @@
-﻿// project=Data, file=20200724085954_InitialMigration.cs, create=10:59 Copyright (c) 2020
-// tuke productions. All rights reserved.
+﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
-using System;
 
 namespace Data.Migrations
 {
     public partial class InitialMigration : Migration
     {
-        protected override void Down(MigrationBuilder migrationBuilder)
-        {
-            migrationBuilder.DropTable(
-                name: "Object");
-
-            migrationBuilder.DropTable(
-                name: "Process");
-
-            migrationBuilder.DropTable(
-                name: "Settings");
-
-            migrationBuilder.DropTable(
-                name: "Library");
-
-            migrationBuilder.DropTable(
-                name: "Target");
-
-            migrationBuilder.DropTable(
-                name: "Workspace");
-        }
-
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
@@ -72,6 +49,7 @@ namespace Data.Migrations
                         .Annotation("Sqlite:Autoincrement", true),
                     CreatedDate = table.Column<DateTime>(nullable: false),
                     UpdatedDate = table.Column<DateTime>(nullable: false),
+                    ApplicationRebuild = table.Column<int>(nullable: true),
                     Directory = table.Column<string>(nullable: true),
                     File = table.Column<string>(nullable: true),
                     WorkspaceId = table.Column<int>(nullable: true)
@@ -95,9 +73,9 @@ namespace Data.Migrations
                         .Annotation("Sqlite:Autoincrement", true),
                     CreatedDate = table.Column<DateTime>(nullable: false),
                     UpdatedDate = table.Column<DateTime>(nullable: false),
+                    Build = table.Column<bool>(nullable: false),
                     Directory = table.Column<string>(nullable: true),
                     File = table.Column<string>(nullable: true),
-                    Build = table.Column<bool>(nullable: false),
                     TargetId = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
@@ -119,9 +97,9 @@ namespace Data.Migrations
                         .Annotation("Sqlite:Autoincrement", true),
                     CreatedDate = table.Column<DateTime>(nullable: false),
                     UpdatedDate = table.Column<DateTime>(nullable: false),
-                    TargetId = table.Column<int>(nullable: true),
                     Error = table.Column<int>(nullable: true),
-                    Sucess = table.Column<int>(nullable: true)
+                    Sucess = table.Column<int>(nullable: true),
+                    TargetId = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -142,10 +120,10 @@ namespace Data.Migrations
                         .Annotation("Sqlite:Autoincrement", true),
                     CreatedDate = table.Column<DateTime>(nullable: false),
                     UpdatedDate = table.Column<DateTime>(nullable: false),
-                    Regenerate = table.Column<bool>(nullable: false),
+                    LibraryId = table.Column<int>(nullable: true),
                     Name = table.Column<string>(nullable: true),
                     ObjectType = table.Column<string>(nullable: true),
-                    LibraryId = table.Column<int>(nullable: true)
+                    Regenerate = table.Column<bool>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -182,6 +160,27 @@ namespace Data.Migrations
                 name: "IX_Target_WorkspaceId",
                 table: "Target",
                 column: "WorkspaceId");
+        }
+
+        protected override void Down(MigrationBuilder migrationBuilder)
+        {
+            migrationBuilder.DropTable(
+                name: "Object");
+
+            migrationBuilder.DropTable(
+                name: "Process");
+
+            migrationBuilder.DropTable(
+                name: "Settings");
+
+            migrationBuilder.DropTable(
+                name: "Library");
+
+            migrationBuilder.DropTable(
+                name: "Target");
+
+            migrationBuilder.DropTable(
+                name: "Workspace");
         }
     }
 }

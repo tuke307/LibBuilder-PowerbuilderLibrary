@@ -14,14 +14,8 @@ namespace LibBuilder.WPFCore.ViewModels
     public class MainWindowViewModel : LibBuilder.Core.ViewModels.MainWindowViewModel
     {
         private readonly ApplicationChanges settings = new ApplicationChanges();
-        private SnackbarMessageQueue _notificationSnackbar;
-        private Options parameter;
 
-        public SnackbarMessageQueue NotificationSnackbar
-        {
-            get => _notificationSnackbar;
-            set => SetProperty(ref _notificationSnackbar, value);
-        }
+        private Options parameter;
 
         public MainWindowViewModel(Options parameter = null)
         {
@@ -32,8 +26,6 @@ namespace LibBuilder.WPFCore.ViewModels
 
             //für start
             OpenContant();
-
-            NotificationSnackbar = new SnackbarMessageQueue();
         }
 
         public override Task Initialize()

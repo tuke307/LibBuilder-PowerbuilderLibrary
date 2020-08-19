@@ -13,6 +13,12 @@ namespace Data.Models
     public class TargetModel : BaseEntity
     {
         /// <summary>
+        /// Gets or sets the application rebuild.
+        /// </summary>
+        /// <value>The application rebuild.</value>
+        public PBDotNetLib.orca.Orca.PBORCA_REBLD_TYPE? ApplicationRebuild { get; set; }
+
+        /// <summary>
         /// Gets or sets the directory.
         /// </summary>
         /// <value>The directory.</value>

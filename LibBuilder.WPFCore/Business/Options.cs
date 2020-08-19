@@ -32,6 +32,9 @@ namespace LibBuilder.WPFCore.Business
         [Option(shortName: 'l', longName: "Librarys", Separator = ';', HelpText = "Auswahl der Librays eines Targets")]
         public IEnumerable<string> Librarys { get; set; }
 
+        [Option(shortName: 'x', longName: "RebuildType", HelpText = "Typ des Rebuild")]
+        public PBDotNetLib.orca.Orca.PBORCA_REBLD_TYPE? RebuildType { get; set; }
+
         [Option(shortName: 'r', longName: "Regenerate", HelpText = "Regenerate aller Objects einer Library")]
         public bool? Regenerate { get; set; }
 
@@ -39,7 +42,7 @@ namespace LibBuilder.WPFCore.Business
         public string Target { get; set; }
 
         [Option(shortName: 'v', longName: "Version", HelpText = "Powerbuilder Version des Workspace")]
-        public int? Version { get; set; }
+        public PBDotNetLib.orca.Orca.Version? Version { get; set; }
 
         [Option(shortName: 'w', longName: "Workspace", Required = true, HelpText = "Pfad bzw. Name des Workspace")]
         public string Workspace { get; set; }

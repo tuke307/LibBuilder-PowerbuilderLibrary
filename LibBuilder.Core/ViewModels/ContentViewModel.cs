@@ -202,7 +202,9 @@ namespace LibBuilder.Core.ViewModels
         protected virtual async Task LoadWorkspace()
         {
             if (LoadWorkspaceTask != null && LoadWorkspaceTask.Status == TaskStatus.Running)
+            {
                 await LoadWorkspaceTask;
+            }
 
             //Worksapce(Targets) updaten
             LoadWorkspaceTask = Task.Run(async () =>
@@ -241,7 +243,7 @@ namespace LibBuilder.Core.ViewModels
         {
             try
             {
-                var exist = Workspaces.Single(w => w.File == Path.GetFileName(filePath));
+                var exist = Workspaces.Single(w => w.FilePath.ToLower() == filePath.ToLower());
                 Workspace = exist;
             }
             catch
@@ -317,6 +319,29 @@ namespace LibBuilder.Core.ViewModels
 
                 #endregion CurrentApplication
 
+                #region ApplicationRebuild
+
+                if (Target.ApplicationRebuild.HasValue)
+                {
+                    lock (_lock)
+                    {
+                        Processes.Add(new Process
+                        {
+                            Target = this.Target.File,
+                            Mode = "ApplicationRebuild"
+                        });
+                    }
+                    lock (_lock)
+                    {
+                        Processes.Last().Result = session.ApplicationRebuild(Target.ApplicationRebuild.Value);
+                    }
+
+                    // Skip other processes
+                    goto End;
+                }
+
+                #endregion ApplicationRebuild
+
                 // für jede unkompilierte(.pbl) Library
                 for (int l = 0; l < Librarys.Count; l++)
                 {
@@ -387,6 +412,8 @@ namespace LibBuilder.Core.ViewModels
 
                     #endregion Build
                 }
+
+            End:
                 session.SessionClose();
 
                 #region Result

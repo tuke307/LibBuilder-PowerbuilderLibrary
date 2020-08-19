@@ -5,8 +5,10 @@ namespace LibBuilder.WPFCore.ViewModels
     using Data.Models;
     using LibBuilder.WPFCore.Business;
     using LibBuilder.WPFCore.Views;
+    using MaterialDesignThemes.Wpf;
     using Microsoft.Win32;
     using MvvmCross.Commands;
+    using MvvmCross.Core;
     using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
@@ -14,6 +16,7 @@ namespace LibBuilder.WPFCore.ViewModels
     using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
+    using System.Windows;
     using System.Windows.Data;
 
     /// <summary>
@@ -53,6 +56,8 @@ namespace LibBuilder.WPFCore.ViewModels
             //if (Workspaces != null && Workspaces.Count > 0)
             //    Workspace = Workspaces.OrderByDescending(w => w.UpdatedDate).FirstOrDefault();
         }
+
+        #region Methods
 
         /// <summary>
         /// Dotses this instance.
@@ -111,8 +116,10 @@ namespace LibBuilder.WPFCore.ViewModels
         /// </summary>
         protected override async Task LoadWorkspace()
         {
-            if (!CheckWorkspace())
+            if (!await CheckWorkspaceAsync())
+            {
                 return;
+            }
 
             ContentLoadingAnimation = true;
             await RaisePropertyChanged(() => ContentLoadingAnimation);
@@ -156,39 +163,56 @@ namespace LibBuilder.WPFCore.ViewModels
             // Workspace
             if (parameter.Workspace != null)
             {
-                Workspace = Workspaces.Single(w => w.File.ToLower() == Path.GetFileName(parameter.Workspace).ToLower());
+                // pfad
+                if (parameter.Workspace.IndexOfAny(Path.GetInvalidPathChars()) == -1)
+                {
+                    if (File.Exists(parameter.Workspace))
+                    {
+                        try
+                        {
+                            Workspace = Workspaces.Single(w => w.FilePath.ToLower() == parameter.Workspace.ToLower());
+                        }
+                        catch
+                        {
+                            // in Datenbank hinzufügen
+                            Console.WriteLine("Workspace-Pfad konnte in Datenbank nicht gefunden werden, daher wird dieser hinzugefügt");
+                            base.OpenWorkspace(parameter.Workspace);
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine("Der Workspace-Pfad " + parameter.Workspace + " ist ungültig");
+                        return;
+                    }
+                }
+                // Name
+                else
+                {
+                    try
+                    {
+                        Workspace = Workspaces.Single(w => w.File.ToLower() == Path.GetFileName(parameter.Workspace).ToLower());
+                    }
+                    catch (Exception exc)
+                    {
+                        Console.WriteLine("Wokspace konnte in Datenbank nicht gefunden werden; " + exc.Message);
+                        return;
+                    }
+                }
 
                 await LoadWorkspace();
-
                 Console.WriteLine("Workspace " + Workspace.FilePath + " erfolgreich eingelesen");
             }
             else
             {
                 // ohne Workspace geht nicht
+                Console.WriteLine("Bitte Workspace angeben");
                 return;
-            }
-
-            // Target
-            if (parameter.Target != null)
-            {
-                Target = Targets.Single(t => t.File.ToLower() == Path.GetFileName(parameter.Target).ToLower());
-                await LoadTarget();
-                Console.WriteLine("Target " + Target.FilePath + " erfolgreich eingelesen");
-            }
-            else
-            {
-                // zuletzt ausgewähltes Target laden
-                Target = Targets.OrderByDescending(t => t.UpdatedDate).FirstOrDefault();
-                await LoadTarget();
-                Console.WriteLine("Target " + Target.FilePath + " erfolgreich eingelesen");
             }
 
             // Version
             if (parameter.Version != null)
             {
-                // Version parsen
-                PBDotNetLib.orca.Orca.Version version = (PBDotNetLib.orca.Orca.Version)Enum.Parse(typeof(PBDotNetLib.orca.Orca.Version), "PB" + parameter.Version);
-                Workspace.PBVersion = version;
+                Workspace.PBVersion = parameter.Version;
 
                 await base.SaveWorkspace();
                 await LoadWorkspace();
@@ -197,10 +221,74 @@ namespace LibBuilder.WPFCore.ViewModels
             }
             else
             {
+                if (!Workspace.PBVersion.HasValue)
+                {
+                    Console.WriteLine("Bitte Powerbuilder-Version für Workspace angeben");
+                    return;
+                }
+
                 // Version, die in DB gespeichert ist
             }
 
-            //Librays
+            // Target
+            if (parameter.Target != null)
+            {
+                // pfad
+                if (parameter.Target.IndexOfAny(Path.GetInvalidPathChars()) == -1)
+                {
+                    if (File.Exists(parameter.Target))
+                    {
+                        try
+                        {
+                            Target = Targets.Single(t => t.FilePath.ToLower() == parameter.Target.ToLower());
+                        }
+                        catch
+                        {
+                            // in Datenbank hinzufügen
+                            Console.WriteLine("Target-Pfad konnte in dem Worspace nicht gefunden werden nicht gefunden werden");
+                            return;
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine("Der Target-Pfad " + parameter.Target + " ist ungültig");
+                        return;
+                    }
+                }
+                // name
+                else
+                {
+                    Target = Targets.Single(t => t.File.ToLower() == Path.GetFileName(parameter.Target).ToLower());
+                }
+
+                await LoadTarget();
+                Console.WriteLine("Target " + Target.FilePath + " erfolgreich eingelesen");
+            }
+            else
+            {
+                // zuletzt ausgewähltes Target laden
+                Target = Targets.OrderByDescending(t => t.UpdatedDate).FirstOrDefault();
+                await LoadTarget();
+                Console.WriteLine("zuletzt ausgewähltes Target " + Target.FilePath + " erfolgreich eingelesen");
+            }
+
+            // Application Rebuild
+            if (parameter.RebuildType.HasValue)
+            {
+                Target.ApplicationRebuild = parameter.RebuildType.Value;
+                await base.SaveTarget();
+
+                // Library Build und Library-Object Regenerate überspringen
+                goto Run;
+            }
+            else
+            {
+                // zurücksetzen
+                Target.ApplicationRebuild = null;
+                await base.SaveTarget();
+            }
+
+            // Librays
             if (!parameter.Librarys.IsNullOrEmpty())
             {
                 base.DeselectAllLibrarys();
@@ -267,6 +355,8 @@ namespace LibBuilder.WPFCore.ViewModels
                 // Letzte Auswahl die in DB gespeichert ist
             }
 
+        Run:
+
             #region Run
 
             Console.WriteLine();
@@ -290,10 +380,10 @@ namespace LibBuilder.WPFCore.ViewModels
         /// </summary>
         protected override async Task RunProcedurAsync()
         {
-            if (!CheckWorkspace())
+            if (!await CheckWorkspaceAsync())
                 return;
 
-            if (!CheckRunnable())
+            if (!await CheckRunnableAsync())
                 return;
 
             Processes = new ObservableCollection<Process>();
@@ -316,11 +406,14 @@ namespace LibBuilder.WPFCore.ViewModels
         /// Checks the runnable.
         /// </summary>
         /// <returns></returns>
-        private bool CheckRunnable()
+        private async Task<bool> CheckRunnableAsync()
         {
             if (Target == null)
             {
-                mainWindowViewModel.NotificationSnackbar.Enqueue("Bitte Target auswählen");
+                var view = new DialogSnackbarView();
+                view.MySnackbar.MessageQueue.Enqueue("Bitte Target auswählen");
+                await DialogHost.Show(view, "DialogSnackbar");
+
                 return false;
             }
 
@@ -331,23 +424,37 @@ namespace LibBuilder.WPFCore.ViewModels
         /// Checks the workspace.
         /// </summary>
         /// <returns></returns>
-        private bool CheckWorkspace()
+        private async Task<bool> CheckWorkspaceAsync()
         {
             if (Workspace == null)
             {
-                mainWindowViewModel.NotificationSnackbar.Enqueue("Bitte Workspace auswählen");
+                if (Utils.IsWindowOpen<Window>("MainWindow"))
+                {
+                    var view = new DialogSnackbarView();
+                    view.MySnackbar.MessageQueue.Enqueue("Bitte Workspace auswählen");
+                    await DialogHost.Show(view, "DialogSnackbar");
+                }
+
                 return false;
             }
             else
             {
                 if (Workspace.PBVersion == null)
                 {
-                    mainWindowViewModel.NotificationSnackbar.Enqueue("Bitte Powerbuilder-Version angeben");
+                    if (Utils.IsWindowOpen<Window>("MainWindow"))
+                    {
+                        var view = new DialogSnackbarView();
+                        view.MySnackbar.MessageQueue.Enqueue("Bitte Powerbuilder-Version angeben");
+                        await DialogHost.Show(view, "DialogSnackbar");
+                    }
+
                     return false;
                 }
             }
 
             return true;
         }
+
+        #endregion Methods
     }
 }

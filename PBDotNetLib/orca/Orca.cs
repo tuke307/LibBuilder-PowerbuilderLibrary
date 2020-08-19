@@ -14,6 +14,17 @@ namespace PBDotNetLib.orca
     public class Orca
     {
         /// <summary>
+        /// Rebuild Type.
+        /// </summary>
+        public enum PBORCA_REBLD_TYPE
+        {
+            PBORCA_FULL_REBUILD = 1,
+            PBORCA_INCREMENTAL_REBUILD = 2,
+            PBORCA_MIGRATE = 3,
+            PBORCA_3PASS = 4
+        }
+
+        /// <summary>
         /// Result.
         /// </summary>
         public enum Result
@@ -123,10 +134,10 @@ namespace PBDotNetLib.orca
         /// </summary>
         public enum Version
         {
-            PB105,
-            PB125,
-            PB170,
-            PB190
+            PB105 = 105,
+            PB125 = 125,
+            PB170 = 170,
+            PB190 = 190
         }
 
         #region private
@@ -145,14 +156,6 @@ namespace PBDotNetLib.orca
             PBORCA_PROJECT,
             PBORCA_PROXYOBJECT,
             PBORCA_BINARY
-        }
-
-        private enum PBORCA_REBLD_TYPE
-        {
-            PBORCA_FULL_REBUILD,
-            PBORCA_INCREMENTAL_REBUILD,
-            PBORCA_MIGRATE,
-            PBORCA_3PASS
         }
 
         private static int session = 0;
@@ -475,7 +478,7 @@ namespace PBDotNetLib.orca
         /// </summary>
         /// <param name="type">The type.</param>
         /// <returns></returns>
-        public Result ApplicationRebuild(int type)
+        public Result ApplicationRebuild(PBORCA_REBLD_TYPE rEBLD_TYPE)
         {
             PBORCA_CALLBACK staticCallbackDel = new PBORCA_CALLBACK(PBORCA_COMPERRCallback);
             IntPtr dummy = new IntPtr();
@@ -483,19 +486,19 @@ namespace PBDotNetLib.orca
             switch (this.currentVersion)
             {
                 case Version.PB105:
-                    result = (Result)PBORCA_ApplicationRebuild105(session, (PBORCA_REBLD_TYPE)type, staticCallbackDel, dummy);
+                    result = (Result)PBORCA_ApplicationRebuild105(session, rEBLD_TYPE, staticCallbackDel, dummy);
                     break;
 
                 case Version.PB125:
-                    result = (Result)PBORCA_ApplicationRebuild125(session, (PBORCA_REBLD_TYPE)type, staticCallbackDel, dummy);
+                    result = (Result)PBORCA_ApplicationRebuild125(session, rEBLD_TYPE, staticCallbackDel, dummy);
                     break;
 
                 case Version.PB170:
-                    result = (Result)PBORCA_ApplicationRebuild170(session, (PBORCA_REBLD_TYPE)type, staticCallbackDel, dummy);
+                    result = (Result)PBORCA_ApplicationRebuild170(session, rEBLD_TYPE, staticCallbackDel, dummy);
                     break;
 
                 case Version.PB190:
-                    result = (Result)PBORCA_ApplicationRebuild190(session, (PBORCA_REBLD_TYPE)type, staticCallbackDel, dummy);
+                    result = (Result)PBORCA_ApplicationRebuild190(session, rEBLD_TYPE, staticCallbackDel, dummy);
                     break;
             }
 
