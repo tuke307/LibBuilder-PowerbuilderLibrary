@@ -265,45 +265,63 @@ namespace LibBuilder.Core.ViewModels
         /// <summary>
         /// Startet die Orca-Prozeduren in einem asynchronen Task
         /// </summary>
-        /// <param name="_lock"></param>
-        protected virtual async Task RunProcedurAsync(object _lock)
+        protected virtual async Task RunProcedurAsync()
         {
             RunProcedurTask = Task.Run(async () =>
             {
                 var session = new PBDotNetLib.orca.Orca(Workspace.PBVersion.Value);
 
-                //Apllication Library Liste
+                #region ApplicationLibrarys
+
+                // Apllication Library Liste
                 lock (_lock)
+                {
                     Processes.Add(new Process
                     {
                         Target = this.Target.File,
                         Mode = "ApplicationLibrarys"
                     });
+                }
 
                 lock (_lock)
+                {
                     Processes.Last().Result = session.SetLibraryList(Target.Librarys.Select(l => l.FilePath).ToArray(), Target.Librarys.Count);
+                }
+
+                #endregion ApplicationLibrarys
+
+                #region CurrentApplication
 
                 //Applikation setzen
                 lock (_lock)
+                {
                     Processes.Add(new Process
                     {
                         Target = this.Target.File,
                         Mode = "CurrentApplication"
                     });
+                }
 
-                //Applikationsname holen(bei TimeLine e2 immer main.pbd(Library) und fakt3(Objekt))
+                // Applikationsname holen(bei TimeLine e2 immer main.pbd(Library) und
+                // fakt3(Objekt))
                 using (var db = new DatabaseContext())
                 {
                     ObjectModel applObj = db.Object.Where(o => o.Library.Target == this.Target && o.ObjectType == PBDotNetLib.orca.Objecttype.Application).First();
                     await db.Entry(applObj).Reference(o => o.Library).LoadAsync();
 
                     lock (_lock)
+                    {
                         Processes.Last().Result = session.SetCurrentAppl(applObj.Library.FilePath, applObj.Name);
+                    }
                 }
 
-                //für jede unkompilierte(.pbl) Library
+                #endregion CurrentApplication
+
+                // für jede unkompilierte(.pbl) Library
                 for (int l = 0; l < Librarys.Count; l++)
                 {
+                    #region Load&Check
+
                     //Laden des Datensatzes
                     using (var db = new DatabaseContext())
                     {
@@ -318,13 +336,17 @@ namespace LibBuilder.Core.ViewModels
                     if (Library.Build == false && Library.Objects.Where(lib => lib.Regenerate == true).ToList().Count == 0)
                         continue;
 
-                    //Regenerate
+                    #endregion Load&Check
+
+                    #region Regenerate
+
                     //für jedes Object
                     for (int i = 0; i < Library.Objects.Count; i++)
                     {
                         if (Library.Objects[i].Regenerate)
                         {
                             lock (_lock)
+                            {
                                 Processes.Add(new Process
                                 {
                                     Target = this.Target.File,
@@ -332,27 +354,42 @@ namespace LibBuilder.Core.ViewModels
                                     Object = this.Library.Objects[i].Name,
                                     Mode = "Regenerate"
                                 });
+                            }
 
                             lock (_lock)
+                            {
                                 Processes.Last().Result = session.RegenerateObject(Library.FilePath, Library.Objects[i].Name, Library.Objects[i].ObjectType.Value);
+                            }
                         }
                     }
 
-                    //build
+                    #endregion Regenerate
+
+                    #region Build
+
                     if (Librarys[l].Build)
                     {
                         lock (_lock)
+                        {
                             Processes.Add(new Process
                             {
                                 Target = this.Target.File,
                                 Library = this.Library.File,
                                 Mode = "Rebuild"
                             });
+                        }
 
                         lock (_lock)
+                        {
                             Processes.Last().Result = session.CreateDynamicLibrary(Librarys[l].FilePath, "");
+                        }
                     }
+
+                    #endregion Build
                 }
+                session.SessionClose();
+
+                #region Result
 
                 var sucess = Processes.Where(r => r.Result.Equals(PBDotNetLib.orca.Orca.Result.PBORCA_OK)).Count();
 
@@ -375,9 +412,7 @@ namespace LibBuilder.Core.ViewModels
                     await db.SaveChangesAsync();
                 }
 
-                session.SessionClose();
-
-                ProcessLoadingAnimation = false;
+                #endregion Result
             });
 
             await RunProcedurTask;
@@ -542,7 +577,7 @@ namespace LibBuilder.Core.ViewModels
         /// Gets or sets the run procedur command.
         /// </summary>
         /// <value>The run procedur command.</value>
-        public IMvxAsyncCommand RunProcedurCommand { get; set; }
+        public MvxAsyncCommand RunProcedurCommand { get; set; }
 
         /// <summary>
         /// Gets or sets the save workspace command.
@@ -576,6 +611,7 @@ namespace LibBuilder.Core.ViewModels
 
         #endregion Commands
 
+        protected object _lock = new object();
         private bool _contentLoadingAnimation;
         private LibraryModel _library;
         private ObservableCollection<LibraryModel> _librarys;

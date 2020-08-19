@@ -43,7 +43,7 @@ namespace LibBuilder.WPFCore.ViewModels
             //UI bezogen
             OpenWorkspaceCommand = new MvxAsyncCommand(OpenWorkspace);
 
-            RunProcedurCommand = new MvxAsyncCommand(RunProcedur);
+            RunProcedurCommand = new MvxAsyncCommand(RunProcedurAsync);
 
             if (parameter != null)
             {
@@ -276,7 +276,7 @@ namespace LibBuilder.WPFCore.ViewModels
             ConsoleSpiner spin = new ConsoleSpiner();
             Task loadingSpinner = Task.Run(() => spin.Turn());
 
-            await RunProcedur();
+            await RunProcedurAsync();
 
             loadingSpinner.Dispose();
             Console.WriteLine();
@@ -288,7 +288,7 @@ namespace LibBuilder.WPFCore.ViewModels
         /// <summary>
         /// Runs the procedur.
         /// </summary>
-        protected async Task RunProcedur()
+        protected override async Task RunProcedurAsync()
         {
             if (!CheckWorkspace())
                 return;
@@ -304,10 +304,12 @@ namespace LibBuilder.WPFCore.ViewModels
             ProcessLoadingAnimation = true;
             await RaisePropertyChanged(() => ProcessLoadingAnimation);
 
-            object _lock = new object();
             BindingOperations.EnableCollectionSynchronization(Processes, _lock);
 
-            await base.RunProcedurAsync(_lock);
+            await base.RunProcedurAsync();
+
+            ProcessLoadingAnimation = false;
+            await RaisePropertyChanged(() => ProcessLoadingAnimation);
         }
 
         /// <summary>
