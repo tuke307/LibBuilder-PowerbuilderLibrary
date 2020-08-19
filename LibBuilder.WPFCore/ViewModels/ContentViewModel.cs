@@ -3,6 +3,7 @@
 namespace LibBuilder.WPFCore.ViewModels
 {
     using Data.Models;
+    using LibBuilder.WPFCore.Business;
     using LibBuilder.WPFCore.Views;
     using Microsoft.Win32;
     using MvvmCross.Commands;
@@ -46,7 +47,7 @@ namespace LibBuilder.WPFCore.ViewModels
 
             if (parameter != null)
             {
-                _ = ParameterStartAsync();
+                Task.Run(ParameterStartAsync);
             }
             //letzten modifizierten Workspace laden, mit zuletzt ausgewähltem Target
             //if (Workspaces != null && Workspaces.Count > 0)
@@ -149,6 +150,9 @@ namespace LibBuilder.WPFCore.ViewModels
         /// </summary>
         protected async Task ParameterStartAsync()
         {
+            Console.WriteLine();
+            Console.WriteLine("---------Vorbereitung---------");
+
             // Workspace
             if (parameter.Workspace != null)
             {
@@ -196,12 +200,12 @@ namespace LibBuilder.WPFCore.ViewModels
                 // Version, die in DB gespeichert ist
             }
 
-            // Librays
-            if (parameter.Librarys != null)
+            //Librays
+            if (!parameter.Librarys.IsNullOrEmpty())
             {
                 base.DeselectAllLibrarys();
 
-                Console.WriteLine("Librarys " + parameter.Librarys + " eingelesen");
+                Console.WriteLine("Librarys " + String.Join(", ", parameter.Librarys.ToArray()) + " selektiert");
             }
             else
             {
@@ -211,30 +215,21 @@ namespace LibBuilder.WPFCore.ViewModels
             // Build
             if (parameter.Build.HasValue)
             {
-                if (!parameter.Build.Value)
+                foreach (var lib in parameter.Librarys)
                 {
-                    foreach (var lib in parameter.Librarys)
+                    Library = Librarys.Single(l => l.File.ToLower() == Path.GetFileName(lib).ToLower());
+                    if (Library != null)
                     {
-                        Library = Librarys.Single(l => l.File.ToLower() == Path.GetFileName(lib).ToLower());
-                        if (Library != null)
+                        if (!parameter.Build.Value)
                         {
                             Library.Build = false;
-
-                            await base.SaveLibrary();
                         }
-                    }
-                }
-                else
-                {
-                    foreach (var lib in parameter.Librarys)
-                    {
-                        Library = Librarys.Single(l => l.File.ToLower() == Path.GetFileName(lib).ToLower());
-                        if (Library != null)
+                        else
                         {
                             Library.Build = true;
-
-                            await base.SaveLibrary();
                         }
+
+                        await base.SaveLibrary();
                     }
                 }
             }
@@ -246,32 +241,24 @@ namespace LibBuilder.WPFCore.ViewModels
             // Regenerate
             if (parameter.Regenerate.HasValue)
             {
-                if (!parameter.Regenerate.Value)
+                foreach (var lib in parameter.Librarys)
                 {
-                    foreach (var lib in parameter.Librarys)
+                    Library = Librarys.Single(l => l.File.ToLower() == Path.GetFileName(lib).ToLower());
+                    if (Library != null)
                     {
-                        Library = Librarys.Single(l => l.File.ToLower() == Path.GetFileName(lib).ToLower());
-                        if (Library != null)
+                        // Library Objects laden
+                        await LoadLibrary();
+
+                        if (!parameter.Regenerate.Value)
                         {
-                            // Library Objects laden
-                            await LoadLibrary();
                             base.DeselectAllEntrys();
-                            await base.SaveLibrary();
                         }
-                    }
-                }
-                else
-                {
-                    foreach (var lib in parameter.Librarys)
-                    {
-                        Library = Librarys.Single(l => l.File.ToLower() == Path.GetFileName(lib).ToLower());
-                        if (Library != null)
+                        else
                         {
-                            // Library Objects laden
-                            await LoadLibrary();
                             base.SelectAllEntrys();
-                            await base.SaveLibrary();
                         }
+
+                        await base.SaveLibrary();
                     }
                 }
             }
@@ -280,12 +267,22 @@ namespace LibBuilder.WPFCore.ViewModels
                 // Letzte Auswahl die in DB gespeichert ist
             }
 
-            // Run
-            Console.WriteLine("Ausführen der Prozedur");
-            Thread thread1 = new Thread(Dots);
-            thread1.Start();
+            #region Run
+
+            Console.WriteLine();
+            Console.WriteLine("---------Ausführung---------");
+            Console.Write("Laden....");
+
+            ConsoleSpiner spin = new ConsoleSpiner();
+            Task loadingSpinner = Task.Run(() => spin.Turn());
+
             await RunProcedur();
-            thread1.Abort();
+
+            loadingSpinner.Dispose();
+            Console.WriteLine();
+            Console.WriteLine("++Abgeschlossen++");
+
+            #endregion Run
         }
 
         /// <summary>
@@ -310,7 +307,7 @@ namespace LibBuilder.WPFCore.ViewModels
             object _lock = new object();
             BindingOperations.EnableCollectionSynchronization(Processes, _lock);
 
-            base.RunProcedur(_lock);
+            await base.RunProcedurAsync(_lock);
         }
 
         /// <summary>

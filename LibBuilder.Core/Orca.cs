@@ -63,18 +63,22 @@ namespace LibBuilder.Core
             pbLibraryList = pbTarget.Libraries.Select(l => l?.FilePath).ToList();
 
             if (dbTarget.Librarys != null)
+            {
                 dbLibraryList = dbTarget.Librarys.Select(l => l?.FilePath).ToList();
+            }
 
             //beide Listen vergleichen
             var difference = pbLibraryList.Except(dbLibraryList).ToList();
 
             //neue Librays hinzufügen
             for (int count = 0; count < difference.Count; count++)
+            {
                 dbTarget.Librarys.Add(new LibraryModel()
                 {
                     File = Path.GetFileName(difference[count]),
                     Directory = Path.GetDirectoryName(difference[count])
                 });
+            }
 
             //Application Object des Targets muss geladen werden, da sie für Compile-Aufgaben gesetzt werden muss
 

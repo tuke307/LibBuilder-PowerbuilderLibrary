@@ -4,7 +4,7 @@ using CommandLine;
 using CommandLine.Text;
 using System.Collections.Generic;
 
-namespace LibBuilder.WPFCore
+namespace LibBuilder.WPFCore.Business
 {
     /// <summary>
     /// Options.

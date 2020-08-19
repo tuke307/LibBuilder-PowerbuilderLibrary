@@ -8,8 +8,10 @@
     <LangVersion>latest</LangVersion>
     <CodeAnalysisRuleSet>$(SolutionDir)\Code Rules.ruleset</CodeAnalysisRuleSet>
     <AssemblyName>LibBuilder</AssemblyName>
-    <Version>2.0.0</Version>
+    <Version>2.0.0.0</Version>
     <ApplicationIcon>icon.ico</ApplicationIcon>
+    <Company>Timeline Financials GmbH &amp; Co. KG</Company>
+    <Authors>Tony Meißner</Authors>
   </PropertyGroup>
 
   <ItemGroup>

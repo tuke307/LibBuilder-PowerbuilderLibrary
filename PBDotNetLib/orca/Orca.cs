@@ -1,18 +1,21 @@
 ﻿// project=PBDotNetLib, file=Orca.cs, creation=2020:6:28 Copyright (c) 2020 Timeline
 // Financials GmbH & Co. KG. All rights reserved.
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Runtime.InteropServices;
-using System.Text;
-
 namespace PBDotNetLib.orca
 {
+    using System;
+    using System.Collections.Generic;
+    using System.ComponentModel;
+    using System.Runtime.InteropServices;
+    using System.Text;
+
     /// <summary>
     /// wrapper to export objects from pbl with orca
     /// </summary>
     public class Orca
     {
+        /// <summary>
+        /// Result.
+        /// </summary>
         public enum Result
         {
             [Description("Operation successful")]
@@ -115,6 +118,9 @@ namespace PBDotNetLib.orca
             PBORCA_PBCFILE_REQ = -32,
         }
 
+        /// <summary>
+        /// Version.
+        /// </summary>
         public enum Version
         {
             PB105,
@@ -122,6 +128,8 @@ namespace PBDotNetLib.orca
             PB170,
             PB190
         }
+
+        #region private
 
         private enum PBORCA_ENTRY_TYPE
         {
@@ -147,14 +155,11 @@ namespace PBDotNetLib.orca
             PBORCA_3PASS
         }
 
-        private Version currentVersion;
-        private Result result;
-
-        #region private
-
         private static int session = 0;
         private string currentLibrary = null;
+        private Version currentVersion;
         private List<LibEntry> libEntries;
+        private Result result;
 
         #endregion private
 
@@ -465,6 +470,11 @@ namespace PBDotNetLib.orca
                 SessionOpen();
         }
 
+        /// <summary>
+        /// Applications the rebuild.
+        /// </summary>
+        /// <param name="type">The type.</param>
+        /// <returns></returns>
         public Result ApplicationRebuild(int type)
         {
             PBORCA_CALLBACK staticCallbackDel = new PBORCA_CALLBACK(PBORCA_COMPERRCallback);
@@ -492,6 +502,12 @@ namespace PBDotNetLib.orca
             return result;
         }
 
+        /// <summary>
+        /// Creates the dynamic library.
+        /// </summary>
+        /// <param name="file">The file.</param>
+        /// <param name="pbrFile">The PBR file.</param>
+        /// <returns></returns>
         public Result CreateDynamicLibrary(string file, string pbrFile)
         {
             switch (this.currentVersion)
@@ -754,6 +770,13 @@ namespace PBDotNetLib.orca
             return result;
         }
 
+        /// <summary>
+        /// Regenerates the object.
+        /// </summary>
+        /// <param name="library">The library.</param>
+        /// <param name="objectName">Name of the object.</param>
+        /// <param name="objecttype">The objecttype.</param>
+        /// <returns></returns>
         public Result RegenerateObject(string library, string objectName, Objecttype objecttype)
         {
             PBORCA_CALLBACK staticCallbackDel = new PBORCA_CALLBACK(PBORCA_COMPERRCallback);
@@ -781,6 +804,9 @@ namespace PBDotNetLib.orca
             return result;
         }
 
+        /// <summary>
+        /// Sessions the close.
+        /// </summary>
         public void SessionClose()
         {
             switch (this.currentVersion)
@@ -805,6 +831,9 @@ namespace PBDotNetLib.orca
             session = 0;
         }
 
+        /// <summary>
+        /// Sessions the open.
+        /// </summary>
         public void SessionOpen()
         {
             switch (this.currentVersion)
@@ -827,6 +856,12 @@ namespace PBDotNetLib.orca
             }
         }
 
+        /// <summary>
+        /// Sets the current appl.
+        /// </summary>
+        /// <param name="applLibName">Name of the appl library.</param>
+        /// <param name="applName">Name of the appl.</param>
+        /// <returns></returns>
         public Result SetCurrentAppl(string applLibName, string applName)
         {
             switch (this.currentVersion)
@@ -851,6 +886,12 @@ namespace PBDotNetLib.orca
             return result;
         }
 
+        /// <summary>
+        /// Sets the library list.
+        /// </summary>
+        /// <param name="librarys">The librarys.</param>
+        /// <param name="libCount">The library count.</param>
+        /// <returns></returns>
         public Result SetLibraryList(string[] librarys, int libCount)
         {
             switch (this.currentVersion)

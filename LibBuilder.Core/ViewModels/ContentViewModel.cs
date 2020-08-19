@@ -266,9 +266,9 @@ namespace LibBuilder.Core.ViewModels
         /// Startet die Orca-Prozeduren in einem asynchronen Task
         /// </summary>
         /// <param name="_lock"></param>
-        protected virtual void RunProcedur(object _lock)
+        protected virtual async Task RunProcedurAsync(object _lock)
         {
-            RunProcedurTask = Task.Run(() =>
+            RunProcedurTask = Task.Run(async () =>
             {
                 var session = new PBDotNetLib.orca.Orca(Workspace.PBVersion.Value);
 
@@ -295,7 +295,7 @@ namespace LibBuilder.Core.ViewModels
                 using (var db = new DatabaseContext())
                 {
                     ObjectModel applObj = db.Object.Where(o => o.Library.Target == this.Target && o.ObjectType == PBDotNetLib.orca.Objecttype.Application).First();
-                    db.Entry(applObj).Reference(o => o.Library).Load();
+                    await db.Entry(applObj).Reference(o => o.Library).LoadAsync();
 
                     lock (_lock)
                         Processes.Last().Result = session.SetCurrentAppl(applObj.Library.FilePath, applObj.Name);
@@ -311,7 +311,7 @@ namespace LibBuilder.Core.ViewModels
                         Library = db.Library.Single(b => b.Id == Librarys[l].Id);
 
                         //Load Collections
-                        db.Entry(Library).Collection(t => t.Objects).Load();
+                        await db.Entry(Library).Collection(t => t.Objects).LoadAsync();
                     }
 
                     //wenn nichts zum verarbeiten
@@ -372,13 +372,15 @@ namespace LibBuilder.Core.ViewModels
 
                     db.Attach(process);
 
-                    db.SaveChanges();
+                    await db.SaveChangesAsync();
                 }
 
                 session.SessionClose();
 
                 ProcessLoadingAnimation = false;
             });
+
+            await RunProcedurTask;
         }
 
         /// <summary>

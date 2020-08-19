@@ -1,14 +1,22 @@
 ﻿// project=LibBuilder.WPFCore, file=Content.xaml.cs, creation=2020:7:21 Copyright (c) 2020
 // Timeline Financials GmbH & Co. KG. All rights reserved.
-using LibBuilder.Core.ViewModels;
-using LibBuilder.WPFCore.ViewModels;
-using System.Collections.Generic;
-using System.Windows.Controls;
-
 namespace LibBuilder.WPFCore.Views
 {
+    using LibBuilder.WPFCore.Business;
+    using System.Windows.Controls;
+
+    /// <summary>
+    /// Content.
+    /// </summary>
+    /// <seealso cref="System.Windows.Controls.UserControl" />
+    /// <seealso cref="System.Windows.Markup.IComponentConnector" />
     public partial class Content : UserControl
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Content" /> class.
+        /// </summary>
+        /// <param name="mainWindowViewModel">The main window view model.</param>
+        /// <param name="parameter">The parameter.</param>
         public Content(WPFCore.ViewModels.MainWindowViewModel mainWindowViewModel, Options parameter = null)
         {
             InitializeComponent();

@@ -1,12 +1,12 @@
 ﻿// project=LibBuilder.WPFCore, file=MainWindow.xaml.cs, creation=2020:7:21 Copyright (c)
 // 2020 Timeline Financials GmbH & Co. KG. All rights reserved.
-using AutoUpdaterDotNET;
-using System.Collections.Generic;
-using System.Windows;
-using System.Windows.Input;
-
 namespace LibBuilder.WPFCore.Views
 {
+    using AutoUpdaterDotNET;
+    using LibBuilder.WPFCore.Business;
+    using System.Windows;
+    using System.Windows.Input;
+
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
