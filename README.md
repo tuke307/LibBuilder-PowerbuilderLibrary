@@ -7,7 +7,7 @@ Das Programm wurde für Windows 10 - 32Bit getestet und entwickelt. Programmiert
 (Download x86 [hier](https://dotnet.microsoft.com/download/dotnet-core/current/runtime))
 
 Zum verwenden der ORCA Funktionen benötigt man die ORCA DLL, diese wird beim Installieren des Powerbuilders automatisch mit installiert. Für jede Powerbuilder Version gibt es eine andere DLL.  
-Normalerweise unter “C:\Program Files (x86)\Appeon\Shared\PowerBuilder\”  
+Normalerweise unter *“C:\Program Files (x86)\Appeon\Shared\PowerBuilder\”*  
 Die Versionen werden vom LibBuilder unterstützt. Weitere Versionen können natürlich hinzugefügt werden.
 | Name              | Orca-DLL      |
 | ------------------|:-------------:|
@@ -17,8 +17,8 @@ Die Versionen werden vom LibBuilder unterstützt. Weitere Versionen können nat�
 | PowerBuilder 19.0 | PBORC190.DLL  |
 
 ## Dateien
-Die zweite Version des LibBuilders erstellt keine zusätzlichen Dateien, alles wird in einer Datenbank gespeichert. Im Installationsverzeichnis befinden sich lediglich 2 Dateien;  
-Die Datenbank befindet sich im Roaming Verzeichnis; „C:\Users\\%currentUser%\\AppData\Roaming\LibBuilder\libbuilder.db“
+Die zweite Version des LibBuilders erstellt keine zusätzlichen Dateien, alles wird in einer Datenbank gespeichert. Im Installationsverzeichnis befinden sich lediglich 2 Dateien; 
+Die Datenbank befindet sich im Roaming Verzeichnis; *„C:\Users\\%currentUser%\\AppData\Roaming\LibBuilder\libbuilder.db“*
 
 
 ## Powerbuilder
@@ -46,7 +46,7 @@ Der Start über die Kommandozeile ist möglich. Die Reihenfolge der Parameterang
 |    -l     | Auswahl der Librarys                | Liste von Zeichenketten |                         | 
 |    -a     | Ausführung über Fenster-Applikation | Boolescher Wert         | true oder false         | 
 
-Beispiele: 
+**Beispiele:** 
 
 Letzte gespeicherte Prozedur erneut ausführen;  
 libbuilder.exe -w kunden.pbw
