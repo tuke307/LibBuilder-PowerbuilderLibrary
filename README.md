@@ -10,7 +10,7 @@ Zum verwenden der ORCA Funktionen benötigt man die ORCA DLL, diese wird beim In
 Normalerweise unter *“C:\Program Files (x86)\Appeon\Shared\PowerBuilder\”*  
 Die Versionen werden vom LibBuilder unterstützt. Weitere Versionen können natürlich hinzugefügt werden.
 | Name              | Orca-DLL      |
-| ------------------|:-------------:|
+| ------------------|---------------|
 | PowerBuilder 10.5 | PBORC105.DLL  | 
 | PowerBuilder 12.5 | PBORC125.DLL  | 
 | PowerBuilder 17.0 | PBORC170.DLL  |
@@ -36,15 +36,15 @@ Es können mehrere Prozeduren auf einmal ausgeführt werden. Der LibBuilder muss
 ## Kommandozeile
 Der Start über die Kommandozeile ist möglich. Die Reihenfolge der Parameterangabe sowie die Groß-und Kleinschreibung ist egal.
 
-| Parameter | Erklärung                           | Typ                     | Eingabe                 |
-|-----------|-------------------------------------|-------------------------|-------------------------|
-|    -w     | Name oder Pfad des Workspace        | Zeichenkette            |                         | 
-|    -t     | Name oder Pfad des Targets          | Zeichenkette            |                         | 
-|    -v     | Powerbuilder Version des Workspace  | Nummer                  | 105, 125, 170 oder 190  | 
-|    -b     | Build der Librarys                  | Boolescher Wert	        | true oder false         | 
-|    -r     | Regenerate der Library Objects      | Boolescher Wert	        | true oder false         | 
-|    -l     | Auswahl der Librarys                | Liste von Zeichenketten |                         | 
-|    -a     | Ausführung über Fenster-Applikation | Boolescher Wert         | true oder false         | 
+| Parameter (kurz) | Parameter (lang)   | Erklärung                           | Typ                     | Eingabe                 |
+|------------------|--------------------|-------------------------------------|-------------------------|-------------------------|
+| -w               | -Workspace         | Name oder Pfad des Workspace        | Zeichenkette            |                         | 
+| -t               | -Target            | Name oder Pfad des Targets          | Zeichenkette            |                         | 
+| -v               | -Version           | Powerbuilder Version des Workspace  | Nummer                  | 105, 125, 170 oder 190  | 
+| -b               | -Build             | Build der Librarys                  | Boolescher Wert	        | true oder false         | 
+| -r               | -Regenerate        | Regenerate der Library Objects      | Boolescher Wert	        | true oder false         | 
+| -l               | -Librarys          | Auswahl der Librarys                | Liste von Zeichenketten |                         | 
+| -a               | -Application       | Ausführung über Fenster-Applikation | Boolescher Wert         | true oder false         | 
 
 **Beispiele:** 
 
