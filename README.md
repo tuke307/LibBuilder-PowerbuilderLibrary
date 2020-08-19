@@ -37,7 +37,7 @@ Es können mehrere Prozeduren auf einmal ausgeführt werden. Der LibBuilder muss
 Der Start über die Kommandozeile ist möglich. Die Reihenfolge der Parameterangabe sowie die Groß-und Kleinschreibung ist egal.
 
 | Parameter | Erklärung                           | Typ                     | Eingabe                 |
-|-----------|:-----------------------------------:|-------------------------|:-----------------------:|
+|-----------|-------------------------------------|-------------------------|-------------------------|
 |    -w     | Name oder Pfad des Workspace        | Zeichenkette            |                         | 
 |    -t     | Name oder Pfad des Targets          | Zeichenkette            |                         | 
 |    -v     | Powerbuilder Version des Workspace  | Nummer                  | 105, 125, 170 oder 190  | 
