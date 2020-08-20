@@ -5,6 +5,7 @@ namespace LibBuilder.WPFCore.ViewModels
     using Data.Models;
     using LibBuilder.WPFCore.Business;
     using LibBuilder.WPFCore.Views;
+    using MaterialDesignColors.Recommended;
     using MaterialDesignThemes.Wpf;
     using Microsoft.Win32;
     using MvvmCross.Commands;
@@ -58,27 +59,6 @@ namespace LibBuilder.WPFCore.ViewModels
         }
 
         #region Methods
-
-        /// <summary>
-        /// Dotses this instance.
-        /// </summary>
-        public static void Dots()
-        {
-            while (true)
-            {
-                for (int i = 0; i < 3; i++)
-                {
-                    Console.Write('.');
-                    System.Threading.Thread.Sleep(1000);
-                    if (i == 2)
-                    {
-                        Console.Write("\r   \r");
-                        i = -1;
-                        System.Threading.Thread.Sleep(1000);
-                    }
-                }
-            }
-        }
 
         /// <summary>
         /// Lädt Library aus Datenbank Vergleich mit aktueller Powerbuilder Library
@@ -164,33 +144,37 @@ namespace LibBuilder.WPFCore.ViewModels
             if (parameter.Workspace != null)
             {
                 // pfad
-                if (parameter.Workspace.IndexOfAny(Path.GetInvalidPathChars()) == -1)
+                if (Path.IsPathFullyQualified(parameter.Workspace) && !Path.IsPathRooted(parameter.Workspace))
                 {
-                    if (File.Exists(parameter.Workspace))
+                    string filePath = Path.GetFullPath(parameter.Workspace);
+
+                    if (File.Exists(filePath))
                     {
                         try
                         {
-                            Workspace = Workspaces.Single(w => w.FilePath.ToLower() == parameter.Workspace.ToLower());
+                            Workspace = Workspaces.Single(w => w.FilePath.ToLower() == filePath.ToLower());
                         }
                         catch
                         {
                             // in Datenbank hinzufügen
                             Console.WriteLine("Workspace-Pfad konnte in Datenbank nicht gefunden werden, daher wird dieser hinzugefügt");
-                            base.OpenWorkspace(parameter.Workspace);
+                            base.OpenWorkspace(filePath);
                         }
                     }
                     else
                     {
-                        Console.WriteLine("Der Workspace-Pfad " + parameter.Workspace + " ist ungültig");
+                        Console.WriteLine("Der Workspace-Pfad " + filePath + " ist ungültig");
                         return;
                     }
                 }
                 // Name
                 else
                 {
+                    string fileName = Path.GetFileName(parameter.Workspace);
+
                     try
                     {
-                        Workspace = Workspaces.Single(w => w.File.ToLower() == Path.GetFileName(parameter.Workspace).ToLower());
+                        Workspace = Workspaces.Single(w => w.File.ToLower() == fileName.ToLower());
                     }
                     catch (Exception exc)
                     {
@@ -234,13 +218,15 @@ namespace LibBuilder.WPFCore.ViewModels
             if (parameter.Target != null)
             {
                 // pfad
-                if (parameter.Target.IndexOfAny(Path.GetInvalidPathChars()) == -1)
+                if (Path.IsPathFullyQualified(parameter.Target) && !Path.IsPathRooted(parameter.Target))
                 {
-                    if (File.Exists(parameter.Target))
+                    string filePath = Path.GetFullPath(parameter.Target);
+
+                    if (File.Exists(filePath))
                     {
                         try
                         {
-                            Target = Targets.Single(t => t.FilePath.ToLower() == parameter.Target.ToLower());
+                            Target = Targets.Single(t => t.FilePath.ToLower() == filePath.ToLower());
                         }
                         catch
                         {
@@ -251,14 +237,16 @@ namespace LibBuilder.WPFCore.ViewModels
                     }
                     else
                     {
-                        Console.WriteLine("Der Target-Pfad " + parameter.Target + " ist ungültig");
+                        Console.WriteLine("Der Target-Pfad " + filePath + " ist ungültig");
                         return;
                     }
                 }
                 // name
                 else
                 {
-                    Target = Targets.Single(t => t.File.ToLower() == Path.GetFileName(parameter.Target).ToLower());
+                    string fileName = Path.GetFileName(parameter.Target);
+
+                    Target = Targets.Single(t => t.File.ToLower() == fileName.ToLower());
                 }
 
                 await LoadTarget();
@@ -288,25 +276,74 @@ namespace LibBuilder.WPFCore.ViewModels
                 await base.SaveTarget();
             }
 
-            // Librays
-            if (!parameter.Librarys.IsNullOrEmpty())
+            // ausgewählte Librarys - Build/Regenerate
+            if (!parameter.Librarys.IsNullOrEmpty() && (parameter.Build.HasValue || parameter.Regenerate.HasValue))
             {
-                base.DeselectAllLibrarys();
+                // ausgewählte Librarys
 
                 Console.WriteLine("Librarys " + String.Join(", ", parameter.Librarys.ToArray()) + " selektiert");
-            }
-            else
-            {
-                // letzte Auswahl nehmen die in DB gespeichert ist
-            }
 
-            // Build
-            if (parameter.Build.HasValue)
-            {
+                // build deselktieren
+                base.DeselectAllLibrarys();
+
+                // Regenerate deselektieren
+                foreach (var lib in Librarys)
+                {
+                    Library = Librarys.Single(x => x == lib);
+
+                    // Library Objects laden
+                    await LoadLibrary();
+
+                    base.DeselectAllEntrys();
+                }
+
+                // ausgewählte Librarys
                 foreach (var lib in parameter.Librarys)
                 {
-                    Library = Librarys.Single(l => l.File.ToLower() == Path.GetFileName(lib).ToLower());
-                    if (Library != null)
+                    // pfad
+                    if (Path.IsPathFullyQualified(lib) && !Path.IsPathRooted(lib))
+                    {
+                        string filePath = Path.GetFullPath(lib);
+
+                        if (File.Exists(filePath))
+                        {
+                            try
+                            {
+                                Library = Librarys.Single(l => l.FilePath.ToLower() == filePath.ToLower());
+                            }
+                            catch
+                            {
+                                Console.WriteLine("Library-Pfad; " + filePath + ", wurde nicht gefunden");
+                                return;
+                            }
+                        }
+                        else
+                        {
+                            Console.WriteLine("Der Library-Pfad " + filePath + " ist ungültig");
+                            return;
+                        }
+                    }
+                    // Name
+                    else
+                    {
+                        string fileName = Path.GetFileName(lib);
+
+                        try
+                        {
+                            Library = Librarys.Single(l => l.File.ToLower() == fileName.ToLower());
+                        }
+                        catch
+                        {
+                            Console.WriteLine("Library-Name; " + fileName + ", wurde nicht gefunden");
+                            return;
+                        }
+                    }
+
+                    // Library Objects laden
+                    await LoadLibrary();
+
+                    // Build
+                    if (parameter.Build.HasValue)
                     {
                         if (!parameter.Build.Value)
                         {
@@ -319,21 +356,44 @@ namespace LibBuilder.WPFCore.ViewModels
 
                         await base.SaveLibrary();
                     }
+
+                    // Regenerate
+                    if (parameter.Regenerate.HasValue)
+                    {
+                        if (!parameter.Regenerate.Value)
+                        {
+                            base.DeselectAllEntrys();
+                        }
+                        else
+                        {
+                            base.SelectAllEntrys();
+                        }
+                    }
                 }
             }
+            // alle Librarys - Build/Regenerate
             else
             {
-                // Letzte Auswahl die in DB gespeichert ist
-            }
-
-            // Regenerate
-            if (parameter.Regenerate.HasValue)
-            {
-                foreach (var lib in parameter.Librarys)
+                // Build
+                if (parameter.Build.HasValue)
                 {
-                    Library = Librarys.Single(l => l.File.ToLower() == Path.GetFileName(lib).ToLower());
-                    if (Library != null)
+                    if (!parameter.Build.Value)
                     {
+                        base.DeselectAllLibrarys();
+                    }
+                    else
+                    {
+                        base.SelectAllLibrarys();
+                    }
+                }
+
+                // Regenerate
+                if (parameter.Regenerate.HasValue)
+                {
+                    foreach (var lib in Librarys)
+                    {
+                        Library = Librarys.Single(x => x == lib);
+
                         // Library Objects laden
                         await LoadLibrary();
 
@@ -345,14 +405,8 @@ namespace LibBuilder.WPFCore.ViewModels
                         {
                             base.SelectAllEntrys();
                         }
-
-                        await base.SaveLibrary();
                     }
                 }
-            }
-            else
-            {
-                // Letzte Auswahl die in DB gespeichert ist
             }
 
         Run:
@@ -364,11 +418,23 @@ namespace LibBuilder.WPFCore.ViewModels
             Console.Write("Laden....");
 
             ConsoleSpiner spin = new ConsoleSpiner();
-            Task loadingSpinner = Task.Run(() => spin.Turn());
+            var ts = new CancellationTokenSource();
+            CancellationToken ct = ts.Token;
+            _ = Task.Run(() =>
+                {
+                    while (true)
+                    {
+                        if (ct.IsCancellationRequested)
+                        {
+                            break;
+                        }
+                        spin.Turn();
+                    }
+                }, ct);
 
             await RunProcedurAsync();
 
-            loadingSpinner.Dispose();
+            ts.Cancel();
             Console.WriteLine();
             Console.WriteLine("++Abgeschlossen++");
 
