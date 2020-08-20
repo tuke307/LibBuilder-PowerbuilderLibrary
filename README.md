@@ -40,11 +40,14 @@ Der Start über die Kommandozeile ist möglich. Die Reihenfolge der Parameterang
 |------------------|--------------------|-------------------------------------|-------------------------|-------------------------|
 | -w               | -Workspace         | Name oder Pfad des Workspace        | Zeichenkette            |                         | 
 | -t               | -Target            | Name oder Pfad des Targets          | Zeichenkette            |                         | 
-| -v               | -Version           | Powerbuilder Version des Workspace  | Nummer                  | 105, 125, 170 oder 190  | 
+| -v               | -Version           | Powerbuilder Version des Workspace  | Enumerischer Wert       | PB105 = 105,  PB125 = 125,  PB170 = 170,  PB190 = 190  | 
 | -b               | -Build             | Build der Librarys                  | Boolescher Wert	        | true oder false         | 
 | -r               | -Regenerate        | Regenerate der Library Objects      | Boolescher Wert	        | true oder false         | 
 | -l               | -Librarys          | Auswahl der Librarys                | Liste von Zeichenketten |                         | 
 | -a               | -Application       | Ausführung über Fenster-Applikation | Boolescher Wert         | true oder false         | 
+| -x               | -RebuildType       | Typ des Rebuild                     | Enumerischer Wert       | PBORCA_FULL_REBUILD = 1,  PBORCA_INCREMENTAL_REBUILD = 2,  PBORCA_MIGRATE = 3,  PBORCA_3PASS = 4         | 
+
+
 
 **Beispiele:** 
 
@@ -52,7 +55,7 @@ Letzte gespeicherte Prozedur erneut ausführen;
 libbuilder.exe -w kunden.pbw
 
 Full Build des Targets „tlfi_lokal.pbt“;  
-libbuilder.exe -w kunden.pbw -t tlfi_lokal.pbt -b true -r true
+libbuilder.exe -w kunden.pbw -t tlfi_lokal.pbt -x 1
 
 Regenerieren aller Objekte der Librarys „client_elinv.pbl“ und „client_tlfiutils.pbl“ des Target „tlfi_lokal.pbt“: 
 libbuilder.exe -w kunden.pbw -t tlfi_lokal.pbt -b true -l client_elinv.pbl;client_tlfiutils.pbl
