@@ -1,20 +1,18 @@
 ﻿// project=LibBuilder.Core, file=MainWindowViewModel.cs, creation=2020:7:21 Copyright (c)
 // 2020 Timeline Financials GmbH & Co. KG. All rights reserved.
 using MvvmCross.Commands;
+using MvvmCross.Logging;
+using MvvmCross.Navigation;
 using MvvmCross.ViewModels;
 using System.Threading.Tasks;
 
 namespace LibBuilder.Core.ViewModels
 {
-    public class MainWindowViewModel : MvxViewModel
+    public class MainViewModel : MvxNavigationViewModel
     {
         private bool _contentVis;
 
-        private object _homeContent;
-
-        private bool _processesVis;
-
-        private bool _settingsVis;
+        private bool _menuVis;
 
         public bool ContentVis
         {
@@ -22,11 +20,13 @@ namespace LibBuilder.Core.ViewModels
             set => SetProperty(ref _contentVis, value);
         }
 
-        public object HomeContent
+        public bool MenuVis
         {
-            get => _homeContent;
-            set => SetProperty(ref _homeContent, value);
+            get => _menuVis;
+            set => SetProperty(ref _menuVis, value);
         }
+
+        public IMvxCommand OpenColorsCommand { get; set; }
 
         public IMvxCommand OpenContentCommand { get; set; }
 
@@ -34,19 +34,8 @@ namespace LibBuilder.Core.ViewModels
 
         public IMvxCommand OpenSettingsCommand { get; set; }
 
-        public bool ProcessesVis
-        {
-            get => _processesVis;
-            set => SetProperty(ref _processesVis, value);
-        }
-
-        public bool SettingsVis
-        {
-            get => _settingsVis;
-            set => SetProperty(ref _settingsVis, value);
-        }
-
-        public MainWindowViewModel()
+        public MainViewModel(IMvxLogProvider logProvider, IMvxNavigationService navigationService)
+            : base(logProvider, navigationService)
         {
         }
 

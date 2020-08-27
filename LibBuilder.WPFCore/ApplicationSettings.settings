@@ -1,0 +1,21 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="LibBuilder.WPFCore" GeneratedClassName="ApplicationSettings">
+  <Profiles />
+  <Settings>
+    <Setting Name="UpdatePath" Type="System.String" Scope="User">
+      <Value Profile="(Default)">file://///tlfi.de\Freigaben\lwi\TL_Tools\LibBuilder\.NET\AutoUpdater.xml</Value>
+    </Setting>
+    <Setting Name="ApplicationRebuildOptions" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="TargetPath" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="WorkspacePath" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="LibraryPath" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

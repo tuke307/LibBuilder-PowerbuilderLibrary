@@ -12,6 +12,7 @@
     <ApplicationIcon>icon.ico</ApplicationIcon>
     <Company>Timeline Financials GmbH &amp; Co. KG</Company>
     <Authors>Tony Meißner</Authors>
+    <Copyright />
   </PropertyGroup>
 
   <ItemGroup>
@@ -25,6 +26,7 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.19" />
+    <PackageReference Include="MvvmCross.Platforms.Wpf" Version="7.0.0" />
   </ItemGroup>
 
   <ItemGroup>
@@ -33,31 +35,49 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="Views\Aussehen.xaml.cs">
-      <DependentUpon>Aussehen.xaml</DependentUpon>
+    <Compile Update="ApplicationSettings.Designer.cs">
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ApplicationSettings.settings</DependentUpon>
     </Compile>
-    <Compile Update="Views\Content.xaml.cs">
-      <DependentUpon>Content.xaml</DependentUpon>
+    <Compile Update="Color.Designer.cs">
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Color.settings</DependentUpon>
+    </Compile>
+    <Compile Update="Views\ColorSettingsView.xaml.cs">
+      <DependentUpon>ColorSettingsView.xaml</DependentUpon>
     </Compile>
     <Compile Update="Views\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Update="Views\Processes.xaml.cs">
-      <DependentUpon>Processes.xaml</DependentUpon>
+    <Compile Update="Views\ProcessHistoryView.xaml.cs">
+      <DependentUpon>ProcessHistoryView.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
 
   <ItemGroup>
-    <Page Update="Views\Aussehen.xaml">
+    <None Update="ApplicationSettings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>ApplicationSettings.Designer.cs</LastGenOutput>
+    </None>
+    <None Update="Color.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Color.Designer.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="Views\ColorSettingsView.xaml">
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="Views\Content.xaml">
+    <Page Update="Views\ProcessMainView.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Views\MainWindow.xaml">
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="Views\Processes.xaml">
+    <Page Update="Views\ProcessHistoryView.xaml">
       <SubType>Designer</SubType>
     </Page>
   </ItemGroup>

@@ -1,0 +1,15 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="LibBuilder.WPFCore" GeneratedClassName="Color">
+  <Profiles />
+  <Settings>
+    <Setting Name="Theme" Type="MaterialDesignThemes.Wpf.BaseTheme" Scope="User">
+      <Value Profile="(Default)">Light</Value>
+    </Setting>
+    <Setting Name="Primary" Type="MaterialDesignColors.PrimaryColor" Scope="User">
+      <Value Profile="(Default)">Teal</Value>
+    </Setting>
+    <Setting Name="Secondary" Type="MaterialDesignColors.SecondaryColor" Scope="User">
+      <Value Profile="(Default)">Cyan</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

@@ -11,11 +11,13 @@ namespace LibBuilder.Core
 
     /// <summary>
     /// PB zu Datenbank.
+    /// TODO: Überprüfen ob remove funktioniert
     /// </summary>
     public static class Orca
     {
         /// <summary>
         /// Fügt neue, noch nicht vorhandene Objects für eine Library hinzu
+        /// TODO: vergleichen des Object namens/typ, nicht nur des Namens
         /// </summary>
         /// <param name="dbLibrary">Die zu aktualisierende Library</param>
         /// <param name="version">Orca Version zum starten der Session</param>
@@ -25,22 +27,34 @@ namespace LibBuilder.Core
             //Powerbuilder-Objects für die selektierte Library holen
             List<LibEntry> pbObjects = new PBDotNetLib.orca.Orca(version).DirLibrary(dbLibrary.FilePath);
 
-            //neue Objekte werden gesucht
-            var newObjects = pbObjects.Select(l => l.Name).ToList().Except(dbLibrary.Objects.Select(l => l.Name).ToList()).ToList();
+            List<string> pbObjectList = new List<string>();
+            List<string> dbObjectList = new List<string>();
 
-            //neue Objekte hinzufügen
-            if (newObjects != null && newObjects.Count > 0)
+            // einlesen
+            pbObjectList = pbObjects?.Select(l => l.Name).ToList();
+            dbObjectList = dbLibrary?.Objects?.Select(t => t.Name).ToList();
+
+            //beide Listen vergleichen
+            var differenceToAdd = pbObjectList.Except(dbObjectList).ToList();
+            var differenceToRemove = dbObjectList.Except(pbObjectList).ToList();
+
+            // neue Targets hinzufügen
+            foreach (var item in differenceToAdd)
             {
-                for (int count = 0; count < newObjects.Count; count++)
-                {
-                    LibEntry temp = pbObjects.Where(o => o.Name == newObjects[count]).First();
+                LibEntry temp = pbObjects.Where(o => o.Name.Equals(item)).First();
 
-                    dbLibrary.Objects.Add(new ObjectModel()
-                    {
-                        Name = temp.Name,
-                        ObjectType = temp.Type
-                    });
-                }
+                dbLibrary.Objects.Add(new ObjectModel()
+                {
+                    Name = temp.Name,
+                    ObjectType = temp.Type
+                });
+            }
+
+            // alte Targets löschen
+            foreach (var item in differenceToRemove)
+            {
+                var _object = dbLibrary.Objects.Single(l => l.Name.ToLower().Equals(item.ToLower()));
+                dbLibrary.Objects.Remove(_object);
             }
 
             return dbLibrary;
@@ -60,29 +74,35 @@ namespace LibBuilder.Core
             List<string> pbLibraryList = new List<string>();
             List<string> dbLibraryList = new List<string>();
 
+            // einlesen
             pbLibraryList = pbTarget.Libraries.Select(l => l?.FilePath).ToList();
-
-            if (dbTarget.Librarys != null)
-            {
-                dbLibraryList = dbTarget.Librarys.Select(l => l?.FilePath).ToList();
-            }
+            dbLibraryList = dbTarget?.Librarys?.Select(l => l?.FilePath).ToList();
 
             //beide Listen vergleichen
-            var difference = pbLibraryList.Except(dbLibraryList).ToList();
+            var differenceToAdd = pbLibraryList.Except(dbLibraryList).ToList();
+            var differenceToRemove = dbLibraryList.Except(pbLibraryList).ToList();
 
-            //neue Librays hinzufügen
-            for (int count = 0; count < difference.Count; count++)
+            // neue Librays hinzufügen
+            foreach (var item in differenceToAdd)
             {
                 dbTarget.Librarys.Add(new LibraryModel()
                 {
-                    File = Path.GetFileName(difference[count]),
-                    Directory = Path.GetDirectoryName(difference[count])
+                    File = Path.GetFileName(item),
+                    Directory = Path.GetDirectoryName(item)
                 });
             }
 
-            //Application Object des Targets muss geladen werden, da sie für Compile-Aufgaben gesetzt werden muss
+            // alte Libraries löschen
+            foreach (var item in differenceToRemove)
+            {
+                var library = dbTarget.Librarys.Single(l => l.FilePath.ToLower().Equals(item.ToLower()));
+                dbTarget.Librarys.Remove(library);
+            }
 
             #region Application
+
+            // Application Object des Targets muss geladen werden, da sie für
+            // Compile-Aufgaben gesetzt werden muss
 
             var applLibrary = pbTarget.Libraries.Where(l => l.EntryList.Where(o => o.Type == Objecttype.Application).Any()).First();
             var dbLibrary = dbTarget.Librarys.Where(l => l.File == applLibrary.File).First();
@@ -109,22 +129,32 @@ namespace LibBuilder.Core
             //Orca Workspace öffnen
             Workspace pbWorkspace = new Workspace(dbWorkspace.FilePath, dbWorkspace.PBVersion.Value);
 
-            //neue Targets werden gesucht
-            var newTargets = pbWorkspace.Targets.Select(t => t.File).ToList().Except(dbWorkspace.Target.Select(t => t.File).ToList()).ToList();
+            List<string> pbTargetList = new List<string>();
+            List<string> dbTargetList = new List<string>();
 
-            //neue Targets hinzufügen
-            if (newTargets != null && newTargets.Count > 0)
+            // einlesen
+            pbTargetList = pbWorkspace?.Targets?.Select(t => Path.Combine(t.Dir, t.File)).ToList();
+            dbTargetList = dbWorkspace?.Target?.Select(t => t.FilePath).ToList();
+
+            //beide Listen vergleichen
+            var differenceToAdd = pbTargetList.Except(dbTargetList).ToList();
+            var differenceToRemove = dbTargetList.Except(pbTargetList).ToList();
+
+            // neue Targets hinzufügen
+            foreach (var item in differenceToAdd)
             {
-                for (int count = 0; count < newTargets.Count; count++)
+                dbWorkspace.Target.Add(new TargetModel()
                 {
-                    Target temp = pbWorkspace.Targets.Where(t => t.File == newTargets[count]).First();
+                    File = Path.GetFileName(item),
+                    Directory = Path.GetDirectoryName(item)
+                });
+            }
 
-                    dbWorkspace.Target.Add(new TargetModel()
-                    {
-                        File = temp.File,
-                        Directory = temp.Dir
-                    });
-                }
+            // alte Targets löschen
+            foreach (var item in differenceToRemove)
+            {
+                var target = dbWorkspace.Target.Single(l => l.FilePath.ToLower().Equals(item.ToLower()));
+                dbWorkspace.Target.Remove(target);
             }
 
             return dbWorkspace;

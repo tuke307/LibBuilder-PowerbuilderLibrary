@@ -1,11 +1,16 @@
-﻿<UserControl x:Class="LibBuilder.WPFCore.Views.Aussehen"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:materialDesignColors="clr-namespace:MaterialDesignColors;assembly=MaterialDesignColors"
-             xmlns:wpf="clr-namespace:MaterialDesignThemes.Wpf;assembly=MaterialDesignThemes.Wpf"
-             xmlns:local="clr-namespace:LibBuilder.WPFCore.Views"
+﻿<views:MvxWpfView  x:Class="LibBuilder.WPFCore.Views.ColorSettingsView"
+                   xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                   xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                   xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                   xmlns:region="clr-namespace:LibBuilder.WPFCore.Region"
+                   xmlns:viewModels="clr-namespace:LibBuilder.WPFCore.ViewModels"
+                   xmlns:local="clr-namespace:LibBuilder.WPFCore.Views"
+                   xmlns:materialDesignColors="clr-namespace:MaterialDesignColors;assembly=MaterialDesignColors"
+                   xmlns:wpf="clr-namespace:MaterialDesignThemes.Wpf;assembly=MaterialDesignThemes.Wpf"
+                   xmlns:views="clr-namespace:MvvmCross.Platforms.Wpf.Views;assembly=MvvmCross.Platforms.Wpf"
+                   x:TypeArguments="viewModels:ColorSettingsViewModel"
+                   region:MvxContainer.Header="Farbe"
              mc:Ignorable="d"
              Background="{DynamicResource MaterialDesignPaper}"
              MinHeight="700"
@@ -67,7 +72,7 @@
                         <Border.Background>
                             <SolidColorBrush Color="{Binding ExemplarHue.Color, Mode=OneTime}" />
                         </Border.Background>
-                        <Button Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:Aussehen}}, Path=DataContext.ApplyPrimaryCommand, Mode=OneTime}"
+                        <Button Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:ColorSettingsView}}, Path=DataContext.ApplyPrimaryCommand, Mode=OneTime}"
                                 CommandParameter="{Binding}">
                             <StackPanel Orientation="Horizontal">
                                 <TextBlock Text="Primär" />
@@ -90,7 +95,7 @@
                         <Border.Background>
                             <SolidColorBrush Color="{Binding AccentExemplarHue.Color, Mode=OneTime}" />
                         </Border.Background>
-                        <Button Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:Aussehen}}, Path=DataContext.ApplyAccentCommand, Mode=OneTime}"
+                        <Button Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:ColorSettingsView}}, Path=DataContext.ApplyAccentCommand, Mode=OneTime}"
                                 CommandParameter="{Binding}">
                             <StackPanel Orientation="Horizontal">
                                 <TextBlock Text="Akzent" />
@@ -175,4 +180,4 @@
             </ItemsControl>
         </ScrollViewer>
     </Grid>
-</UserControl>
+</views:MvxWpfView>

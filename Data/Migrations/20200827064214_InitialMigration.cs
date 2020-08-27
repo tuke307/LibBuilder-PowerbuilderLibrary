@@ -8,23 +8,6 @@ namespace Data.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Settings",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    CreatedDate = table.Column<DateTime>(nullable: false),
-                    UpdatedDate = table.Column<DateTime>(nullable: false),
-                    DarkMode = table.Column<bool>(nullable: false),
-                    PrimaryColor = table.Column<string>(nullable: false),
-                    SecondaryColor = table.Column<string>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Settings", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Workspace",
                 columns: table => new
                 {
@@ -136,11 +119,6 @@ namespace Data.Migrations
                         onDelete: ReferentialAction.Restrict);
                 });
 
-            migrationBuilder.InsertData(
-                table: "Settings",
-                columns: new[] { "Id", "CreatedDate", "DarkMode", "PrimaryColor", "SecondaryColor", "UpdatedDate" },
-                values: new object[] { 1, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), false, "teal", "cyan", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) });
-
             migrationBuilder.CreateIndex(
                 name: "IX_Library_TargetId",
                 table: "Library",
@@ -169,9 +147,6 @@ namespace Data.Migrations
 
             migrationBuilder.DropTable(
                 name: "Process");
-
-            migrationBuilder.DropTable(
-                name: "Settings");
 
             migrationBuilder.DropTable(
                 name: "Library");

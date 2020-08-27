@@ -1,96 +1,72 @@
-﻿// project=LibBuilder.WPFCore, file=ApplicationChanges.cs, creation=2020:7:21 Copyright
-// (c) 2020 Timeline Financials GmbH & Co. KG. All rights reserved.
-using Data;
+﻿// project=SimTuning.Forms.WPFCore, file=ApplicationChanges.cs, creation=2020:7:31
+// Copyright (c) 2020 tuke productions. All rights reserved.
+using MaterialDesignColors;
 using System;
-using System.Linq;
-using System.Windows;
 
 namespace LibBuilder.WPFCore.Business
 {
-    public class ApplicationChanges
+    /// <summary>
+    /// ApplicationChanges.
+    /// </summary>
+    public static class ApplicationChanges
     {
-        public void LoadColors()
-        {
-            using (var db = new DatabaseContext())
-            {
-                var settings = db.Settings.ToList().Last(); //zuletzt hinzugefügter Datensatz
-                if (settings != null)
-                {
-                    Uri primary = new Uri($"pack://application:,,,/MaterialDesignColors;component/Themes/Recommended/Primary/MaterialDesignColor." + settings.PrimaryColor + ".xaml");
-                    NewResourceDictionary(0, primary);
-
-                    Uri accent = new Uri($"pack://application:,,,/MaterialDesignColors;component/Themes/Recommended/Accent/MaterialDesignColor." + settings.SecondaryColor + ".xaml");
-                    NewResourceDictionary(1, accent);
-
-                    Uri basetheme = new Uri($"pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme." + StringBaseTheme(settings.DarkMode) + ".xaml");
-                    NewResourceDictionary(2, basetheme);
-                }
-            }
-        }
-
-        public void SetAccent(object acccent_color)
-        {
-            using (var db = new DatabaseContext())
-            {
-                var settings = db.Settings.ToList().Last(); //zuletzt hinzugefügter Datensatz
-                if (settings != null)
-                {
-                    Uri accent = new Uri($"pack://application:,,,/MaterialDesignColors;component/Themes/Recommended/Accent/MaterialDesignColor." + acccent_color.ToString() + ".xaml");
-                    NewResourceDictionary(1, accent);
-
-                    settings.SecondaryColor = acccent_color.ToString();
-
-                    db.SaveChanges();
-                }
-            }
-        }
-
-        public void SetBaseTheme(object base_color)
-        {
-            using (var db = new DatabaseContext())
-            {
-                var settings = db.Settings.ToList().Last(); //zuletzt hinzugefügter Datensatz
-                if (settings != null)
-                {
-                    Uri basetheme = new Uri($"pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme." + StringBaseTheme((bool)base_color) + ".xaml");
-                    NewResourceDictionary(2, basetheme);
-
-                    settings.DarkMode = (bool)base_color;
-
-                    db.SaveChanges();
-                }
-            }
-        }
-
-        public void SetPrimary(object primary_color)
-        {
-            using (var db = new DatabaseContext())
-            {
-                var settings = db.Settings.ToList().Last(); //zuletzt hinzugefügter Datensatz
-                if (settings != null)
-                {
-                    Uri primary = new Uri($"pack://application:,,,/MaterialDesignColors;component/Themes/Recommended/Primary/MaterialDesignColor." + primary_color.ToString() + ".xaml");
-                    NewResourceDictionary(0, primary);
-
-                    settings.PrimaryColor = primary_color.ToString();
-
-                    db.SaveChanges();
-                }
-            }
-        }
-
-        private void NewResourceDictionary(int position, Uri newvalue)
-        {
-            Application.Current.Resources.MergedDictionaries.RemoveAt(position);
-            Application.Current.Resources.MergedDictionaries.Insert(position, new ResourceDictionary() { Source = newvalue });
-        }
-
-        private string StringBaseTheme(bool value)
+        public static MaterialDesignThemes.Wpf.BaseTheme BoolToBaseTheme(bool value)
         {
             if (value)
-                return "Dark";
+                return MaterialDesignThemes.Wpf.BaseTheme.Dark;
             else
-                return "Light";
+                return MaterialDesignThemes.Wpf.BaseTheme.Light;
+        }
+
+        public static bool IsDarkTheme()
+        {
+            if (Color.Default.Theme == MaterialDesignThemes.Wpf.BaseTheme.Dark)
+                return true;
+            else
+                return false;
+        }
+
+        public static void LoadColors()
+        {
+            var appChanges = new RessourceChanges();
+
+            appChanges.Colors(
+                primaryColor: Color.Default.Primary.ToString(),
+                secondaryColor: Color.Default.Secondary.ToString(),
+                baseTheme: Color.Default.Theme.ToString());
+        }
+
+        public static void SetAccent(Swatch acccent_color)
+        {
+            Color.Default.Secondary = (MaterialDesignColors.SecondaryColor)Enum.Parse(typeof(MaterialDesignColors.SecondaryColor), acccent_color.Name);
+
+            Color.Default.Save();
+
+            var appChanges = new RessourceChanges();
+
+            appChanges.Colors(secondaryColor: Color.Default.Secondary.ToString());
+        }
+
+        public static void SetBaseTheme(bool base_color)
+        {
+            Color.Default.Theme = ApplicationChanges.BoolToBaseTheme(base_color);
+
+            Color.Default.Save();
+
+            var appChanges = new RessourceChanges();
+
+            appChanges.Colors(baseTheme: Color.Default.Theme.ToString());
+        }
+
+        public static void SetPrimary(Swatch primary_color)
+        {
+            Color.Default.Primary = (MaterialDesignColors.PrimaryColor)Enum.Parse(typeof(MaterialDesignColors.PrimaryColor), primary_color.ToString(), true);
+
+            Color.Default.Save();
+
+            var appChanges = new RessourceChanges();
+
+            appChanges.Colors(primaryColor: Color.Default.Primary.ToString());
         }
     }
 }

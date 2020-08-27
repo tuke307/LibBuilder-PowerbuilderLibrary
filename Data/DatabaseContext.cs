@@ -33,12 +33,6 @@ namespace Data
         public DbSet<ProcessModel> Process { get; set; }
 
         /// <summary>
-        /// Gets or sets the settings.
-        /// </summary>
-        /// <value>The settings.</value>
-        public DbSet<SettingsModel> Settings { get; set; }
-
-        /// <summary>
         /// Gets or sets the target.
         /// </summary>
         /// <value>The target.</value>
@@ -56,8 +50,8 @@ namespace Data
         public DatabaseContext()
         {
             // migrate and create
-            //Database.Migrate();
-            Database.EnsureCreated();
+            Database.Migrate();
+            //Database.EnsureCreated();
         }
 
         /// <summary>
@@ -136,10 +130,6 @@ namespace Data
                 .HasConversion(
                     x => x.ToString(), // to converter
                     x => (Objecttype)Enum.Parse(typeof(Objecttype), x));// from converter
-
-            //Seeding
-            modelBuilder.Entity<SettingsModel>().HasData(
-            new SettingsModel { Id = 1, DarkMode = false, PrimaryColor = "teal", SecondaryColor = "cyan" });
         }
     }
 }

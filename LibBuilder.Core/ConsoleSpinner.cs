@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace LibBuilder.WPFCore.Business
+namespace LibBuilder.Core
 {
     public class ConsoleSpiner
     {

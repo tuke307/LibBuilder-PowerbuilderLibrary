@@ -4,6 +4,8 @@ using LibBuilder.WPFCore.Business;
 using LibBuilder.WPFCore.Views;
 using MaterialDesignThemes.Wpf;
 using MvvmCross.Commands;
+using MvvmCross.Logging;
+using MvvmCross.Navigation;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -11,17 +13,18 @@ using System.Threading.Tasks;
 
 namespace LibBuilder.WPFCore.ViewModels
 {
-    public class MainWindowViewModel : LibBuilder.Core.ViewModels.MainWindowViewModel
+    public class MainViewModel : LibBuilder.Core.ViewModels.MainViewModel
     {
-        private readonly ApplicationChanges settings = new ApplicationChanges();
+        private readonly IMvxNavigationService _navigationService;
 
-        private Options parameter;
-
-        public MainWindowViewModel(Options parameter = null)
+        public MainViewModel(IMvxLogProvider logProvider, IMvxNavigationService navigationService)
+            : base(logProvider, navigationService)
         {
-            this.parameter = parameter;
+            this._navigationService = navigationService;
+
             OpenSettingsCommand = new MvxCommand(OpenSettings);
             OpenContentCommand = new MvxCommand(OpenContant);
+            OpenColorsCommand = new MvxCommand(OpenColors);
             OpenProcessesCommand = new MvxCommand(OpenProcesses);
 
             //für start
@@ -30,7 +33,7 @@ namespace LibBuilder.WPFCore.ViewModels
 
         public override Task Initialize()
         {
-            settings.LoadColors();
+            ApplicationChanges.LoadColors();
 
             return base.Initialize();
         }
@@ -40,27 +43,35 @@ namespace LibBuilder.WPFCore.ViewModels
             base.Prepare();
         }
 
+        private void OpenColors()
+        {
+            _navigationService.Navigate<ColorSettingsViewModel>();
+
+            MenuVis = false;
+            ContentVis = true;
+        }
+
         private void OpenContant()
         {
-            HomeContent = new Content(this, parameter);
-            SettingsVis = true;
-            ProcessesVis = true;
+            _navigationService.Navigate<ProcessMainViewModel>();
+
+            MenuVis = true;
             ContentVis = false;
         }
 
         private void OpenProcesses()
         {
-            HomeContent = new Processes();
-            SettingsVis = false;
-            ProcessesVis = false;
+            _navigationService.Navigate<ProcessHistoryViewModel>();
+
+            MenuVis = false;
             ContentVis = true;
         }
 
         private void OpenSettings()
         {
-            HomeContent = new Aussehen();
-            SettingsVis = false;
-            ProcessesVis = false;
+            _navigationService.Navigate<ApplicationSettingsViewModel>();
+
+            MenuVis = false;
             ContentVis = true;
         }
     }

@@ -4,6 +4,8 @@ using Data;
 using Data.Models;
 using Microsoft.EntityFrameworkCore;
 using MvvmCross.Commands;
+using MvvmCross.Logging;
+using MvvmCross.Navigation;
 using MvvmCross.ViewModels;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -11,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace LibBuilder.Core.ViewModels
 {
-    public class ProcessHistoryViewModel : MvxViewModel
+    public class ProcessHistoryViewModel : MvxNavigationViewModel
     {
         private ObservableCollection<ProcessModel> _processes;
 
@@ -23,7 +25,8 @@ namespace LibBuilder.Core.ViewModels
             set => SetProperty(ref _processes, value);
         }
 
-        public ProcessHistoryViewModel()
+        public ProcessHistoryViewModel(IMvxLogProvider logProvider, IMvxNavigationService navigationService)
+            : base(logProvider, navigationService)
         {
             ClearProcessesCommand = new MvxCommand(ClearProcesses);
 

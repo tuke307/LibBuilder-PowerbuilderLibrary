@@ -4,21 +4,21 @@ namespace LibBuilder.WPFCore.Views
 {
     using AutoUpdaterDotNET;
     using LibBuilder.WPFCore.Business;
+    using LibBuilder.WPFCore.ViewModels;
+    using MvvmCross.Platforms.Wpf.Views;
     using System.Windows;
     using System.Windows.Input;
 
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class MainWindow : MvxWindow
     {
-        public MainWindow(Options parameter = null)
+        public MainWindow()
         {
             InitializeComponent();
 
-            DataContext = new LibBuilder.WPFCore.ViewModels.MainWindowViewModel(parameter);
-
-            AutoUpdater.Start(@"file://///tlfi.de\Freigaben\lwi\TL_Tools\LibBuilder\.NET\AutoUpdater.xml");
+            AutoUpdater.Start(ApplicationSettings.Default.UpdatePath);
         }
 
         private void GridTop_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
