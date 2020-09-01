@@ -75,8 +75,8 @@ Copyright (c) 2020 Timeline Financials GmbH & Co. KG. All rights reserved.
                               materialDesign:HintAssist.Hint="Workspace"
                               IsEditable="False"
                               ToolTip="Wähle ein Workspace aus"
-                              ItemsSource="{Binding Workspaces}"
-                              SelectedItem="{Binding Workspace}"
+                              ItemsSource="{Binding Mode=TwoWay, Path=Workspaces}"
+                              SelectedItem="{Binding Mode=TwoWay, Path=Workspace}"
                               DisplayMemberPath="File"
                               Style="{StaticResource MaterialDesignFloatingHintComboBox}"
                               VerticalAlignment="Center">
@@ -95,8 +95,8 @@ Copyright (c) 2020 Timeline Financials GmbH & Co. KG. All rights reserved.
                               materialDesign:HintAssist.Hint="Workspace"
                               IsEditable="False"
                               ToolTip="Wähle ein Workspace aus"
-                              ItemsSource="{Binding Workspaces}"
-                              SelectedItem="{Binding Workspace}"
+                              ItemsSource="{Binding Mode=TwoWay, Path=Workspaces}"
+                              SelectedItem="{Binding Mode=TwoWay, Path=Workspace}"
                               DisplayMemberPath="FilePath"
                               Style="{StaticResource MaterialDesignFloatingHintComboBox}"
                               VerticalAlignment="Center">
@@ -111,20 +111,19 @@ Copyright (c) 2020 Timeline Financials GmbH & Co. KG. All rights reserved.
                     <ComboBox Grid.Column="2"
                               Margin="10"
                               materialDesign:HintAssist.Hint="Version"
+                              materialDesign:TextFieldAssist.UnderlineBrush="{DynamicResource SecondaryAccentBrush}"
                               IsEditable="False"
                               Width="100"
-                              ItemsSource="{Binding PBVersions}"
-                              SelectedItem="{Binding WorkspacePBVersion}"
+                              ItemsSource="{Binding Mode=OneTime, Path=PBVersions}"
+                              SelectedItem="{Binding Mode=TwoWay, Path=Workspace.PBVersion}"
                               Style="{StaticResource MaterialDesignFloatingHintComboBox}"
                               VerticalAlignment="Center">
-                        <!--<i:Interaction.Triggers>
+                        <i:Interaction.Triggers>
                             <i:EventTrigger EventName="SelectionChanged">
-                                -->
-                        <!--<i:InvokeCommandAction Command="{Binding SaveWorkspaceCommand}" />-->
-                        <!--
+                                <i:InvokeCommandAction Command="{Binding SaveWorkspaceCommand}" />
                                 <i:InvokeCommandAction Command="{Binding WorkspaceSelectedCommand}" />
                             </i:EventTrigger>
-                        </i:Interaction.Triggers>-->
+                        </i:Interaction.Triggers>
                     </ComboBox>
                 </Grid>
             </GroupBox>
@@ -145,8 +144,8 @@ Copyright (c) 2020 Timeline Financials GmbH & Co. KG. All rights reserved.
                               materialDesign:HintAssist.Hint="Target"
                               IsEditable="False"
                               ToolTip="Wähle ein Target aus"
-                              ItemsSource="{Binding Targets}"
-                              SelectedItem="{Binding Target}"
+                              ItemsSource="{Binding Mode=TwoWay, Path=Targets}"
+                              SelectedItem="{Binding Mode=TwoWay, Path=Target}"
                               DisplayMemberPath="FilePath"
                               Style="{StaticResource MaterialDesignFloatingHintComboBox}"
                               VerticalAlignment="Center">
@@ -163,8 +162,8 @@ Copyright (c) 2020 Timeline Financials GmbH & Co. KG. All rights reserved.
                               materialDesign:HintAssist.Hint="Target"
                               IsEditable="False"
                               ToolTip="Wähle ein Target aus"
-                              ItemsSource="{Binding Targets}"
-                              SelectedItem="{Binding Target}"
+                              ItemsSource="{Binding Mode=TwoWay, Path=Targets}"
+                              SelectedItem="{Binding Mode=TwoWay, Path=Target}"
                               DisplayMemberPath="File"
                               Style="{StaticResource MaterialDesignFloatingHintComboBox}"
                               VerticalAlignment="Center">
@@ -181,18 +180,15 @@ Copyright (c) 2020 Timeline Financials GmbH & Co. KG. All rights reserved.
                               IsEditable="False"
                               Width="100"
                               Visibility="{Binding Source={x:Static local:ApplicationSettings.Default}, Path=ApplicationRebuildOptions, Mode=TwoWay, Converter={StaticResource BooleanToVisibilityConverter}}"
-                              ItemsSource="{Binding ApplicationRebuild}"
-                              SelectedItem="{Binding TargetApplicationRebuild}"
+                              ItemsSource="{Binding Mode=OneTime, Path=ApplicationRebuild}"
+                              SelectedItem="{Binding Mode=TwoWay, Path=Target.ApplicationRebuild}"
                               Style="{StaticResource MaterialDesignFloatingHintComboBox}"
                               VerticalAlignment="Center">
-                        <!--<i:Interaction.Triggers>
+                        <i:Interaction.Triggers>
                             <i:EventTrigger EventName="SelectionChanged">
-                                -->
-                        <!--<i:InvokeCommandAction Command="{Binding SaveWorkspaceCommand}" />-->
-                        <!--
-                                <i:InvokeCommandAction Command="{Binding TargetSelectedCommand}" />
+                                <i:InvokeCommandAction Command="{Binding SaveTargetCommand}" />
                             </i:EventTrigger>
-                        </i:Interaction.Triggers>-->
+                        </i:Interaction.Triggers>
                     </ComboBox>
                 </Grid>
             </GroupBox>

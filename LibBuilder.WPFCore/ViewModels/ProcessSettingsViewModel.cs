@@ -136,7 +136,7 @@ namespace LibBuilder.WPFCore.ViewModels
 
             await base.LoadTarget();
 
-            if (Target.ApplicationRebuild.HasValue && ApplicationSettings.Default.ApplicationRebuildOptions == false)
+            if (ApplicationSettings.Default.ApplicationRebuildOptions == false)
             {
                 using (var db = new DatabaseContext())
                 {
@@ -157,7 +157,7 @@ namespace LibBuilder.WPFCore.ViewModels
         /// </summary>
         protected override async Task LoadWorkspace()
         {
-            if (!await CheckWorkspaceAsync())
+            if (!CheckWorkspace())
             {
                 return;
             }
@@ -506,10 +506,10 @@ namespace LibBuilder.WPFCore.ViewModels
         /// </summary>
         protected async Task RunProcedurAsync()
         {
-            if (!await CheckWorkspaceAsync())
+            if (!CheckWorkspace())
                 return;
 
-            if (!await CheckRunnableAsync())
+            if (!CheckRunnable())
                 return;
 
             // navigate to ongoing and fire runprocedur!!!
@@ -520,12 +520,12 @@ namespace LibBuilder.WPFCore.ViewModels
         /// Checks the runnable.
         /// </summary>
         /// <returns></returns>
-        private async Task<bool> CheckRunnableAsync()
+        private bool CheckRunnable()
         {
             if (Target == null)
             {
                 dialogView.MySnackbar.MessageQueue.Enqueue("Bitte Target auswählen");
-                await DialogHost.Show(dialogView, "DialogSnackbar");
+                _ = DialogHost.Show(dialogView, "DialogSnackbar");
 
                 return false;
             }
@@ -537,20 +537,20 @@ namespace LibBuilder.WPFCore.ViewModels
         /// Checks the workspace.
         /// </summary>
         /// <returns></returns>
-        private async Task<bool> CheckWorkspaceAsync()
+        private bool CheckWorkspace()
         {
             if (Workspace == null)
             {
                 dialogView.MySnackbar.MessageQueue.Enqueue("Bitte Workspace auswählen");
-                await DialogHost.Show(dialogView, "DialogSnackbar");
+                _ = DialogHost.Show(dialogView, "DialogSnackbar");
 
                 return false;
             }
 
-            if (WorkspacePBVersion == null)
+            if (Workspace.PBVersion == null)
             {
                 dialogView.MySnackbar.MessageQueue.Enqueue("Bitte Powerbuilder-Version angeben");
-                await DialogHost.Show(dialogView, "DialogSnackbar");
+                _ = DialogHost.Show(dialogView, "DialogSnackbar");
 
                 return false;
             }
@@ -564,34 +564,6 @@ namespace LibBuilder.WPFCore.ViewModels
 
         private readonly IMvxNavigationService _navigationService;
         private readonly DialogSnackbarView dialogView;
-
-        /// <summary>
-        /// Gets or sets the target application rebuild.
-        /// </summary>
-        /// <value>The target application rebuild.</value>
-        public override PBDotNetLib.orca.Orca.PBORCA_REBLD_TYPE? TargetApplicationRebuild
-        {
-            get => Target?.ApplicationRebuild;
-            set
-            {
-                base.TargetApplicationRebuild = value;
-                Task.Run(CheckRunnableAsync);
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets the workspace pb version.
-        /// </summary>
-        /// <value>The workspace pb version.</value>
-        public override PBDotNetLib.orca.Orca.Version? WorkspacePBVersion
-        {
-            get => Workspace?.PBVersion;
-            set
-            {
-                base.WorkspacePBVersion = value;
-                Task.Run(CheckWorkspaceAsync);
-            }
-        }
 
         #endregion Properties
     }

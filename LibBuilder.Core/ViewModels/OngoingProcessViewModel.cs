@@ -76,18 +76,16 @@
                 #region ApplicationLibrarys
 
                 // Apllication Library Liste
+                var resultApplicationLibrarys = session.SetLibraryList(Target.Librarys.Select(l => l.FilePath).ToArray(), Target.Librarys.Count);
+
                 lock (_lock)
                 {
                     Processes.Add(new Data.Models.Process
                     {
                         Target = this.Target.File,
-                        Mode = "ApplicationLibrarys"
+                        Mode = "ApplicationLibrarys",
+                        Result = resultApplicationLibrarys
                     });
-                }
-
-                lock (_lock)
-                {
-                    Processes.Last().Result = session.SetLibraryList(Target.Librarys.Select(l => l.FilePath).ToArray(), Target.Librarys.Count);
                 }
 
                 #endregion ApplicationLibrarys
@@ -95,15 +93,6 @@
                 #region CurrentApplication
 
                 //Applikation setzen
-                lock (_lock)
-                {
-                    Processes.Add(new Data.Models.Process
-                    {
-                        Target = this.Target.File,
-                        Mode = "CurrentApplication"
-                    });
-                }
-
                 // Applikationsname holen(bei TimeLine e2 immer main.pbd(Library) und
                 // fakt3(Objekt))
                 using (var db = new DatabaseContext())
@@ -111,9 +100,16 @@
                     ObjectModel applObj = db.Object.Where(o => o.Library.Target == this.Target && o.ObjectType == PBDotNetLib.orca.Objecttype.Application).First();
                     await db.Entry(applObj).Reference(o => o.Library).LoadAsync();
 
+                    var resultCurrentApplication = session.SetCurrentAppl(applObj.Library.FilePath, applObj.Name);
+
                     lock (_lock)
                     {
-                        Processes.Last().Result = session.SetCurrentAppl(applObj.Library.FilePath, applObj.Name);
+                        Processes.Add(new Data.Models.Process
+                        {
+                            Target = this.Target.File,
+                            Mode = "CurrentApplication",
+                            Result = resultCurrentApplication
+                        });
                     }
                 }
 
@@ -123,17 +119,16 @@
 
                 if (Target.ApplicationRebuild.HasValue)
                 {
+                    var resultApplicationRebuild = session.ApplicationRebuild(Target.ApplicationRebuild.Value);
+
                     lock (_lock)
                     {
                         Processes.Add(new Data.Models.Process
                         {
                             Target = this.Target.File,
-                            Mode = "ApplicationRebuild"
+                            Mode = "ApplicationRebuild",
+                            Result = resultApplicationRebuild
                         });
-                    }
-                    lock (_lock)
-                    {
-                        Processes.Last().Result = session.ApplicationRebuild(Target.ApplicationRebuild.Value);
                     }
 
                     // Skip other processes

@@ -35,13 +35,14 @@ namespace LibBuilder.Core.ViewModels
             DeselectAllEntrysCommand = new MvxCommand(DeselectAllEntrys);
 
             //Speichern
-            SaveWorkspaceCommand = new MvxAsyncCommand(async () => await SaveWorkspace());
+            SaveWorkspaceCommand = new MvxAsyncCommand(SaveWorkspace);
+            SaveTargetCommand = new MvxAsyncCommand(SaveTarget);
 
             //VersionsListe
-            PBVersions = Enum.GetValues(typeof(PBDotNetLib.orca.Orca.Version)).Cast<PBDotNetLib.orca.Orca.Version>().ToList();
+            PBVersions = Enum.GetValues(typeof(PBDotNetLib.orca.Orca.Version)).Cast<PBDotNetLib.orca.Orca.Version?>().ToList();
 
             //RebuildType
-            ApplicationRebuild = Enum.GetValues(typeof(PBDotNetLib.orca.Orca.PBORCA_REBLD_TYPE)).Cast<PBDotNetLib.orca.Orca.PBORCA_REBLD_TYPE>().ToList();
+            ApplicationRebuild = Enum.GetValues(typeof(PBDotNetLib.orca.Orca.PBORCA_REBLD_TYPE)).Cast<PBDotNetLib.orca.Orca.PBORCA_REBLD_TYPE?>().ToList();
 
             using (var db = new DatabaseContext())
             {
@@ -410,6 +411,12 @@ namespace LibBuilder.Core.ViewModels
         public MvxAsyncCommand RunProcedurCommand { get; set; }
 
         /// <summary>
+        /// Gets or sets the save target command.
+        /// </summary>
+        /// <value>The save target command.</value>
+        public MvxAsyncCommand SaveTargetCommand { get; set; }
+
+        /// <summary>
         /// Gets or sets the save workspace command.
         /// </summary>
         /// <value>The save workspace command.</value>
@@ -443,13 +450,13 @@ namespace LibBuilder.Core.ViewModels
 
         #region private
 
-        private List<PBDotNetLib.orca.Orca.PBORCA_REBLD_TYPE> _applicationRebuild;
+        private List<PBDotNetLib.orca.Orca.PBORCA_REBLD_TYPE?> _applicationRebuild;
         private bool _contentLoadingAnimation;
         private LibraryModel _library;
         private ObservableCollection<LibraryModel> _librarys;
         private ObjectModel _object;
         private ObservableCollection<ObjectModel> _objects;
-        private List<PBDotNetLib.orca.Orca.Version> _pBVersions;
+        private List<PBDotNetLib.orca.Orca.Version?> _pBVersions;
         private TargetModel _target;
         private ObservableCollection<TargetModel> _targets;
         private WorkspaceModel _workspace;
@@ -468,7 +475,7 @@ namespace LibBuilder.Core.ViewModels
         /// Gets or sets the application rebuild.
         /// </summary>
         /// <value>The application rebuild.</value>
-        public List<PBDotNetLib.orca.Orca.PBORCA_REBLD_TYPE> ApplicationRebuild
+        public List<PBDotNetLib.orca.Orca.PBORCA_REBLD_TYPE?> ApplicationRebuild
         {
             get => _applicationRebuild;
             set => SetProperty(ref _applicationRebuild, value);
@@ -557,7 +564,7 @@ namespace LibBuilder.Core.ViewModels
         /// Gets or sets the pb versions.
         /// </summary>
         /// <value>The pb versions.</value>
-        public List<PBDotNetLib.orca.Orca.Version> PBVersions
+        public List<PBDotNetLib.orca.Orca.Version?> PBVersions
         {
             get => _pBVersions;
             set => SetProperty(ref _pBVersions, value);
@@ -573,25 +580,8 @@ namespace LibBuilder.Core.ViewModels
             set
             {
                 SetProperty(ref _target, value);
-                this.RaisePropertyChanged(() => this.TargetApplicationRebuild);
+                //this.RaisePropertyChanged(() => this.TargetApplicationRebuild);
                 TargetSelectedCommand.Execute();
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets the target application rebuild.
-        /// </summary>
-        /// <value>The target application rebuild.</value>
-        public virtual PBDotNetLib.orca.Orca.PBORCA_REBLD_TYPE? TargetApplicationRebuild
-        {
-            get => Target?.ApplicationRebuild;
-            set
-            {
-                if (Target != null)
-                {
-                    Target.ApplicationRebuild = value;
-                    TargetSelectedCommand.Execute();
-                }
             }
         }
 
@@ -616,30 +606,7 @@ namespace LibBuilder.Core.ViewModels
             {
                 SetProperty(ref _workspace, value);
                 WorkspaceSelectedCommand.Execute();
-                this.RaisePropertyChanged(() => this.WorkspacePBVersion);
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets the workspace pb version.
-        /// </summary>
-        /// <value>The workspace pb version.</value>
-        public virtual PBDotNetLib.orca.Orca.Version? WorkspacePBVersion
-        {
-            get => Workspace?.PBVersion;
-            set
-            {
-                if (Workspace != null)
-                {
-                    Workspace.PBVersion = value;
-                    WorkspaceSelectedCommand.Execute();
-                }
-
-                //SaveWorkspaceCommand.Execute();
-                //if (!WorkspaceSelectedCommand.CanExecute())
-                //{
-                //    WorkspaceSelectedCommand.Cancel();
-                //}
+                //this.RaisePropertyChanged(() => this.WorkspacePBVersion);
             }
         }
 
