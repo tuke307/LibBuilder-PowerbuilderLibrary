@@ -1,5 +1,5 @@
-﻿// project=SimTuning.Forms.WPFCore, file=ApplicationChanges.cs, creation=2020:7:31
-// Copyright (c) 2020 tuke productions. All rights reserved.
+﻿// project=LibBuilder.WPFCore, file=ApplicationChanges.cs, creation=2020:7:21 Copyright
+// (c) 2020 Timeline Financials GmbH & Co. KG. All rights reserved.
 using MaterialDesignColors;
 using System;
 

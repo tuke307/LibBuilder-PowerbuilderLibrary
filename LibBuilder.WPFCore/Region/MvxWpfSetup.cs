@@ -1,5 +1,5 @@
-﻿// project=SimTuning.Forms.WPFCore, file=MvxWpfSetup.cs, creation=2020:7:31 Copyright (c)
-// 2020 tuke productions. All rights reserved.
+﻿// project=LibBuilder.WPFCore, file=MvxWpfSetup.cs, creation=2020:8:24 Copyright (c) 2020
+// Timeline Financials GmbH & Co. KG. All rights reserved.
 using MvvmCross.Platforms.Wpf.Presenters;
 using MvvmCross.ViewModels;
 using System.Windows.Controls;

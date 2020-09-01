@@ -1,115 +1,33 @@
-﻿using Data;
-using Data.Models;
-using MvvmCross.Commands;
-using MvvmCross.Logging;
-using MvvmCross.Navigation;
-using MvvmCross.ViewModels;
-using System;
-using System.Collections.ObjectModel;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace LibBuilder.Core.ViewModels
+﻿namespace LibBuilder.Core.ViewModels
 {
+    using Data;
+    using Data.Models;
+    using MvvmCross.Commands;
+    using MvvmCross.Logging;
+    using MvvmCross.Navigation;
+    using MvvmCross.ViewModels;
+    using System.Collections.ObjectModel;
+    using System.Linq;
+    using System.Threading.Tasks;
+
+    /// <summary>
+    /// OngoingProcessViewModel.
+    /// </summary>
+    /// <seealso cref="MvvmCross.ViewModels.MvxNavigationViewModel{Data.Models.TargetModel}" />
     public class OngoingProcessViewModel : MvxNavigationViewModel<TargetModel>
     {
-        protected object _lock = new object();
-
-        private LibraryModel _library;
-        private ObservableCollection<LibraryModel> _librarys;
-        private bool _processError;
-
-        private ObservableCollection<Data.Models.Process> _processes;
-
-        private bool _processLoadingAnimation;
-
-        private bool _processSucess;
-
-        private TargetModel _target;
-
-        //private string _title;
-        private WorkspaceModel _workspace;
-
-        private Task RunProcedurTask;
-
-        public LibraryModel Library
-        {
-            get => _library;
-            set
-            {
-                //bevor neu zugewiesen wird; altes Model in DB speichern
-                //if (Library != null)
-                //{
-                //    using (var db = new DatabaseContext())
-                //    {
-                //        db.Library.Update(Library);
-                //        db.SaveChanges();
-                //    }
-                //}
-
-                SetProperty(ref _library, value);
-            }
-        }
-
-        public ObservableCollection<LibraryModel> Librarys
-        {
-            get => _librarys;
-            set => SetProperty(ref _librarys, value);
-        }
-
-        public bool ProcessError
-        {
-            get => _processError;
-            set => SetProperty(ref _processError, value);
-        }
-
-        public ObservableCollection<Data.Models.Process> Processes
-        {
-            get => _processes;
-            set => SetProperty(ref _processes, value);
-        }
-
-        public bool ProcessLoadingAnimation
-        {
-            get => _processLoadingAnimation;
-            set => SetProperty(ref _processLoadingAnimation, value);
-        }
-
-        public bool ProcessSucess
-        {
-            get => _processSucess;
-            set => SetProperty(ref _processSucess, value);
-        }
-
         /// <summary>
-        /// Gets or sets the run procedur command.
+        /// Initializes a new instance of the <see cref="OngoingProcessViewModel" />
+        /// class.
         /// </summary>
-        /// <value>The run procedur command.</value>
-        public MvxAsyncCommand RunProcedurCommand { get; set; }
-
-        public TargetModel Target
-        {
-            get => _target;
-            set => SetProperty(ref _target, value);
-        }
-
-        //public string Title
-        //{
-        //    get => _title;
-        //    set => SetProperty(ref _title, value);
-        //}
-
-        public WorkspaceModel Workspace
-        {
-            get => _workspace;
-            set => SetProperty(ref _workspace, value);
-        }
-
+        /// <param name="logProvider">The log provider.</param>
+        /// <param name="navigationService">The navigation service.</param>
         public OngoingProcessViewModel(IMvxLogProvider logProvider, IMvxNavigationService navigationService)
                                                                                                     : base(logProvider, navigationService)
         {
         }
+
+        #region Methods
 
         /// <summary>
         /// Initializes this instance.
@@ -326,5 +244,97 @@ namespace LibBuilder.Core.ViewModels
 
             await RunProcedurTask;
         }
+
+        #endregion Methods
+
+        #region Properties
+
+        protected object _lock = new object();
+
+        private LibraryModel _library;
+        private ObservableCollection<LibraryModel> _librarys;
+        private bool _processError;
+
+        private ObservableCollection<Data.Models.Process> _processes;
+
+        private bool _processLoadingAnimation;
+
+        private bool _processSucess;
+
+        private TargetModel _target;
+
+        //private string _title;
+        private WorkspaceModel _workspace;
+
+        private Task RunProcedurTask;
+
+        public LibraryModel Library
+        {
+            get => _library;
+            set
+            {
+                //bevor neu zugewiesen wird; altes Model in DB speichern
+                //if (Library != null)
+                //{
+                //    using (var db = new DatabaseContext())
+                //    {
+                //        db.Library.Update(Library);
+                //        db.SaveChanges();
+                //    }
+                //}
+
+                SetProperty(ref _library, value);
+            }
+        }
+
+        public ObservableCollection<LibraryModel> Librarys
+        {
+            get => _librarys;
+            set => SetProperty(ref _librarys, value);
+        }
+
+        public bool ProcessError
+        {
+            get => _processError;
+            set => SetProperty(ref _processError, value);
+        }
+
+        public ObservableCollection<Data.Models.Process> Processes
+        {
+            get => _processes;
+            set => SetProperty(ref _processes, value);
+        }
+
+        public bool ProcessLoadingAnimation
+        {
+            get => _processLoadingAnimation;
+            set => SetProperty(ref _processLoadingAnimation, value);
+        }
+
+        public bool ProcessSucess
+        {
+            get => _processSucess;
+            set => SetProperty(ref _processSucess, value);
+        }
+
+        /// <summary>
+        /// Gets or sets the run procedur command.
+        /// </summary>
+        /// <value>The run procedur command.</value>
+        public MvxAsyncCommand RunProcedurCommand { get; set; }
+
+        public TargetModel Target
+        {
+            get => _target;
+            set => SetProperty(ref _target, value);
+        }
+
+        public WorkspaceModel Workspace
+        {
+            get => _workspace;
+            set => SetProperty(ref _workspace, value);
+        }
+
+        #endregion Properties
     }
 }

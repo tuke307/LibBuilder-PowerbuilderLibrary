@@ -1,5 +1,5 @@
-﻿// project=LibBuilder.WPFCore, file=ContentViewModel.cs, creation=2020:7:21 Copyright (c)
-// 2020 Timeline Financials GmbH & Co. KG. All rights reserved.
+﻿// project=LibBuilder.WPFCore, file=ProcessMainViewModel.cs, creation=2020:7:21 Copyright
+// (c) 2020 Timeline Financials GmbH & Co. KG. All rights reserved.
 namespace LibBuilder.WPFCore.ViewModels
 {
     using Data.Models;
@@ -61,6 +61,9 @@ namespace LibBuilder.WPFCore.ViewModels
             base.Prepare();
         }
 
+        /// <summary>
+        /// Views the appearing.
+        /// </summary>
         public override void ViewAppearing()
         {
             this._navigationService.Navigate<ProcessSettingsViewModel>();

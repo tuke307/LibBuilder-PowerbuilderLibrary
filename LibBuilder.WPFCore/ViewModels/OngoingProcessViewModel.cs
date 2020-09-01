@@ -1,18 +1,27 @@
-﻿using Data.Models;
+﻿// project=LibBuilder.WPFCore, file=OngoingProcessViewModel.cs, creation=2020:8:24
+// Copyright (c) 2020 Timeline Financials GmbH & Co. KG. All rights reserved.
+using Data.Models;
 using MvvmCross.Commands;
 using MvvmCross.Logging;
 using MvvmCross.Navigation;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Data;
 
 namespace LibBuilder.WPFCore.ViewModels
 {
+    /// <summary>
+    /// OngoingProcessViewModel.
+    /// </summary>
+    /// <seealso cref="LibBuilder.Core.ViewModels.OngoingProcessViewModel" />
     public class OngoingProcessViewModel : Core.ViewModels.OngoingProcessViewModel
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="OngoingProcessViewModel" />
+        /// class.
+        /// </summary>
+        /// <param name="logProvider">The log provider.</param>
+        /// <param name="navigationService">The navigation service.</param>
         public OngoingProcessViewModel(IMvxLogProvider logProvider, IMvxNavigationService navigationService)
             : base(logProvider, navigationService)
         {

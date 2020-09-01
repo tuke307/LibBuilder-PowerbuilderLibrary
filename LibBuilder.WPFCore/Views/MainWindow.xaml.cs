@@ -14,6 +14,9 @@ namespace LibBuilder.WPFCore.Views
     /// </summary>
     public partial class MainWindow : MvxWindow
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MainWindow" /> class.
+        /// </summary>
         public MainWindow()
         {
             InitializeComponent();

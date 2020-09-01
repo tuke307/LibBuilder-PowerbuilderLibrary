@@ -1,4 +1,6 @@
-﻿using System;
+﻿// project=LibBuilder.WPFCore, file=RessourceChanges.cs, creation=2020:8:24 Copyright (c)
+// 2020 Timeline Financials GmbH & Co. KG. All rights reserved.
+using System;
 using System.Windows;
 
 namespace LibBuilder.WPFCore.Business

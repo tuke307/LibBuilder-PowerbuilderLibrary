@@ -10,7 +10,7 @@ Copyright (c) %CurrentYear% Timeline Financials GmbH & Co. KG. All rights reserv
 extensions: .vb
 'project=%Project%, file=%FileName%, creation=%CreationYear%:%CreationMonth%:%CreationDay%
 'Copyright (c) %CurrentYear% Timeline Financials GmbH & Co. KG. All rights reserved.
-extensions:  .xml .config .xsd
+extensions: .xaml .xml .config .xsd
 <!--
 project=%Project%, file=%FileName%, creation=%CreationYear%:%CreationMonth%:%CreationDay%
 Copyright (c) %CurrentYear% Timeline Financials GmbH & Co. KG. All rights reserved.

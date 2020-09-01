@@ -1,4 +1,8 @@
-﻿<views:MvxWpfView  x:Class="LibBuilder.WPFCore.Views.ApplicationSettingsView"
+﻿<!--
+project=LibBuilder.WPFCore, file=ApplicationSettingsView.xaml, creation=2020:8:24
+Copyright (c) 2020 Timeline Financials GmbH & Co. KG. All rights reserved.
+-->
+<views:MvxWpfView  x:Class="LibBuilder.WPFCore.Views.ApplicationSettingsView"
                    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
                    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -21,21 +25,22 @@
             <RowDefinition Height="*" />
             <RowDefinition Height="auto" />
         </Grid.RowDefinitions>
-        <StackPanel Grid.Row="0" Margin="25">
+        <StackPanel Grid.Row="0"
+                    Margin="25">
 
-            <TextBox
-                Margin="10"
-                Style="{StaticResource MaterialDesignOutlinedTextFieldTextBox}"
-                Text="{Binding Source={x:Static local:ApplicationSettings.Default}, Path=UpdatePath, Mode=TwoWay}"
-                materialDesign:HintAssist.Hint="Update-Datei" IsManipulationEnabled="False" />
+            <TextBox Margin="10"
+                     Style="{StaticResource MaterialDesignOutlinedTextFieldTextBox}"
+                     Text="{Binding Source={x:Static local:ApplicationSettings.Default}, Path=UpdatePath, Mode=TwoWay}"
+                     materialDesign:HintAssist.Hint="Update-Datei"
+                     IsManipulationEnabled="False" />
 
-            <Separator Margin="0 10 0 10"  Style="{StaticResource MaterialDesignSeparator}" />
+            <Separator Margin="0 10 0 10"
+                       Style="{StaticResource MaterialDesignSeparator}" />
 
             <StackPanel Orientation="Horizontal">
-                <CheckBox
-                Margin="10"
-                Style="{StaticResource MaterialDesignCheckBox}"
-                    IsChecked="{Binding Source={x:Static local:ApplicationSettings.Default}, Path=ApplicationRebuildOptions, Mode=TwoWay}">
+                <CheckBox Margin="10"
+                          Style="{StaticResource MaterialDesignCheckBox}"
+                          IsChecked="{Binding Source={x:Static local:ApplicationSettings.Default}, Path=ApplicationRebuildOptions, Mode=TwoWay}">
                 </CheckBox>
 
                 <Label VerticalAlignment="Center">
@@ -43,12 +48,13 @@
                 </Label>
             </StackPanel>
 
-            <Separator Margin="0 10 0 10" Style="{StaticResource MaterialDesignSeparator}" />
+            <Separator Margin="0 10 0 10"
+                       Style="{StaticResource MaterialDesignSeparator}" />
 
             <StackPanel Orientation="Horizontal">
-                <CheckBox
-                Margin="10"
-            Style="{StaticResource MaterialDesignCheckBox}" IsChecked="{Binding Source={x:Static local:ApplicationSettings.Default}, Path=WorkspacePath, Mode=TwoWay}">
+                <CheckBox Margin="10"
+                          Style="{StaticResource MaterialDesignCheckBox}"
+                          IsChecked="{Binding Source={x:Static local:ApplicationSettings.Default}, Path=WorkspacePath, Mode=TwoWay}">
                 </CheckBox>
 
                 <Label VerticalAlignment="Center">
@@ -57,9 +63,9 @@
             </StackPanel>
 
             <StackPanel Orientation="Horizontal">
-                <CheckBox
-                Margin="10"
-            Style="{StaticResource MaterialDesignCheckBox}" IsChecked="{Binding Source={x:Static local:ApplicationSettings.Default}, Path=TargetPath, Mode=TwoWay}">
+                <CheckBox Margin="10"
+                          Style="{StaticResource MaterialDesignCheckBox}"
+                          IsChecked="{Binding Source={x:Static local:ApplicationSettings.Default}, Path=TargetPath, Mode=TwoWay}">
                 </CheckBox>
 
                 <Label VerticalAlignment="Center">
@@ -68,9 +74,9 @@
             </StackPanel>
 
             <StackPanel Orientation="Horizontal">
-                <CheckBox
-                Margin="10"
-            Style="{StaticResource MaterialDesignCheckBox}" IsChecked="{Binding Source={x:Static local:ApplicationSettings.Default}, Path=LibraryPath, Mode=TwoWay}">
+                <CheckBox Margin="10"
+                          Style="{StaticResource MaterialDesignCheckBox}"
+                          IsChecked="{Binding Source={x:Static local:ApplicationSettings.Default}, Path=LibraryPath, Mode=TwoWay}">
                 </CheckBox>
 
                 <Label VerticalAlignment="Center">

@@ -13,8 +13,18 @@ using System.Threading.Tasks;
 
 namespace LibBuilder.Core.ViewModels
 {
+    /// <summary>
+    /// ProcessSettingsViewModel.
+    /// </summary>
+    /// <seealso cref="MvvmCross.ViewModels.MvxNavigationViewModel" />
     public class ProcessSettingsViewModel : MvxNavigationViewModel
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ProcessSettingsViewModel" />
+        /// class.
+        /// </summary>
+        /// <param name="logProvider">The log provider.</param>
+        /// <param name="navigationService">The navigation service.</param>
         public ProcessSettingsViewModel(IMvxLogProvider logProvider, IMvxNavigationService navigationService)
             : base(logProvider, navigationService)
         {
@@ -39,6 +49,8 @@ namespace LibBuilder.Core.ViewModels
                 Workspaces = new ObservableCollection<WorkspaceModel>(db.Workspace.ToList());
             }
         }
+
+        #region Methods
 
         /// <summary>
         /// Deselektiert alle Objects(Entrys)
@@ -167,9 +179,6 @@ namespace LibBuilder.Core.ViewModels
             await SaveTarget();
 
             Librarys = new ObservableCollection<LibraryModel>(Target.Librarys.Where(l => l.File.EndsWith(".pbl")).ToList());
-
-            //string message = "Target " + Target.File + " erfolgreich geladen";
-            //mainWindowViewModel.NotificationSnackbar.Enqueue(message);
         }
 
         /// <summary>
@@ -206,10 +215,7 @@ namespace LibBuilder.Core.ViewModels
             await SaveWorkspace();
 
             //Einfügen der DB Targets
-            await Task.Run(() => Targets = new ObservableCollection<TargetModel>(Workspace.Target.ToList()));
-
-            //string message = "Workspace " + Workspace.File + " wurde eingelesen";
-            //mainWindowViewModel.NotificationSnackbar.Enqueue(message);
+            Targets = new ObservableCollection<TargetModel>(Workspace.Target.ToList());
         }
 
         /// <summary>
@@ -367,6 +373,8 @@ namespace LibBuilder.Core.ViewModels
             }
         }
 
+        #endregion Methods
+
         #region Properties
 
         #region Commands
@@ -433,6 +441,8 @@ namespace LibBuilder.Core.ViewModels
 
         #endregion Commands
 
+        #region private
+
         private List<PBDotNetLib.orca.Orca.PBORCA_REBLD_TYPE> _applicationRebuild;
         private bool _contentLoadingAnimation;
         private LibraryModel _library;
@@ -452,18 +462,34 @@ namespace LibBuilder.Core.ViewModels
         private Task SaveTargetTask;
         private Task SaveWorkspaceTask;
 
+        #endregion private
+
+        /// <summary>
+        /// Gets or sets the application rebuild.
+        /// </summary>
+        /// <value>The application rebuild.</value>
         public List<PBDotNetLib.orca.Orca.PBORCA_REBLD_TYPE> ApplicationRebuild
         {
             get => _applicationRebuild;
             set => SetProperty(ref _applicationRebuild, value);
         }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether [content loading animation].
+        /// </summary>
+        /// <value>
+        /// <c>true</c> if [content loading animation]; otherwise, <c>false</c>.
+        /// </value>
         public bool ContentLoadingAnimation
         {
             get => _contentLoadingAnimation;
             set => SetProperty(ref _contentLoadingAnimation, value);
         }
 
+        /// <summary>
+        /// Gets or sets the library.
+        /// </summary>
+        /// <value>The library.</value>
         public LibraryModel Library
         {
             get => _library;
@@ -483,12 +509,20 @@ namespace LibBuilder.Core.ViewModels
             }
         }
 
+        /// <summary>
+        /// Gets or sets the librarys.
+        /// </summary>
+        /// <value>The librarys.</value>
         public ObservableCollection<LibraryModel> Librarys
         {
             get => _librarys;
             set => SetProperty(ref _librarys, value);
         }
 
+        /// <summary>
+        /// Gets or sets the object.
+        /// </summary>
+        /// <value>The object.</value>
         public ObjectModel Object
         {
             get => _object;
@@ -509,36 +543,110 @@ namespace LibBuilder.Core.ViewModels
             }
         }
 
+        /// <summary>
+        /// Gets or sets the objects.
+        /// </summary>
+        /// <value>The objects.</value>
         public ObservableCollection<ObjectModel> Objects
         {
             get => _objects;
             set => SetProperty(ref _objects, value);
         }
 
+        /// <summary>
+        /// Gets or sets the pb versions.
+        /// </summary>
+        /// <value>The pb versions.</value>
         public List<PBDotNetLib.orca.Orca.Version> PBVersions
         {
             get => _pBVersions;
             set => SetProperty(ref _pBVersions, value);
         }
 
+        /// <summary>
+        /// Gets or sets the target.
+        /// </summary>
+        /// <value>The target.</value>
         public TargetModel Target
         {
             get => _target;
-            set => SetProperty(ref _target, value);
+            set
+            {
+                SetProperty(ref _target, value);
+                this.RaisePropertyChanged(() => this.TargetApplicationRebuild);
+                TargetSelectedCommand.Execute();
+            }
         }
 
+        /// <summary>
+        /// Gets or sets the target application rebuild.
+        /// </summary>
+        /// <value>The target application rebuild.</value>
+        public virtual PBDotNetLib.orca.Orca.PBORCA_REBLD_TYPE? TargetApplicationRebuild
+        {
+            get => Target?.ApplicationRebuild;
+            set
+            {
+                if (Target != null)
+                {
+                    Target.ApplicationRebuild = value;
+                    TargetSelectedCommand.Execute();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the targets.
+        /// </summary>
+        /// <value>The targets.</value>
         public ObservableCollection<TargetModel> Targets
         {
             get => _targets;
             set => SetProperty(ref _targets, value);
         }
 
+        /// <summary>
+        /// Gets or sets the workspace.
+        /// </summary>
+        /// <value>The workspace.</value>
         public WorkspaceModel Workspace
         {
             get => _workspace;
-            set => SetProperty(ref _workspace, value);
+            set
+            {
+                SetProperty(ref _workspace, value);
+                WorkspaceSelectedCommand.Execute();
+                this.RaisePropertyChanged(() => this.WorkspacePBVersion);
+            }
         }
 
+        /// <summary>
+        /// Gets or sets the workspace pb version.
+        /// </summary>
+        /// <value>The workspace pb version.</value>
+        public virtual PBDotNetLib.orca.Orca.Version? WorkspacePBVersion
+        {
+            get => Workspace?.PBVersion;
+            set
+            {
+                if (Workspace != null)
+                {
+                    Workspace.PBVersion = value;
+                    WorkspaceSelectedCommand.Execute();
+                }
+
+                //SaveWorkspaceCommand.Execute();
+                //if (!WorkspaceSelectedCommand.CanExecute())
+                //{
+                //    WorkspaceSelectedCommand.Cancel();
+                //}
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the workspaces.
+        /// </summary>
+        /// <value>The workspaces.</value>
         public ObservableCollection<WorkspaceModel> Workspaces
         {
             get => _workspaces;

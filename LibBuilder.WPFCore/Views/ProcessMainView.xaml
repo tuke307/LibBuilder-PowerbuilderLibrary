@@ -1,4 +1,8 @@
-﻿<views:MvxWpfView  x:Class="LibBuilder.WPFCore.Views.ProcessMainView"
+﻿<!--
+project=LibBuilder.WPFCore, file=ProcessMainView.xaml, creation=2020:7:21
+Copyright (c) 2020 Timeline Financials GmbH & Co. KG. All rights reserved.
+-->
+<views:MvxWpfView  x:Class="LibBuilder.WPFCore.Views.ProcessMainView"
                    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                    xmlns:dragablz="http://dragablz.net/winfx/xaml/dragablz"
                    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"

@@ -1,44 +1,53 @@
-﻿using CommandLine;
-using CommandLine.Text;
-using Data;
-using Data.Models;
-using LibBuilder.Core;
-using LibBuilder.WPFCore.Views;
-using MaterialDesignThemes.Wpf;
-using Microsoft.Win32;
-using MvvmCross.Commands;
-using MvvmCross.Logging;
-using MvvmCross.Navigation;
-using PBDotNetLib.pbuilder;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Windows;
-
+﻿// project=LibBuilder.WPFCore, file=ProcessSettingsViewModel.cs, creation=2020:8:24
+// Copyright (c) 2020 Timeline Financials GmbH & Co. KG. All rights reserved.
 namespace LibBuilder.WPFCore.ViewModels
 {
+    using CommandLine;
+    using CommandLine.Text;
+    using Data;
+    using Data.Models;
+    using LibBuilder.Core;
+    using LibBuilder.WPFCore.Views;
+    using MaterialDesignThemes.Wpf;
+    using Microsoft.Win32;
+    using MvvmCross.Commands;
+    using MvvmCross.Logging;
+    using MvvmCross.Navigation;
+    using System;
+    using System.Collections.Generic;
+    using System.IO;
+    using System.Linq;
+    using System.Threading;
+    using System.Threading.Tasks;
+
+    /// <summary>
+    /// ProcessSettingsViewModel.
+    /// </summary>
+    /// <seealso cref="LibBuilder.Core.ViewModels.ProcessSettingsViewModel" />
     public class ProcessSettingsViewModel : LibBuilder.Core.ViewModels.ProcessSettingsViewModel
     {
-        private readonly IMvxNavigationService _navigationService;
-
+        /// <summary>
+        /// ProcessSettingsViewModel.
+        /// </summary>
+        /// <param name="logProvider"></param>
+        /// <param name="navigationService"></param>
         public ProcessSettingsViewModel(IMvxLogProvider logProvider, IMvxNavigationService navigationService)
             : base(logProvider, navigationService)
         {
             this._navigationService = navigationService;
 
-            //Laden
-            WorkspaceSelectedCommand = new MvxAsyncCommand(async () => await LoadWorkspace());
-            TargetSelectedCommand = new MvxAsyncCommand(async () => await LoadTarget());
-            LibrarySelectedCommand = new MvxAsyncCommand(async () => await LoadLibrary());
+            WorkspaceSelectedCommand = new MvxAsyncCommand(LoadWorkspace);
+            TargetSelectedCommand = new MvxAsyncCommand(LoadTarget);
+            LibrarySelectedCommand = new MvxAsyncCommand(LoadLibrary);
 
-            //UI bezogen
             OpenWorkspaceCommand = new MvxAsyncCommand(OpenWorkspace);
 
             RunProcedurCommand = new MvxAsyncCommand(RunProcedurAsync);
+
+            dialogView = new DialogSnackbarView();
         }
+
+        #region Methods
 
         /// <summary>
         /// Handles the parse error.
@@ -67,9 +76,8 @@ namespace LibBuilder.WPFCore.ViewModels
         }
 
         /// <summary>
-        /// Prepares the specified user.
+        /// Prepares this instance.
         /// </summary>
-        /// <param name="_user">The user.</param>
         public override void Prepare()
         {
             base.Prepare();
@@ -78,8 +86,7 @@ namespace LibBuilder.WPFCore.ViewModels
 
             if (arguments.Count() > 0 && arguments != null)
             {
-                //var parser = new Parser(with => with.EnableDashDash = true);
-                //var result = parser.ParseArguments<Options>(e.Args);
+                // Konsole von der der Befehl ausgeführt wird verwenden
                 Core.Utils.AttachConsole(-1);
 
                 var result = Parser.Default.ParseArguments<Options>(arguments)
@@ -517,9 +524,8 @@ namespace LibBuilder.WPFCore.ViewModels
         {
             if (Target == null)
             {
-                var view = new DialogSnackbarView();
-                view.MySnackbar.MessageQueue.Enqueue("Bitte Target auswählen");
-                await DialogHost.Show(view, "DialogSnackbar");
+                dialogView.MySnackbar.MessageQueue.Enqueue("Bitte Target auswählen");
+                await DialogHost.Show(dialogView, "DialogSnackbar");
 
                 return false;
             }
@@ -535,31 +541,58 @@ namespace LibBuilder.WPFCore.ViewModels
         {
             if (Workspace == null)
             {
-                if (WPFCore.Business.Utils.IsWindowOpen<Window>("MainWindow"))
-                {
-                    var view = new DialogSnackbarView();
-                    view.MySnackbar.MessageQueue.Enqueue("Bitte Workspace auswählen");
-                    await DialogHost.Show(view, "DialogSnackbar");
-                }
+                dialogView.MySnackbar.MessageQueue.Enqueue("Bitte Workspace auswählen");
+                await DialogHost.Show(dialogView, "DialogSnackbar");
 
                 return false;
             }
-            else
-            {
-                if (Workspace.PBVersion == null)
-                {
-                    if (WPFCore.Business.Utils.IsWindowOpen<Window>("MainWindow"))
-                    {
-                        var view = new DialogSnackbarView();
-                        view.MySnackbar.MessageQueue.Enqueue("Bitte Powerbuilder-Version angeben");
-                        await DialogHost.Show(view, "DialogSnackbar");
-                    }
 
-                    return false;
-                }
+            if (WorkspacePBVersion == null)
+            {
+                dialogView.MySnackbar.MessageQueue.Enqueue("Bitte Powerbuilder-Version angeben");
+                await DialogHost.Show(dialogView, "DialogSnackbar");
+
+                return false;
             }
 
             return true;
         }
+
+        #endregion Methods
+
+        #region Properties
+
+        private readonly IMvxNavigationService _navigationService;
+        private readonly DialogSnackbarView dialogView;
+
+        /// <summary>
+        /// Gets or sets the target application rebuild.
+        /// </summary>
+        /// <value>The target application rebuild.</value>
+        public override PBDotNetLib.orca.Orca.PBORCA_REBLD_TYPE? TargetApplicationRebuild
+        {
+            get => Target?.ApplicationRebuild;
+            set
+            {
+                base.TargetApplicationRebuild = value;
+                Task.Run(CheckRunnableAsync);
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the workspace pb version.
+        /// </summary>
+        /// <value>The workspace pb version.</value>
+        public override PBDotNetLib.orca.Orca.Version? WorkspacePBVersion
+        {
+            get => Workspace?.PBVersion;
+            set
+            {
+                base.WorkspacePBVersion = value;
+                Task.Run(CheckWorkspaceAsync);
+            }
+        }
+
+        #endregion Properties
     }
 }
