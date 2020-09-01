@@ -34,10 +34,10 @@ namespace LibBuilder.WPFCore.ViewModels
         /// <returns>Initilisierung.</returns>
         public override Task Initialize()
         {
-            //if (Target != null)
-            //{
-            //    RunProcedurCommand.Execute();
-            //}
+            if (Target != null)
+            {
+                RunProcedurCommand.Execute();
+            }
 
             return base.Initialize();
         }

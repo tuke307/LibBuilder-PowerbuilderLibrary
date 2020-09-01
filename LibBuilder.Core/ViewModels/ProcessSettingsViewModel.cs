@@ -581,7 +581,7 @@ namespace LibBuilder.Core.ViewModels
             {
                 SetProperty(ref _target, value);
                 //this.RaisePropertyChanged(() => this.TargetApplicationRebuild);
-                TargetSelectedCommand.Execute();
+                //TargetSelectedCommand.Execute();
             }
         }
 
@@ -605,7 +605,7 @@ namespace LibBuilder.Core.ViewModels
             set
             {
                 SetProperty(ref _workspace, value);
-                WorkspaceSelectedCommand.Execute();
+                //WorkspaceSelectedCommand.Execute();
                 //this.RaisePropertyChanged(() => this.WorkspacePBVersion);
             }
         }

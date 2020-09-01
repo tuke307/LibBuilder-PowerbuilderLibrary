@@ -12,7 +12,6 @@
     <ApplicationIcon>icon.ico</ApplicationIcon>
     <Company>Timeline Financials GmbH &amp; Co. KG</Company>
     <Authors>Tony Meißner</Authors>
-    <Copyright />
   </PropertyGroup>
 
   <ItemGroup>

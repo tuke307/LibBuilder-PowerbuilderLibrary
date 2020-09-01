@@ -8,8 +8,13 @@
     <RootNamespace>LibBuilder.Core.Con</RootNamespace>
     <ApplicationIcon>icon.ico</ApplicationIcon>
     <Authors>Tony Meißner</Authors>
+    <Company>Timeline Financials GmbH &amp; Co. KG</Company>
     <Platforms>AnyCPU;x86;x64</Platforms>
   </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="ConsoleTables" Version="2.4.2" />
+  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Data\Data.csproj" />

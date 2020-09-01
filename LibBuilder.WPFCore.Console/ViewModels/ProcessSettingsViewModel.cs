@@ -1,4 +1,5 @@
-﻿using MvvmCross.Commands;
+﻿using ConsoleTables;
+using MvvmCross.Commands;
 using MvvmCross.Logging;
 using MvvmCross.Navigation;
 using System;
@@ -11,10 +12,11 @@ namespace LibBuilder.Core.Con.ViewModels
 {
     public class ProcessSettingsViewModel : Core.ViewModels.ProcessSettingsViewModel
     {
+        private Con.ViewModels.OngoingProcessViewModel ongoingProcessViewModel;
+
         public ProcessSettingsViewModel(IMvxLogProvider logProvider, IMvxNavigationService navigationService)
             : base(logProvider, navigationService)
         {
-            RunProcedurCommand = new MvxAsyncCommand(RunProcedurAsync);
         }
 
         /// <summary>
@@ -67,7 +69,7 @@ namespace LibBuilder.Core.Con.ViewModels
                     }
                 }
 
-                await LoadWorkspace();
+                LoadWorkspace().Wait();
                 Console.WriteLine("Workspace " + Workspace.FilePath + " erfolgreich eingelesen");
             }
             else
@@ -82,8 +84,8 @@ namespace LibBuilder.Core.Con.ViewModels
             {
                 Workspace.PBVersion = parameter.Version;
 
-                await base.SaveWorkspace();
-                await LoadWorkspace();
+                base.SaveWorkspace().Wait();
+                LoadWorkspace().Wait();
 
                 Console.WriteLine("Version erfolgreich gesetzt");
             }
@@ -133,14 +135,14 @@ namespace LibBuilder.Core.Con.ViewModels
                     Target = Targets.Single(t => t.File.ToLower() == fileName.ToLower());
                 }
 
-                await LoadTarget();
+                LoadTarget().Wait();
                 Console.WriteLine("Target " + Target.FilePath + " erfolgreich eingelesen");
             }
             else
             {
                 // zuletzt ausgewähltes Target laden
                 Target = Targets.OrderByDescending(t => t.UpdatedDate).FirstOrDefault();
-                await LoadTarget();
+                LoadTarget().Wait();
                 Console.WriteLine("zuletzt ausgewähltes Target " + Target.FilePath + " erfolgreich eingelesen");
             }
 
@@ -148,7 +150,7 @@ namespace LibBuilder.Core.Con.ViewModels
             if (parameter.RebuildType.HasValue)
             {
                 Target.ApplicationRebuild = parameter.RebuildType.Value;
-                await base.SaveTarget();
+                base.SaveTarget().Wait();
 
                 // Library Build und Library-Object Regenerate überspringen
                 goto Run;
@@ -157,7 +159,7 @@ namespace LibBuilder.Core.Con.ViewModels
             {
                 // zurücksetzen
                 Target.ApplicationRebuild = null;
-                await base.SaveTarget();
+                base.SaveTarget().Wait();
             }
 
             // ausgewählte Librarys - Build/Regenerate
@@ -176,7 +178,7 @@ namespace LibBuilder.Core.Con.ViewModels
                     Library = Librarys.Single(x => x == lib);
 
                     // Library Objects laden
-                    await LoadLibrary();
+                    LoadLibrary().Wait();
 
                     base.DeselectAllEntrys();
                 }
@@ -224,7 +226,7 @@ namespace LibBuilder.Core.Con.ViewModels
                     }
 
                     // Library Objects laden
-                    await LoadLibrary();
+                    LoadLibrary().Wait();
 
                     // Build
                     if (parameter.Build.HasValue)
@@ -238,7 +240,7 @@ namespace LibBuilder.Core.Con.ViewModels
                             Library.Build = true;
                         }
 
-                        await base.SaveLibrary();
+                        base.SaveLibrary().Wait();
                     }
 
                     // Regenerate
@@ -279,7 +281,7 @@ namespace LibBuilder.Core.Con.ViewModels
                         Library = Librarys.Single(x => x == lib);
 
                         // Library Objects laden
-                        await LoadLibrary();
+                        LoadLibrary().Wait();
 
                         if (!parameter.Regenerate.Value)
                         {
@@ -295,46 +297,25 @@ namespace LibBuilder.Core.Con.ViewModels
 
         Run:
 
-            #region Run
-
-            Console.WriteLine();
-            Console.WriteLine("---------Ausführung---------");
-            Console.Write("Laden....");
-
-            ConsoleSpiner spin = new ConsoleSpiner();
-            var ts = new CancellationTokenSource();
-            CancellationToken ct = ts.Token;
-            _ = Task.Run(() =>
-            {
-                while (true)
-                {
-                    if (ct.IsCancellationRequested)
-                    {
-                        break;
-                    }
-                    spin.Turn();
-                }
-            }, ct);
-
-            await RunProcedurAsync();
-
-            ts.Cancel();
-            Console.WriteLine();
-            Console.WriteLine("++Abgeschlossen++");
-
-            #endregion Run
+            RunProcedur();
         }
 
         /// <summary>
         /// Runs the procedur.
         /// </summary>
-        protected async Task RunProcedurAsync()
+        protected void RunProcedur()
         {
-            if (!await CheckWorkspaceAsync())
+            if (!CheckWorkspaceAsync())
                 return;
 
-            if (!await CheckRunnableAsync())
+            if (!CheckRunnableAsync())
                 return;
+
+            ongoingProcessViewModel = new Con.ViewModels.OngoingProcessViewModel(null, null);
+            ongoingProcessViewModel.Prepare(Target);
+            ongoingProcessViewModel.Initialize();
+
+            ongoingProcessViewModel.RunProcedurAsync().Wait();
 
             // navigate to ongoing and fire runprocedur!!!
         }
@@ -343,7 +324,7 @@ namespace LibBuilder.Core.Con.ViewModels
         /// Checks the runnable.
         /// </summary>
         /// <returns></returns>
-        private async Task<bool> CheckRunnableAsync()
+        private bool CheckRunnableAsync()
         {
             if (Target == null)
             {
@@ -361,7 +342,7 @@ namespace LibBuilder.Core.Con.ViewModels
         /// Checks the workspace.
         /// </summary>
         /// <returns></returns>
-        private async Task<bool> CheckWorkspaceAsync()
+        private bool CheckWorkspaceAsync()
         {
             if (Workspace == null)
             {

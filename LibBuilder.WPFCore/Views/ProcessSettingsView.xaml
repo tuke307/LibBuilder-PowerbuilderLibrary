@@ -80,11 +80,11 @@ Copyright (c) 2020 Timeline Financials GmbH & Co. KG. All rights reserved.
                               DisplayMemberPath="File"
                               Style="{StaticResource MaterialDesignFloatingHintComboBox}"
                               VerticalAlignment="Center">
-                        <!--<i:Interaction.Triggers>
+                        <i:Interaction.Triggers>
                             <i:EventTrigger EventName="SelectionChanged">
                                 <i:InvokeCommandAction Command="{Binding WorkspaceSelectedCommand}" />
                             </i:EventTrigger>
-                        </i:Interaction.Triggers>-->
+                        </i:Interaction.Triggers>
                     </ComboBox>
 
                     <!--Workspace-->
@@ -149,11 +149,11 @@ Copyright (c) 2020 Timeline Financials GmbH & Co. KG. All rights reserved.
                               DisplayMemberPath="FilePath"
                               Style="{StaticResource MaterialDesignFloatingHintComboBox}"
                               VerticalAlignment="Center">
-                        <!--<i:Interaction.Triggers>
+                        <i:Interaction.Triggers>
                             <i:EventTrigger EventName="SelectionChanged">
                                 <i:InvokeCommandAction Command="{Binding TargetSelectedCommand}" />
                             </i:EventTrigger>
-                        </i:Interaction.Triggers>-->
+                        </i:Interaction.Triggers>
                     </ComboBox>
 
                     <!--Target-->

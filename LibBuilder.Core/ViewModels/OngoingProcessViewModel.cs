@@ -44,8 +44,6 @@
                     var libraries = data.Library.Where(l => l.TargetId == Target.Id).ToList();
                     Librarys = new ObservableCollection<LibraryModel>(libraries);
                 }
-
-                RunProcedurCommand.Execute();
             }
 
             return base.Initialize();
