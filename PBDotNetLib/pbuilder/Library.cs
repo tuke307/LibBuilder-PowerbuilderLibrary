@@ -9,7 +9,7 @@ namespace PBDotNetLib.pbuilder
     /// <summary>
     /// pb library
     /// </summary>
-    public class Library : PBSrcFile, ILibrary
+    public class Library : ILibrary
     {
         #region private
 

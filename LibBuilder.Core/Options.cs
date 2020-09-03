@@ -23,9 +23,6 @@ namespace LibBuilder.Core
             }
         }
 
-        [Option(shortName: 'a', longName: "Application", HelpText = "Applikation-Fenster anzeigen")]
-        public bool? Application { get; set; }
-
         [Option(shortName: 'b', longName: "Build", HelpText = "Build einer Library")]
         public bool? Build { get; set; }
 

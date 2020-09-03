@@ -22,7 +22,7 @@ namespace LibBuilder.Core.Con.ViewModels
         /// <summary>
         /// Parameters the start asynchronous.
         /// </summary>
-        public async Task ParameterStartAsync(Options parameter)
+        public void ParameterStart(Options parameter)
         {
             Console.WriteLine("---------Vorbereitung---------");
 
@@ -316,8 +316,6 @@ namespace LibBuilder.Core.Con.ViewModels
             ongoingProcessViewModel.Initialize();
 
             ongoingProcessViewModel.RunProcedurAsync().Wait();
-
-            // navigate to ongoing and fire runprocedur!!!
         }
 
         /// <summary>

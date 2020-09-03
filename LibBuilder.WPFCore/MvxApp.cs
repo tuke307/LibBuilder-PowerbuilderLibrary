@@ -1,13 +1,10 @@
 ﻿// project=LibBuilder.WPFCore, file=App.xaml.cs, creation=2020:7:21 Copyright (c) 2020
 // Timeline Financials GmbH & Co. KG. All rights reserved.
-using CommandLine;
-using CommandLine.Text;
+
 using Data;
-using LibBuilder.Core;
-using LibBuilder.WPFCore.Business;
+using Microsoft.EntityFrameworkCore;
 using MvvmCross.ViewModels;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -18,26 +15,14 @@ namespace LibBuilder.WPFCore
 {
     public class MvxApp : MvxApplication
     {
-        /// <summary>
-        /// Handles the parse error.
-        /// </summary>
-        /// <param name="errs">The errs.</param>
-        public void HandleParseError(IEnumerable<Error> errs)
-        {
-            if (errs.Any(x => x is HelpRequestedError || x is VersionRequestedError))
-            {
-                // kein Fehler, da --help oder --version
-            }
-            else
-            {
-                Console.WriteLine("Fehler beim einlesen der Parameter; ");
-                Console.Write("{0} Fehler gefunden", errs.Count());
-            }
-        }
-
         public override void Initialize()
         {
             Constants.DatabasePath = Path.Combine(Constants.FileDirectory, Data.Constants.DatabaseName);
+
+            using (var db = new DatabaseContext())
+            {
+                db.Database.Migrate();
+            }
 
             if (!Directory.Exists(Constants.FileDirectory))
             {
@@ -49,22 +34,17 @@ namespace LibBuilder.WPFCore
             base.Initialize();
         }
 
-        /// <summary>
-        /// Runs the options.
-        /// </summary>
-        /// <param name="options">The options.</param>
-        public void RunOptions(Options options)
+        public override Task Startup()
         {
-            Console.WriteLine("---------LibBuilder-----------");
-            Console.WriteLine(HeadingInfo.Default);
-            Console.WriteLine(CopyrightInfo.Default);
-            Console.WriteLine();
+            string[] arguments = Environment.GetCommandLineArgs();
 
-            if (!options.Application.HasValue)
+            if (arguments.Count() > 0 && arguments != null)
             {
-                Console.WriteLine("Start über Kommandozeile");
+                if (arguments[0].ToLower().EndsWith("libbuilder.dll")) return base.Startup();
 
-                string args = String.Concat(Environment.GetCommandLineArgs());
+                Core.Utils.AttachConsole(-1);
+
+                string args = String.Concat(arguments);
                 string app = "LibBuilder.Console.exe";
                 Process runProg = new Process();
                 try
@@ -80,23 +60,6 @@ namespace LibBuilder.WPFCore
 
                 // schließen der WPF-App
                 Application.Current.Shutdown();
-            }
-            //new WPFCore.ViewModels.ProcessMainViewModel().Prepare(parameter: options);
-        }
-
-        public override Task Startup()
-        {
-            string[] arguments = Environment.GetCommandLineArgs();
-
-            if (arguments.Count() > 0 && arguments != null)
-            {
-                //var parser = new Parser(with => with.EnableDashDash = true);
-                //var result = parser.ParseArguments<Options>(e.Args);
-                Core.Utils.AttachConsole(-1);
-
-                var result = Parser.Default.ParseArguments<Options>(arguments)
-               .WithParsed(this.RunOptions)
-               .WithNotParsed(this.HandleParseError);
             }
 
             return base.Startup();

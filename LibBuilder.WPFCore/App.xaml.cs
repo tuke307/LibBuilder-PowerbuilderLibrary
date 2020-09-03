@@ -2,24 +2,14 @@
 // Timeline Financials GmbH & Co. KG. All rights reserved.
 namespace LibBuilder.WPFCore
 {
-    using CommandLine;
-    using CommandLine.Text;
-    using Data;
-    using LibBuilder.WPFCore.Business;
     using LibBuilder.WPFCore.Region;
-    using LibBuilder.WPFCore.Views;
     using MvvmCross.Core;
-    using System;
-    using System.Collections.Generic;
-    using System.IO;
-    using System.Linq;
-    using System.Runtime.InteropServices;
-    using System.Windows;
+    using MvvmCross.Platforms.Wpf.Views;
 
     /// <summary>
     /// Interaction logic for App.xaml
     /// </summary>
-    public partial class App
+    public partial class App : MvxApplication
     {
         protected override void RegisterSetup()
         {

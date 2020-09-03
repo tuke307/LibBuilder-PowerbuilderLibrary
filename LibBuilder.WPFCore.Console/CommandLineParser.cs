@@ -1,9 +1,9 @@
 ﻿using CommandLine;
 using CommandLine.Text;
 using Data;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 
@@ -18,6 +18,11 @@ namespace LibBuilder.Core.Con
             if (arguments.Count() > 0 && arguments != null)
             {
                 Constants.DatabasePath = Path.Combine(Constants.FileDirectory, Data.Constants.DatabaseName);
+
+                using (var db = new DatabaseContext())
+                {
+                    db.Database.Migrate();
+                }
 
                 if (!Directory.Exists(Constants.FileDirectory))
                 {
@@ -62,30 +67,7 @@ namespace LibBuilder.Core.Con
             Console.WriteLine(CopyrightInfo.Default);
             Console.WriteLine();
 
-            // normale Applikation starten wenn Parameter "-a" auf "true"
-            if (options.Application.HasValue)
-            {
-                if (options.Application.Value)
-                {
-                    Console.WriteLine("Start mit Fenster");
-
-                    string args = String.Concat(Environment.GetCommandLineArgs());
-                    string app = "LibBuilder.exe";
-                    Process runProg = new Process();
-                    try
-                    {
-                        runProg.StartInfo.FileName = app;
-                        runProg.StartInfo.Arguments = args;
-                        runProg.Start();
-                    }
-                    catch (Exception ex)
-                    {
-                        Console.WriteLine("Could not start program " + ex);
-                    }
-                }
-            }
-
-            processSettingsViewModel.ParameterStartAsync(options).Wait();
+            processSettingsViewModel.ParameterStart(options);
 
             Console.ReadKey();
             //new WPFCore.ViewModels.ProcessMainViewModel().Prepare(parameter: options);

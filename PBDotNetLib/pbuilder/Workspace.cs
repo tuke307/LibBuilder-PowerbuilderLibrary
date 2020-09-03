@@ -109,10 +109,17 @@ namespace PBDotNetLib.pbuilder
                 if (path.Equals(defaultRemoteTarget))
                     defRemTarFlag = true;
 
+                // TODO: verbessern!!!
                 if (path.IndexOf(':') < 0)
-                    path = Dir + "\\" + path;
+                    path = Path.Combine(Dir, path).Replace(@"\\", @"\");
 
+                //DirectoryInfo directoryInfo = new DirectoryInfo(@"\\tlfi-sql2");
+                //DirectoryInfo directoryInfo2 = new DirectoryInfo(@"\\tlfi-sql2\TL_kunden");
                 path = Path.GetFullPath(path);
+                if (path.StartsWith(@"C:\tlfi-sql2"))
+                {
+                    path = path.Replace(@"C:\tlfi-sql2", @"\\tlfi-sql2");
+                }
 
                 targets.Add(new Tuple<string, int, bool, bool>(path, Int32.Parse(matchesTarget[0].Groups["order"].Value), defTargetFlag, defRemTarFlag));
             }
