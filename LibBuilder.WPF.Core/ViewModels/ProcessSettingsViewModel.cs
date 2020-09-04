@@ -137,7 +137,9 @@ namespace LibBuilder.WPF.Core.ViewModels
             openFileDialog.Filter = "Powerbuilder Workspace (*.pbw)|*.pbw";
             openFileDialog.RestoreDirectory = true;
 
-            if (openFileDialog.ShowDialog().HasValue)
+            bool? result = openFileDialog.ShowDialog();
+
+            if ((bool)result)
             {
                 base.OpenWorkspace(openFileDialog.FileName);
             }
