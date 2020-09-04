@@ -1,0 +1,187 @@
+﻿<!--
+project=LibBuilder.WPF.Core, file=ColorSettingsView.xaml, creation=2020:7:21
+Copyright (c) 2020 Timeline Financials GmbH & Co. KG. All rights reserved.
+-->
+<views:MvxWpfView  x:Class="LibBuilder.WPF.Core.Views.ColorSettingsView"
+                   xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                   xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                   xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                   xmlns:region="clr-namespace:LibBuilder.WPF.Core.Region;assembly=LibBuilder.WPF.Core"
+                   xmlns:viewModels="clr-namespace:LibBuilder.WPF.Core.ViewModels;assembly=LibBuilder.WPF.Core"
+                   xmlns:local="clr-namespace:LibBuilder.WPF.Core.Views"
+                   xmlns:materialDesignColors="clr-namespace:MaterialDesignColors;assembly=MaterialDesignColors"
+                   xmlns:wpf="clr-namespace:MaterialDesignThemes.Wpf;assembly=MaterialDesignThemes.Wpf"
+                   xmlns:views="clr-namespace:MvvmCross.Platforms.Wpf.Views;assembly=MvvmCross.Platforms.Wpf"
+                   x:TypeArguments="viewModels:ColorSettingsViewModel"
+                   region:MvxContainer.Header="Farbe"
+                   mc:Ignorable="d"
+                   Background="{DynamicResource MaterialDesignPaper}"
+                   MinHeight="700"
+                   MinWidth="900"
+                   d:DesignHeight="700"
+                   d:DesignWidth="900">
+    <UserControl.Resources>
+        <!--Button-->
+        <Style TargetType="Button"
+               BasedOn="{StaticResource MaterialDesignFlatButton}">
+            <Setter Property="Margin"
+                    Value="0" />
+            <Setter Property="CommandParameter"
+                    Value="{Binding}" />
+            <Setter Property="VerticalAlignment"
+                    Value="Stretch" />
+            <Setter Property="HorizontalAlignment"
+                    Value="Stretch" />
+            <Setter Property="Foreground">
+                <Setter.Value>
+                    <SolidColorBrush Color="{Binding ExemplarHue.Foreground, Mode=OneTime}" />
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!--Pallete-->
+        <Style x:Key="PalettePath"
+               TargetType="Path">
+            <Setter Property="Data"
+                    Value="M17.5,12A1.5,1.5 0 0,1 16,10.5A1.5,1.5 0 0,1 17.5,9A1.5,1.5 0 0,1 19,10.5A1.5,1.5 0 0,1 17.5,12M14.5,8A1.5,1.5 0 0,1 13,6.5A1.5,1.5 0 0,1 14.5,5A1.5,1.5 0 0,1 16,6.5A1.5,1.5 0 0,1 14.5,8M9.5,8A1.5,1.5 0 0,1 8,6.5A1.5,1.5 0 0,1 9.5,5A1.5,1.5 0 0,1 11,6.5A1.5,1.5 0 0,1 9.5,8M6.5,12A1.5,1.5 0 0,1 5,10.5A1.5,1.5 0 0,1 6.5,9A1.5,1.5 0 0,1 8,10.5A1.5,1.5 0 0,1 6.5,12M12,3A9,9 0 0,0 3,12A9,9 0 0,0 12,21A1.5,1.5 0 0,0 13.5,19.5C13.5,19.11 13.35,18.76 13.11,18.5C12.88,18.23 12.73,17.88 12.73,17.5A1.5,1.5 0 0,1 14.23,16H16A5,5 0 0,0 21,11C21,6.58 16.97,3 12,3Z" />
+            <Setter Property="Fill">
+                <Setter.Value>
+                    <SolidColorBrush Color="{Binding ExemplarHue.Foreground, Mode=OneTime}" />
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!--Farbpaletten-->
+        <DataTemplate DataType="{x:Type materialDesignColors:Swatch}">
+            <wpf:Card Margin="2 2 6 6"
+                      Width="240">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Text="{Binding Name}"
+                               Margin="8"
+                               Grid.ColumnSpan="2" />
+
+                    <!--Primary color change-->
+                    <Border Grid.Row="1"
+                            Grid.Column="0"
+                            MinWidth="120">
+                        <Border.Background>
+                            <SolidColorBrush Color="{Binding ExemplarHue.Color, Mode=OneTime}" />
+                        </Border.Background>
+                        <Button Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:ColorSettingsView}}, Path=DataContext.ApplyPrimaryCommand, Mode=OneTime}"
+                                CommandParameter="{Binding}">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="Primär" />
+                                <Viewbox Width="16"
+                                         Height="16">
+                                    <Canvas Width="24"
+                                            Height="24">
+                                        <Path Style="{StaticResource PalettePath}" />
+                                    </Canvas>
+                                </Viewbox>
+                            </StackPanel>
+                        </Button>
+                    </Border>
+
+                    <!--Secondary color change-->
+                    <Border Grid.Row="1"
+                            Grid.Column="1"
+                            Visibility="{Binding IsAccented, Converter={StaticResource BooleanToVisibilityConverter}, Mode=OneTime}"
+                            Width="120">
+                        <Border.Background>
+                            <SolidColorBrush Color="{Binding AccentExemplarHue.Color, Mode=OneTime}" />
+                        </Border.Background>
+                        <Button Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:ColorSettingsView}}, Path=DataContext.ApplyAccentCommand, Mode=OneTime}"
+                                CommandParameter="{Binding}">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="Akzent" />
+                                <Viewbox Width="16"
+                                         Height="16">
+                                    <Canvas Width="24"
+                                            Height="24">
+                                        <Path Style="{StaticResource PalettePath}" />
+                                    </Canvas>
+                                </Viewbox>
+                            </StackPanel>
+                        </Button>
+                    </Border>
+                </Grid>
+            </wpf:Card>
+        </DataTemplate>
+    </UserControl.Resources>
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
+        </Grid.RowDefinitions>
+
+        <!--derzeitige Palette-->
+        <wpf:Card Grid.Row="0"
+                  Grid.Column="0"
+                  DockPanel.Dock="Top"
+                  Margin="10">
+            <DockPanel>
+                <StackPanel Orientation="Horizontal">
+                    <Button Style="{StaticResource MaterialDesignRaisedLightButton}"
+                            Width="90"
+                            Content="LIGHT"
+                            Margin="5" />
+                    <Button Style="{StaticResource MaterialDesignRaisedButton}"
+                            Width="90"
+                            Content="MID"
+                            Margin="5" />
+                    <Button Style="{StaticResource MaterialDesignRaisedDarkButton}"
+                            Width="90"
+                            Content="DARK"
+                            Margin="5" />
+                    <Button Style="{StaticResource MaterialDesignRaisedAccentButton}"
+                            Width="90"
+                            Content="ACCENT"
+                            Margin="5" />
+                </StackPanel>
+                <TextBlock Margin="16"
+                           TextWrapping="Wrap"
+                           VerticalAlignment="Center">derzeitige Farbpalette</TextBlock>
+            </DockPanel>
+        </wpf:Card>
+
+        <StackPanel Grid.Row="1"
+                    Grid.Column="0"
+                    Orientation="Horizontal"
+                    Margin="10">
+            <!--Base Theme-->
+            <Label VerticalAlignment="Top">Light Mode</Label>
+            <ToggleButton Style="{StaticResource MaterialDesignSwitchToggleButton}"
+                          IsChecked="{Binding ToogleDarkmode}" />
+            <Label VerticalAlignment="Top">Dark Mode</Label>
+        </StackPanel>
+
+        <!--Paletten ausgewählter Farben-->
+        <ScrollViewer Grid.Row="2"
+                      Grid.Column="0"
+                      VerticalScrollBarVisibility="Auto"
+                      HorizontalScrollBarVisibility="Disabled"
+                      Margin="10">
+            <ItemsControl ItemsSource="{Binding Swatches, Mode=OneTime}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <WrapPanel />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+            </ItemsControl>
+        </ScrollViewer>
+    </Grid>
+</views:MvxWpfView>

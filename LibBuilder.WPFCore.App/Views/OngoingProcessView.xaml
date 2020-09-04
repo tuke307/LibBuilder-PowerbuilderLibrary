@@ -1,0 +1,111 @@
+﻿<!--
+project=LibBuilder.WPF.Core, file=OngoingProcessView.xaml, creation=2020:8:24
+Copyright (c) 2020 Timeline Financials GmbH & Co. KG. All rights reserved.
+-->
+<views:MvxWpfView  x:Class="LibBuilder.WPF.Core.Views.OngoingProcessView"
+                   xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                   xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+                   xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                   xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                   xmlns:local="clr-namespace:LibBuilder.WPF.Core.Business;assembly=LibBuilder.WPF.Core"
+                   xmlns:region="clr-namespace:LibBuilder.WPF.Core.Region;assembly=LibBuilder.WPF.Core"
+                   xmlns:viewModels="clr-namespace:LibBuilder.WPF.Core.ViewModels;assembly=LibBuilder.WPF.Core"
+                   xmlns:views="clr-namespace:MvvmCross.Platforms.Wpf.Views;assembly=MvvmCross.Platforms.Wpf"
+                   x:TypeArguments="viewModels:OngoingProcessViewModel"
+                   region:MvxContainer.Header="{Binding Path=Target.File, Mode=OneTime}"
+                   mc:Ignorable="d"
+                   Background="{DynamicResource MaterialDesignPaper}"
+                   MinHeight="650"
+                   MinWidth="900"
+                   Height="650"
+                   d:DesignWidth="900">
+    <UserControl.Resources>
+        <local:NameToBrushConverter x:Key="NameToBrushConverter" />
+    </UserControl.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="0.15*" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <StackPanel Orientation="Horizontal"
+                    Grid.Row="0"
+                    Visibility="{Binding Mode=OneWay, Path=ProcessError, Converter={StaticResource BooleanToVisibilityConverter}}">
+            <TextBlock Text="Fehler gefunden!!!"
+                       Foreground="Red"
+                       Margin="10"
+                       VerticalAlignment="Center"
+                       Style="{StaticResource MaterialDesignHeadline5TextBlock}" />
+
+            <Button VerticalAlignment="Center"
+                    HorizontalAlignment="Left"
+                    Margin="10"
+                    Style="{StaticResource MaterialDesignIconButton}"
+                    Background="{DynamicResource MaterialDesignTextFieldBoxBackground}">
+                <materialDesign:PackIcon Kind="Error"
+                                         Foreground="Red" />
+            </Button>
+        </StackPanel>
+
+        <StackPanel Orientation="Horizontal"
+                    Grid.Row="0"
+                    Visibility="{Binding Mode=OneWay, Path=ProcessSucess, Converter={StaticResource BooleanToVisibilityConverter}}">
+            <TextBlock Text="Erfolgreich ausgeführt!!!"
+                       Foreground="Green"
+                       Margin="10"
+                       VerticalAlignment="Center"
+                       Style="{StaticResource MaterialDesignHeadline5TextBlock}" />
+
+            <Button VerticalAlignment="Center"
+                    HorizontalAlignment="Left"
+                    Margin="10"
+                    Style="{StaticResource MaterialDesignIconButton}"
+                    Background="{DynamicResource MaterialDesignTextFieldBoxBackground}">
+                <materialDesign:PackIcon Kind="TickCircle"
+                                         Foreground="Green" />
+            </Button>
+        </StackPanel>
+
+        <ProgressBar Margin="10 30 10 10"
+                     IsIndeterminate="True"
+                     Height="6"
+                     Visibility="{Binding Mode=OneWay, Path=ProcessLoadingAnimation, Converter={StaticResource BooleanToVisibilityConverter}}"
+                     Grid.Row="0" />
+
+        <DataGrid Grid.Row="1"
+                  AutoGenerateColumns="False"
+                  CanUserAddRows="False"
+                  Margin="10"
+                  ItemsSource="{Binding Mode=OneWay, Path=Processes}">
+            <DataGrid.Columns>
+
+                <DataGridTextColumn Header="Target"
+                                    Binding="{Binding Mode=OneWay, Path=Target}"
+                                    IsReadOnly="True" />
+
+                <DataGridTextColumn Header="Library"
+                                    Binding="{Binding Mode=OneWay, Path=Library}"
+                                    IsReadOnly="True" />
+
+                <DataGridTextColumn Header="Object"
+                                    Binding="{Binding Mode=OneWay, Path=Object}"
+                                    IsReadOnly="True" />
+
+                <DataGridTextColumn Header="Mode"
+                                    Binding="{Binding Mode=OneWay, Path=Mode}"
+                                    IsReadOnly="True" />
+
+                <DataGridTextColumn Header="Ergebnis"
+                                    Binding="{Binding Mode=OneWay, Path=Result}">
+                    <DataGridTextColumn.ElementStyle>
+                        <Style TargetType="{x:Type TextBlock}">
+                            <Setter Property="Background"
+                                    Value="{Binding Result, Converter={StaticResource NameToBrushConverter}}" />
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+    </Grid>
+</views:MvxWpfView>

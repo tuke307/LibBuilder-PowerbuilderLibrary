@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "LibBuilder.Console.App": {
+      "commandName": "Project",
+      "commandLineArgs": "-w kunden.pbw -t tlfi_lokal.pbt -b true -l client_elinv.pbl;client_tlfiutils.pbl"
+    }
+  }
+}
