@@ -58,19 +58,13 @@ namespace LibBuilder.Core.ViewModels
         /// </summary>
         protected void DeselectAllEntrys()
         {
-            if (Objects == null)
+            if (Library == null || Objects == null)
                 return;
 
-            List<ObjectModel> temp = new List<ObjectModel>();
-            temp = Objects.ToList();
-            Objects.Clear();
-
-            for (int i = 0; i < temp.Count; i++)
+            foreach (var item in Library.Objects)
             {
-                temp[i].Regenerate = false;
+                item.Regenerate = false;
             }
-
-            Objects = new ObservableCollection<ObjectModel>(temp.ToList());
 
             using (var db = new DatabaseContext())
             {
@@ -79,6 +73,8 @@ namespace LibBuilder.Core.ViewModels
 
                 db.SaveChanges();
             }
+
+            this.RaisePropertyChanged(() => this.Objects);
         }
 
         /// <summary>
@@ -86,20 +82,13 @@ namespace LibBuilder.Core.ViewModels
         /// </summary>
         protected void DeselectAllLibrarys()
         {
-            if (Librarys == null)
+            if (Target == null || Librarys == null)
                 return;
 
-            List<LibraryModel> temp = new List<LibraryModel>();
-            temp = Librarys.ToList();
-            Librarys.Clear();
-
-            for (int i = 0; i < temp.Count; i++)
+            foreach (var item in Target.Librarys)
             {
-                //temp[i].Regenerate = false;
-                temp[i].Build = false;
+                item.Build = false;
             }
-
-            Librarys = new ObservableCollection<LibraryModel>(temp.ToList());
 
             using (var db = new DatabaseContext())
             {
@@ -108,6 +97,8 @@ namespace LibBuilder.Core.ViewModels
 
                 db.SaveChanges();
             }
+
+            this.RaisePropertyChanged(() => this.Librarys);
         }
 
         /// <summary>
@@ -143,10 +134,7 @@ namespace LibBuilder.Core.ViewModels
                 //Updaten
                 await SaveLibrary();
 
-                Objects = new ObservableCollection<ObjectModel>(Library.Objects.ToList());
-
-                //string message = "Objects von " + Library.File + " erfolgreich geladen";
-                //mainWindowViewModel.NotificationSnackbar.Enqueue(message);
+                //Objects = new ObservableCollection<ObjectModel>(Library.Objects.ToList());
             }
         }
 
@@ -179,7 +167,7 @@ namespace LibBuilder.Core.ViewModels
 
             await SaveTarget();
 
-            Librarys = new ObservableCollection<LibraryModel>(Target.Librarys.Where(l => l.File.EndsWith(".pbl")).ToList());
+            //Librarys = new ObservableCollection<LibraryModel>(Target.Librarys.Where(l => l.File.EndsWith(".pbl")).ToList());
         }
 
         /// <summary>
@@ -216,7 +204,7 @@ namespace LibBuilder.Core.ViewModels
             await SaveWorkspace();
 
             //Einfügen der DB Targets
-            Targets = new ObservableCollection<TargetModel>(Workspace.Target.ToList());
+            //Targets = new ObservableCollection<TargetModel>(Workspace.Target.ToList());
         }
 
         /// <summary>
@@ -323,19 +311,13 @@ namespace LibBuilder.Core.ViewModels
         /// </summary>
         protected void SelectAllEntrys()
         {
-            if (Objects == null)
+            if (Library == null || Objects == null)
                 return;
 
-            List<ObjectModel> temp = new List<ObjectModel>();
-            temp = Objects.ToList();
-            Objects.Clear();
-
-            for (int i = 0; i < temp.Count; i++)
+            foreach (var item in Library.Objects)
             {
-                temp[i].Regenerate = true;
+                item.Regenerate = true;
             }
-
-            Objects = new ObservableCollection<ObjectModel>(temp.ToList());
 
             using (var db = new DatabaseContext())
             {
@@ -344,6 +326,8 @@ namespace LibBuilder.Core.ViewModels
 
                 db.SaveChanges();
             }
+
+            this.RaisePropertyChanged(() => this.Objects);
         }
 
         /// <summary>
@@ -351,19 +335,13 @@ namespace LibBuilder.Core.ViewModels
         /// </summary>
         protected void SelectAllLibrarys()
         {
-            if (Librarys == null)
+            if (Target == null || Librarys == null)
                 return;
 
-            List<LibraryModel> temp = Librarys.ToList();
-            Librarys.Clear();
-
-            for (int i = 0; i < temp.Count; i++)
+            foreach (var item in Target.Librarys)
             {
-                //temp[i].Regenerate = true;
-                temp[i].Build = true;
+                item.Build = true;
             }
-
-            Librarys = new ObservableCollection<LibraryModel>(temp.ToList());
 
             using (var db = new DatabaseContext())
             {
@@ -372,6 +350,8 @@ namespace LibBuilder.Core.ViewModels
 
                 db.SaveChanges();
             }
+
+            this.RaisePropertyChanged(() => this.Librarys);
         }
 
         #endregion Methods
@@ -453,12 +433,9 @@ namespace LibBuilder.Core.ViewModels
         private List<PBDotNetLib.orca.Orca.PBORCA_REBLD_TYPE?> _applicationRebuild;
         private bool _contentLoadingAnimation;
         private LibraryModel _library;
-        private ObservableCollection<LibraryModel> _librarys;
         private ObjectModel _object;
-        private ObservableCollection<ObjectModel> _objects;
         private List<PBDotNetLib.orca.Orca.Version?> _pBVersions;
         private TargetModel _target;
-        private ObservableCollection<TargetModel> _targets;
         private WorkspaceModel _workspace;
         private ObservableCollection<WorkspaceModel> _workspaces;
         private Task LoadLibraryTask;
@@ -511,7 +488,7 @@ namespace LibBuilder.Core.ViewModels
                         db.SaveChanges();
                     }
                 }
-
+                this.RaisePropertyChanged(() => this.Objects);
                 SetProperty(ref _library, value);
             }
         }
@@ -522,8 +499,8 @@ namespace LibBuilder.Core.ViewModels
         /// <value>The librarys.</value>
         public ObservableCollection<LibraryModel> Librarys
         {
-            get => _librarys;
-            set => SetProperty(ref _librarys, value);
+            get => new ObservableCollection<LibraryModel>(Target?.Librarys);
+            //set => SetProperty(ref _librarys, value);
         }
 
         /// <summary>
@@ -556,8 +533,7 @@ namespace LibBuilder.Core.ViewModels
         /// <value>The objects.</value>
         public ObservableCollection<ObjectModel> Objects
         {
-            get => _objects;
-            set => SetProperty(ref _objects, value);
+            get => new ObservableCollection<ObjectModel>(Library?.Objects);
         }
 
         /// <summary>
@@ -580,8 +556,23 @@ namespace LibBuilder.Core.ViewModels
             set
             {
                 SetProperty(ref _target, value);
-                //this.RaisePropertyChanged(() => this.TargetApplicationRebuild);
+                this.RaisePropertyChanged(() => this.TargetApplicationRebuild);
+                this.RaisePropertyChanged(() => this.Librarys);
                 //TargetSelectedCommand.Execute();
+            }
+        }
+
+        public PBDotNetLib.orca.Orca.PBORCA_REBLD_TYPE? TargetApplicationRebuild
+        {
+            get => Target?.ApplicationRebuild;
+            set
+            {
+                if (Target == null)
+                {
+                    return;
+                }
+
+                Target.ApplicationRebuild = value;
             }
         }
 
@@ -591,8 +582,8 @@ namespace LibBuilder.Core.ViewModels
         /// <value>The targets.</value>
         public ObservableCollection<TargetModel> Targets
         {
-            get => _targets;
-            set => SetProperty(ref _targets, value);
+            get => new ObservableCollection<TargetModel>(Workspace?.Target);
+            //set => SetProperty(ref _targets, value);
         }
 
         /// <summary>
@@ -606,7 +597,22 @@ namespace LibBuilder.Core.ViewModels
             {
                 SetProperty(ref _workspace, value);
                 //WorkspaceSelectedCommand.Execute();
-                //this.RaisePropertyChanged(() => this.WorkspacePBVersion);
+                this.RaisePropertyChanged(() => this.WorkspacePBVersion);
+                this.RaisePropertyChanged(() => this.Targets);
+            }
+        }
+
+        public PBDotNetLib.orca.Orca.Version? WorkspacePBVersion
+        {
+            get => Workspace?.PBVersion;
+            set
+            {
+                if (Workspace == null)
+                {
+                    return;
+                }
+
+                Workspace.PBVersion = value;
             }
         }
 

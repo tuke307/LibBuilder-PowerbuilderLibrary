@@ -73,6 +73,7 @@ Copyright (c) 2020 Timeline Financials GmbH & Co. KG. All rights reserved.
                               Visibility="{Binding ElementName=WorkspaceFilePath, Path=IsVisible , Converter={StaticResource negatedBoolToVisibilityConverter}}"
                               Margin="10"
                               materialDesign:HintAssist.Hint="Workspace"
+                              materialDesign:TextFieldAssist.UnderlineBrush="{DynamicResource SecondaryAccentBrush}"
                               IsEditable="False"
                               ToolTip="Wähle ein Workspace aus"
                               ItemsSource="{Binding Mode=TwoWay, Path=Workspaces}"
@@ -93,6 +94,7 @@ Copyright (c) 2020 Timeline Financials GmbH & Co. KG. All rights reserved.
                               Visibility="{Binding Source={x:Static local:ApplicationSettings.Default}, Path=WorkspacePath, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}}"
                               Margin="10"
                               materialDesign:HintAssist.Hint="Workspace"
+                              materialDesign:TextFieldAssist.UnderlineBrush="{DynamicResource SecondaryAccentBrush}"
                               IsEditable="False"
                               ToolTip="Wähle ein Workspace aus"
                               ItemsSource="{Binding Mode=TwoWay, Path=Workspaces}"
@@ -100,11 +102,11 @@ Copyright (c) 2020 Timeline Financials GmbH & Co. KG. All rights reserved.
                               DisplayMemberPath="FilePath"
                               Style="{StaticResource MaterialDesignFloatingHintComboBox}"
                               VerticalAlignment="Center">
-                        <!--<i:Interaction.Triggers>
+                        <i:Interaction.Triggers>
                             <i:EventTrigger EventName="SelectionChanged">
                                 <i:InvokeCommandAction Command="{Binding WorkspaceSelectedCommand}" />
                             </i:EventTrigger>
-                        </i:Interaction.Triggers>-->
+                        </i:Interaction.Triggers>
                     </ComboBox>
 
                     <!--Version-->
@@ -115,7 +117,7 @@ Copyright (c) 2020 Timeline Financials GmbH & Co. KG. All rights reserved.
                               IsEditable="False"
                               Width="100"
                               ItemsSource="{Binding Mode=OneTime, Path=PBVersions}"
-                              SelectedItem="{Binding Mode=TwoWay, Path=Workspace.PBVersion}"
+                              SelectedItem="{Binding Mode=TwoWay, Path=WorkspacePBVersion}"
                               Style="{StaticResource MaterialDesignFloatingHintComboBox}"
                               VerticalAlignment="Center">
                         <i:Interaction.Triggers>
@@ -142,9 +144,10 @@ Copyright (c) 2020 Timeline Financials GmbH & Co. KG. All rights reserved.
                               x:Name="TargetFilePath"
                               Visibility="{Binding Source={x:Static local:ApplicationSettings.Default}, Path=TargetPath, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}}"
                               materialDesign:HintAssist.Hint="Target"
+                              materialDesign:TextFieldAssist.UnderlineBrush="{DynamicResource SecondaryAccentBrush}"
                               IsEditable="False"
                               ToolTip="Wähle ein Target aus"
-                              ItemsSource="{Binding Mode=TwoWay, Path=Targets}"
+                              ItemsSource="{Binding Mode=OneWay, Path=Targets}"
                               SelectedItem="{Binding Mode=TwoWay, Path=Target}"
                               DisplayMemberPath="FilePath"
                               Style="{StaticResource MaterialDesignFloatingHintComboBox}"
@@ -160,28 +163,30 @@ Copyright (c) 2020 Timeline Financials GmbH & Co. KG. All rights reserved.
                     <ComboBox Grid.Column="0"
                               Visibility="{Binding ElementName=TargetFilePath, Path=IsVisible , Converter={StaticResource negatedBoolToVisibilityConverter}}"
                               materialDesign:HintAssist.Hint="Target"
+                              materialDesign:TextFieldAssist.UnderlineBrush="{DynamicResource SecondaryAccentBrush}"
                               IsEditable="False"
                               ToolTip="Wähle ein Target aus"
-                              ItemsSource="{Binding Mode=TwoWay, Path=Targets}"
+                              ItemsSource="{Binding Mode=OneWay, Path=Targets}"
                               SelectedItem="{Binding Mode=TwoWay, Path=Target}"
                               DisplayMemberPath="File"
                               Style="{StaticResource MaterialDesignFloatingHintComboBox}"
                               VerticalAlignment="Center">
-                        <!--<i:Interaction.Triggers>
+                        <i:Interaction.Triggers>
                             <i:EventTrigger EventName="SelectionChanged">
                                 <i:InvokeCommandAction Command="{Binding TargetSelectedCommand}" />
                             </i:EventTrigger>
-                        </i:Interaction.Triggers>-->
+                        </i:Interaction.Triggers>
                     </ComboBox>
 
                     <ComboBox Grid.Column="1"
                               Margin="10"
                               materialDesign:HintAssist.Hint="Rebuild-Typ"
+                              materialDesign:TextFieldAssist.UnderlineBrush="{DynamicResource SecondaryAccentBrush}"
                               IsEditable="False"
                               Width="100"
                               Visibility="{Binding Source={x:Static local:ApplicationSettings.Default}, Path=ApplicationRebuildOptions, Mode=TwoWay, Converter={StaticResource BooleanToVisibilityConverter}}"
                               ItemsSource="{Binding Mode=OneTime, Path=ApplicationRebuild}"
-                              SelectedItem="{Binding Mode=TwoWay, Path=Target.ApplicationRebuild}"
+                              SelectedItem="{Binding Mode=TwoWay, Path=TargetApplicationRebuild}"
                               Style="{StaticResource MaterialDesignFloatingHintComboBox}"
                               VerticalAlignment="Center">
                         <i:Interaction.Triggers>
@@ -247,7 +252,7 @@ Copyright (c) 2020 Timeline Financials GmbH & Co. KG. All rights reserved.
                               AutoGenerateColumns="False"
                               CanUserAddRows="False"
                               SelectedItem="{Binding Mode=TwoWay, Path=Library}"
-                              ItemsSource="{Binding Mode=TwoWay, Path=Librarys}">
+                              ItemsSource="{Binding Mode=OneWay, Path=Librarys}">
                         <DataGrid.Columns>
 
                             <DataGridTextColumn Header="File"
@@ -349,7 +354,7 @@ Copyright (c) 2020 Timeline Financials GmbH & Co. KG. All rights reserved.
                                           AutoGenerateColumns="False"
                                           CanUserAddRows="False"
                                           SelectedItem="{Binding Mode=TwoWay, Path=Object}"
-                                          ItemsSource="{Binding Mode=TwoWay, Path=Objects}">
+                                          ItemsSource="{Binding Mode=OneWay, Path=Objects}">
                                     <DataGrid.Columns>
                                         <DataGridTextColumn Header="Name"
                                                             IsReadOnly="True"

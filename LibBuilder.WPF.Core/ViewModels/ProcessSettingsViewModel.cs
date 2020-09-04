@@ -79,6 +79,11 @@ namespace LibBuilder.WPF.Core.ViewModels
         /// </summary>
         protected override async Task LoadTarget()
         {
+            if (!CheckTarget())
+            {
+                return;
+            }
+
             ContentLoadingAnimation = true;
             await RaisePropertyChanged(() => ContentLoadingAnimation);
 
@@ -149,7 +154,7 @@ namespace LibBuilder.WPF.Core.ViewModels
             if (!CheckWorkspace())
                 return;
 
-            if (!CheckRunnable())
+            if (!CheckTarget())
                 return;
 
             // navigate to ongoing and fire runprocedur!!!
@@ -160,7 +165,7 @@ namespace LibBuilder.WPF.Core.ViewModels
         /// Checks the runnable.
         /// </summary>
         /// <returns></returns>
-        private bool CheckRunnable()
+        private bool CheckTarget()
         {
             if (Target == null)
             {
@@ -187,7 +192,7 @@ namespace LibBuilder.WPF.Core.ViewModels
                 return false;
             }
 
-            if (Workspace.PBVersion == null)
+            if (WorkspacePBVersion == null)
             {
                 dialogView.MySnackbar.MessageQueue.Enqueue("Bitte Powerbuilder-Version angeben");
                 _ = DialogHost.Show(dialogView, "DialogSnackbar");
