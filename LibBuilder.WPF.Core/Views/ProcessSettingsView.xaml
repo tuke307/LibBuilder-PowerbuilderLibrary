@@ -9,10 +9,10 @@ Copyright (c) 2020 Timeline Financials GmbH & Co. KG. All rights reserved.
                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                    xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
                    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-                   xmlns:behaviours="clr-namespace:LibBuilder.WPF.Core.Business;assembly=LibBuilder.WPF.Core"
-                   xmlns:region="clr-namespace:LibBuilder.WPF.Core.Region;assembly=LibBuilder.WPF.Core"
-                   xmlns:viewModels="clr-namespace:LibBuilder.WPF.Core.ViewModels;assembly=LibBuilder.WPF.Core"
-                   xmlns:local="clr-namespace:LibBuilder.WPF.Core;assembly=LibBuilder.WPF.Core"
+                   xmlns:local="clr-namespace:LibBuilder.WPF.Core"
+                   xmlns:behaviours="clr-namespace:LibBuilder.WPF.Core.Business"
+                   xmlns:region="clr-namespace:LibBuilder.WPF.Core.Region"
+                   xmlns:viewModels="clr-namespace:LibBuilder.WPF.Core.ViewModels"
                    xmlns:views="clr-namespace:MvvmCross.Platforms.Wpf.Views;assembly=MvvmCross.Platforms.Wpf"
                    x:TypeArguments="viewModels:ProcessSettingsViewModel"
                    region:MvxContainer.Header="Übersicht"
@@ -24,15 +24,21 @@ Copyright (c) 2020 Timeline Financials GmbH & Co. KG. All rights reserved.
                    d:DesignWidth="900">
     <views:MvxWpfView.Resources>
 
-        <!--CONVERTER-->
-        <BooleanToVisibilityConverter x:Key="BoolToVis" />
-        <behaviours:NegateBooleanConverter x:Key="Inverter" />
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/LibBuilder.Wpf.Core;component/ThemeResource.xaml" />
+            </ResourceDictionary.MergedDictionaries>
 
-        <!--2 CONVERTER kombiniert-->
-        <behaviours:CombiningConverter x:Key="negatedBoolToVisibilityConverter"
-                                       Converter1="{StaticResource Inverter}"
-                                       Converter2="{StaticResource BoolToVis}">
-        </behaviours:CombiningConverter>
+            <!--CONVERTER-->
+            <BooleanToVisibilityConverter x:Key="BoolToVis" />
+            <behaviours:NegateBooleanConverter x:Key="Inverter" />
+
+            <!--2 CONVERTER kombiniert-->
+            <behaviours:CombiningConverter x:Key="negatedBoolToVisibilityConverter"
+                                           Converter1="{StaticResource Inverter}"
+                                           Converter2="{StaticResource BoolToVis}">
+            </behaviours:CombiningConverter>
+        </ResourceDictionary>
     </views:MvxWpfView.Resources>
     <Grid>
         <Grid.RowDefinitions>

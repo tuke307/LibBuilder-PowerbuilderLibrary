@@ -9,8 +9,8 @@ Copyright (c) 2020 Timeline Financials GmbH & Co. KG. All rights reserved.
                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                    xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
                    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-                   xmlns:region="clr-namespace:LibBuilder.WPF.Core.Region;assembly=LibBuilder.WPF.Core"
-                   xmlns:viewModels="clr-namespace:LibBuilder.WPF.Core.ViewModels;assembly=LibBuilder.WPF.Core"
+                   xmlns:region="clr-namespace:LibBuilder.WPF.Core.Region"
+                   xmlns:viewModels="clr-namespace:LibBuilder.WPF.Core.ViewModels"
                    xmlns:views="clr-namespace:MvvmCross.Platforms.Wpf.Views;assembly=MvvmCross.Platforms.Wpf"
                    x:TypeArguments="viewModels:MainViewModel"
                    mc:Ignorable="d"
@@ -18,6 +18,13 @@ Copyright (c) 2020 Timeline Financials GmbH & Co. KG. All rights reserved.
                    MinWidth="450"
                    d:DesignHeight="30"
                    d:DesignWidth="450">
+    <views:MvxWpfView.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/LibBuilder.Wpf.Core;component/ThemeResource.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </views:MvxWpfView.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="30" />

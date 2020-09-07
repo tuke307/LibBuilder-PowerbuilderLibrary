@@ -8,9 +8,9 @@ Copyright (c) 2020 Timeline Financials GmbH & Co. KG. All rights reserved.
                    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-                   xmlns:local="clr-namespace:LibBuilder.WPF.Core.Business;assembly=LibBuilder.WPF.Core"
-                   xmlns:region="clr-namespace:LibBuilder.WPF.Core.Region;assembly=LibBuilder.WPF.Core"
-                   xmlns:viewModels="clr-namespace:LibBuilder.WPF.Core.ViewModels;assembly=LibBuilder.WPF.Core"
+                   xmlns:local="clr-namespace:LibBuilder.WPF.Core.Business"
+                   xmlns:region="clr-namespace:LibBuilder.WPF.Core.Region"
+                   xmlns:viewModels="clr-namespace:LibBuilder.WPF.Core.ViewModels"
                    xmlns:views="clr-namespace:MvvmCross.Platforms.Wpf.Views;assembly=MvvmCross.Platforms.Wpf"
                    x:TypeArguments="viewModels:OngoingProcessViewModel"
                    region:MvxContainer.Header="{Binding Path=Target.File, Mode=OneTime}"
@@ -20,9 +20,15 @@ Copyright (c) 2020 Timeline Financials GmbH & Co. KG. All rights reserved.
                    MinWidth="900"
                    Height="650"
                    d:DesignWidth="900">
-    <UserControl.Resources>
+    <views:MvxWpfView.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/LibBuilder.Wpf.Core;component/ThemeResource.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+
         <local:NameToBrushConverter x:Key="NameToBrushConverter" />
-    </UserControl.Resources>
+    </views:MvxWpfView.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="0.15*" />

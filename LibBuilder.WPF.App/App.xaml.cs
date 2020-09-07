@@ -1,17 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Windows;
+﻿using LibBuilder.WPF.Core;
+using MvvmCross.Core;
+using MvvmCross.Platforms.Wpf.Views;
 
 namespace LibBuilder.WPF.App
 {
     /// <summary>
     /// Interaction logic for App.xaml
     /// </summary>
-    public partial class App : Application
+    public partial class App : MvxApplication
     {
+        protected override void RegisterSetup()
+        {
+            base.RegisterSetup();
+            this.RegisterSetupType<MvxWpfSetup<MvxApp>>();
+        }
     }
 }

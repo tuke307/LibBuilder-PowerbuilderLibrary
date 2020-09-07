@@ -1,5 +1,4 @@
 ﻿using LibBuilder.WPF.Core;
-using LibBuilder.WPF.Core.Region;
 using MvvmCross.Core;
 using MvvmCross.Platforms.Wpf.Views;
 

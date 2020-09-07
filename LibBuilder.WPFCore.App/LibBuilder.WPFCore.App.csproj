@@ -28,58 +28,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Data\Data.csproj" />
     <ProjectReference Include="..\LibBuilder.WPF.Core\LibBuilder.WPF.Core.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Compile Update="Views\ApplicationSettingsView.xaml.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Update="Views\ColorSettingsView.xaml.cs">
-      <DependentUpon>ColorSettingsView.xaml</DependentUpon>
-    </Compile>
-    <Compile Update="Views\MainView.xaml.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Update="Views\MainWindow.xaml.cs">
-      <DependentUpon>MainWindow.xaml</DependentUpon>
-    </Compile>
-    <Compile Update="Views\OngoingProcessView.xaml.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Update="Views\ProcessHistoryView.xaml.cs">
-      <DependentUpon>ProcessHistoryView.xaml</DependentUpon>
-    </Compile>
-    <Compile Update="Views\ProcessSettingsView.xaml.cs">
-      <SubType>Code</SubType>
-    </Compile>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Page Update="Views\ApplicationSettingsView.xaml">
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Update="Views\ColorSettingsView.xaml">
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Update="Views\MainView.xaml">
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Update="Views\MainWindow.xaml">
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Update="Views\OngoingProcessView.xaml">
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Update="Views\ProcessHistoryView.xaml">
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Update="Views\ProcessMainView.xaml">
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Update="Views\ProcessSettingsView.xaml">
-      <SubType>Designer</SubType>
-    </Page>
   </ItemGroup>
 </Project>

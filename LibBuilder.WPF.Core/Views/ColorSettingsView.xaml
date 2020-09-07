@@ -7,8 +7,8 @@ Copyright (c) 2020 Timeline Financials GmbH & Co. KG. All rights reserved.
                    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-                   xmlns:region="clr-namespace:LibBuilder.WPF.Core.Region;assembly=LibBuilder.WPF.Core"
-                   xmlns:viewModels="clr-namespace:LibBuilder.WPF.Core.ViewModels;assembly=LibBuilder.WPF.Core"
+                   xmlns:region="clr-namespace:LibBuilder.WPF.Core.Region"
+                   xmlns:viewModels="clr-namespace:LibBuilder.WPF.Core.ViewModels"
                    xmlns:local="clr-namespace:LibBuilder.WPF.Core.Views"
                    xmlns:materialDesignColors="clr-namespace:MaterialDesignColors;assembly=MaterialDesignColors"
                    xmlns:wpf="clr-namespace:MaterialDesignThemes.Wpf;assembly=MaterialDesignThemes.Wpf"
@@ -22,6 +22,12 @@ Copyright (c) 2020 Timeline Financials GmbH & Co. KG. All rights reserved.
                    d:DesignHeight="700"
                    d:DesignWidth="900">
     <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/LibBuilder.Wpf.Core;component/ThemeResource.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+
         <!--Button-->
         <Style TargetType="Button"
                BasedOn="{StaticResource MaterialDesignFlatButton}">
