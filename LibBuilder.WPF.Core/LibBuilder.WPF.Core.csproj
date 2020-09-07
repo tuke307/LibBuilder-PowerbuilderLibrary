@@ -2,20 +2,14 @@
 
   <PropertyGroup>
     <TargetFrameworks>net472;netcoreapp3.1</TargetFrameworks>
-    <UseWPF>true</UseWPF>
     <LangVersion>latest</LangVersion>
     <CodeAnalysisRuleSet>$(SolutionDir)\Code Rules.ruleset</CodeAnalysisRuleSet>
-    <Version>2.0.0.0</Version>
     <Company>Timeline Financials GmbH &amp; Co. KG</Company>
     <Authors>Tony Meißner</Authors>
-    <Platforms>AnyCPU;x86;x64</Platforms>
+    <Platforms>AnyCPU;x64;x86</Platforms>
   </PropertyGroup>
 
   <Import Project="$(ProjectDir)netcore.targets" Condition=" $(TargetFramework.StartsWith('netcoreapp3'))" />
-
-  <ItemGroup>
-    <None Remove="ThemeResource.xaml" />
-  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Autoupdater.NET.Official" Version="1.6.2" />
@@ -43,12 +37,8 @@
     <ProjectReference Include="..\LibBuilder.Core\LibBuilder.Core.csproj" />
   </ItemGroup>
 
+  
 
-  <ItemGroup>
-    <Resource Include="ThemeResource.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Resource>
-  </ItemGroup>
 
   <ItemGroup>
     <Compile Update="ApplicationSettings.Designer.cs">

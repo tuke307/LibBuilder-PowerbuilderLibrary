@@ -62,7 +62,6 @@ namespace LibBuilder.Core
 
         /// <summary>
         /// Fügt neue, noch nicht vorhandene Librarys für ein Targets hinzu
-        /// TODO: Remove einfügen
         /// </summary>
         /// <param name="dbTarget">Das zu aktualisierende Target</param>
         /// <param name="version">Orca Version zum starten der Session</param>

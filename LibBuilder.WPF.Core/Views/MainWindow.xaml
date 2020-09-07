@@ -11,9 +11,6 @@ Copyright (c) 2020 Timeline Financials GmbH & Co. KG. All rights reserved.
                   xmlns:region="clr-namespace:LibBuilder.WPF.Core.Region"
                   xmlns:views="clr-namespace:MvvmCross.Platforms.Wpf.Views;assembly=MvvmCross.Platforms.Wpf"
                   mc:Ignorable="d"
-                  TextElement.Foreground="{DynamicResource MaterialDesignBody}"
-                  Background="{DynamicResource MaterialDesignPaper}"
-                  FontFamily="{DynamicResource MaterialDesignFont}"
                   MinHeight="730"
                   MinWidth="900"
                   Height="730"
@@ -27,7 +24,7 @@ Copyright (c) 2020 Timeline Financials GmbH & Co. KG. All rights reserved.
     <views:MvxWindow.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="pack://application:,,,/LibBuilder.Wpf.Core;component/ThemeResource.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Defaults.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </views:MvxWindow.Resources>

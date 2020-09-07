@@ -43,8 +43,6 @@ namespace LibBuilder.WPF.Core.ViewModels
         /// <returns></returns>
         public override Task Initialize()
         {
-            ApplicationChanges.LoadColors();
-
             return base.Initialize();
         }
 

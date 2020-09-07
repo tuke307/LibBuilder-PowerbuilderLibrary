@@ -2,6 +2,7 @@
 // Timeline Financials GmbH & Co. KG. All rights reserved.
 
 using Data;
+using LibBuilder.WPF.Core.Business;
 using Microsoft.EntityFrameworkCore;
 using MvvmCross.ViewModels;
 using System;
@@ -17,6 +18,8 @@ namespace LibBuilder.WPF.Core
     {
         public override void Initialize()
         {
+            ApplicationChanges.LoadColors();
+
             Constants.DatabasePath = Path.Combine(Constants.FileDirectory, Data.Constants.DatabaseName);
 
             using (var db = new DatabaseContext())

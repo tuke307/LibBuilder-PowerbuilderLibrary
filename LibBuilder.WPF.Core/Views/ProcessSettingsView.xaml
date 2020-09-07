@@ -17,7 +17,6 @@ Copyright (c) 2020 Timeline Financials GmbH & Co. KG. All rights reserved.
                    x:TypeArguments="viewModels:ProcessSettingsViewModel"
                    region:MvxContainer.Header="Übersicht"
                    mc:Ignorable="d"
-                   Background="{DynamicResource MaterialDesignPaper}"
                    MinHeight="650"
                    MinWidth="900"
                    Height="650"
@@ -26,7 +25,7 @@ Copyright (c) 2020 Timeline Financials GmbH & Co. KG. All rights reserved.
 
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="pack://application:,,,/LibBuilder.Wpf.Core;component/ThemeResource.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Defaults.xaml" />
             </ResourceDictionary.MergedDictionaries>
 
             <!--CONVERTER-->

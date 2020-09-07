@@ -23,11 +23,11 @@ Copyright (c) 2020 Timeline Financials GmbH & Co. KG. All rights reserved.
     <views:MvxWpfView.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="pack://application:,,,/LibBuilder.Wpf.Core;component/ThemeResource.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Defaults.xaml" />
             </ResourceDictionary.MergedDictionaries>
-        </ResourceDictionary>
 
-        <local:NameToBrushConverter x:Key="NameToBrushConverter" />
+            <local:NameToBrushConverter x:Key="NameToBrushConverter" />
+        </ResourceDictionary>
     </views:MvxWpfView.Resources>
     <Grid>
         <Grid.RowDefinitions>

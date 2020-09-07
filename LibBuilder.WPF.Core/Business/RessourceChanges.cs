@@ -25,24 +25,25 @@ namespace LibBuilder.WPF.Core.Business
             {
                 position = 0;
                 changes = new Uri($"pack://application:,,,/MaterialDesignColors;component/Themes/Recommended/Primary/MaterialDesignColor." + primaryColor + ".xaml");
-                //Application.Current.Resources.MergedDictionaries.RemoveAt(position);
-                //Application.Current.Resources.MergedDictionaries.Insert(position, new ResourceDictionary() { Source = changes });
+
+                Application.Current.Resources.MergedDictionaries.RemoveAt(position);
+                Application.Current.Resources.MergedDictionaries.Insert(position, new ResourceDictionary() { Source = changes });
             }
 
             if (!string.IsNullOrEmpty(secondaryColor))
             {
                 position = 1;
                 changes = new Uri($"pack://application:,,,/MaterialDesignColors;component/Themes/Recommended/Accent/MaterialDesignColor." + secondaryColor + ".xaml");
-                //Application.Current.Resources.MergedDictionaries.RemoveAt(position);
-                //Application.Current.Resources.MergedDictionaries.Insert(position, new ResourceDictionary() { Source = changes });
+                Application.Current.Resources.MergedDictionaries.RemoveAt(position);
+                Application.Current.Resources.MergedDictionaries.Insert(position, new ResourceDictionary() { Source = changes });
             }
 
             if (!string.IsNullOrEmpty(baseTheme))
             {
                 position = 2;
                 changes = new Uri($"pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme." + baseTheme + ".xaml");
-                //Application.Current.Resources.MergedDictionaries.RemoveAt(position);
-                //Application.Current.Resources.MergedDictionaries.Insert(position, new ResourceDictionary() { Source = changes });
+                Application.Current.Resources.MergedDictionaries.RemoveAt(position);
+                Application.Current.Resources.MergedDictionaries.Insert(position, new ResourceDictionary() { Source = changes });
             }
         }
     }

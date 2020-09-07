@@ -8,6 +8,7 @@
     <RootNamespace>LibBuilder.Console.App</RootNamespace>
     <ApplicationIcon>icon.ico</ApplicationIcon>
     <Authors>Tony Meißner</Authors>
+    <Version>2.0.0.0</Version>
     <Company>Timeline Financials GmbH &amp; Co. KG</Company>
     <Platforms>AnyCPU;x86;x64</Platforms>
   </PropertyGroup>
