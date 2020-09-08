@@ -499,7 +499,7 @@ namespace LibBuilder.Core.ViewModels
         /// <value>The librarys.</value>
         public ObservableCollection<LibraryModel> Librarys
         {
-            get => new ObservableCollection<LibraryModel>(Target?.Librarys);
+            get => new ObservableCollection<LibraryModel>(Target?.Librarys.Where(l => l.File.EndsWith(".pbl")));
             //set => SetProperty(ref _librarys, value);
         }
 

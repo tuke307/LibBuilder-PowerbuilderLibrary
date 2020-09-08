@@ -5,6 +5,10 @@
     <Platforms>x86;AnyCPU;x64</Platforms>
     <LangVersion>latest</LangVersion>
     <CodeAnalysisRuleSet>$(SolutionDir)\Code Rules.ruleset</CodeAnalysisRuleSet>
+    <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
+  </PropertyGroup>
+
+  <PropertyGroup>
     <Company>Timeline Financials GmbH &amp; Co. KG</Company>
     <Authors>Tony Meißner</Authors>
   </PropertyGroup>

@@ -1,43 +1,32 @@
 ﻿using CommandLine;
-using CommandLine.Text;
-using Data;
 using LibBuilder.Console.Core;
-using Microsoft.EntityFrameworkCore;
-using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 
 namespace LibBuilder.Console.App
 {
+    /// <summary>
+    /// CommandLineParser.
+    /// </summary>
     public class CommandLineParser
     {
-        private LibBuilder.Console.Core.ViewModels.ProcessSettingsViewModel processSettingsViewModel;
+        private readonly LibBuilder.Console.Core.ViewModels.ProcessSettingsViewModel processSettingsViewModel;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CommandLineParser" /> class.
+        /// </summary>
+        /// <param name="arguments">The arguments.</param>
         public CommandLineParser(string[] arguments)
         {
-            if (arguments.Count() > 0 && arguments != null)
-            {
-                Constants.DatabasePath = Path.Combine(Constants.FileDirectory, Data.Constants.DatabaseName);
+            // Initialize ViewModel
+            processSettingsViewModel = new LibBuilder.Console.Core.ViewModels.ProcessSettingsViewModel(null, null);
+            processSettingsViewModel.Prepare();
+            processSettingsViewModel.Initialize();
 
-                using (var db = new DatabaseContext())
-                {
-                    db.Database.Migrate();
-                }
-
-                if (!Directory.Exists(Constants.FileDirectory))
-                {
-                    Directory.CreateDirectory(Constants.FileDirectory);
-                }
-
-                processSettingsViewModel = new LibBuilder.Console.Core.ViewModels.ProcessSettingsViewModel(null, null);
-                processSettingsViewModel.Prepare();
-                processSettingsViewModel.Initialize();
-
-                var result = Parser.Default.ParseArguments<LibBuilder.Console.Core.Options>(arguments)
-               .WithParsed(this.RunOptions)
-               .WithNotParsed(this.HandleParseError);
-            }
+            // Parse Parameter
+            var result = Parser.Default.ParseArguments<LibBuilder.Console.Core.Options>(arguments)
+           .WithParsed(this.RunOptions)
+           .WithNotParsed(this.HandleParseError);
         }
 
         /// <summary>
@@ -63,11 +52,6 @@ namespace LibBuilder.Console.App
         /// <param name="options">The options.</param>
         private void RunOptions(Options options)
         {
-            System.Console.WriteLine("---------LibBuilder-----------");
-            System.Console.WriteLine(HeadingInfo.Default);
-            System.Console.WriteLine(CopyrightInfo.Default);
-            System.Console.WriteLine();
-
             processSettingsViewModel.ParameterStart(options);
 
             System.Console.ReadKey();

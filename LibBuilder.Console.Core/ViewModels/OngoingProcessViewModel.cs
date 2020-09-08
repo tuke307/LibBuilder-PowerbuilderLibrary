@@ -47,9 +47,9 @@ namespace LibBuilder.Console.Core.ViewModels
             await base.RunProcedurAsync();
 
             System.Console.WriteLine();
-            System.Console.ForegroundColor = ConsoleColor.Gray;
+            //System.Console.ForegroundColor = ConsoleColor.Gray;
             System.Console.WriteLine("++Abgeschlossen++");
-            System.Console.ResetColor();
+            //System.Console.ResetColor();
 
             #endregion Run
         }

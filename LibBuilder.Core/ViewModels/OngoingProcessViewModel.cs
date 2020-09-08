@@ -39,10 +39,14 @@
             {
                 using (var data = new DatabaseContext())
                 {
+                    // Für PB-Version, Workspace laden
                     Workspace = data.Workspace.Find(Target.WorkspaceId);
 
-                    var libraries = data.Library.Where(l => l.TargetId == Target.Id).ToList();
-                    Librarys = new ObservableCollection<LibraryModel>(libraries);
+                    //Load Librarys
+                    Target = data.Target.Find(Target.Id);
+                    data.Entry(Target).Collection(t => t.Librarys).LoadAsync();
+                    //var libraries = data.Library.Where(l => l.TargetId == Target.Id).ToList();
+                    //Librarys = new ObservableCollection<LibraryModel>(libraries);
                 }
             }
 
@@ -135,8 +139,10 @@
 
                 #endregion ApplicationRebuild
 
+                #region Rebuild&Regenerate
+
                 // für jede unkompilierte(.pbl) Library
-                for (int l = 0; l < Librarys.Count; l++)
+                foreach (var lib in Librarys)
                 {
                     #region Load&Check
 
@@ -144,14 +150,14 @@
                     using (var db = new DatabaseContext())
                     {
                         //Track Entitiy
-                        Library = db.Library.Single(b => b.Id == Librarys[l].Id);
+                        Library = await db.Library.FindAsync(lib.Id);
 
                         //Load Collections
                         await db.Entry(Library).Collection(t => t.Objects).LoadAsync();
                     }
 
                     //wenn nichts zum verarbeiten
-                    if (Library.Build == false && Library.Objects.Where(lib => lib.Regenerate == true).ToList().Count == 0)
+                    if (Library.Build == false && Library.Objects.Where(l => l.Regenerate == true).ToList().Count == 0)
                         continue;
 
                     #endregion Load&Check
@@ -159,24 +165,22 @@
                     #region Regenerate
 
                     //für jedes Object
-                    for (int i = 0; i < Library.Objects.Count; i++)
+                    foreach (var obj in Library.Objects)
                     {
-                        if (Library.Objects[i].Regenerate)
+                        if (obj.Regenerate)
                         {
+                            var resultRegenerate = session.RegenerateObject(Library.FilePath, obj.Name, obj.ObjectType.Value);
+
                             lock (_lock)
                             {
                                 Processes.Add(new Data.Models.Process
                                 {
                                     Target = this.Target.File,
                                     Library = this.Library.File,
-                                    Object = this.Library.Objects[i].Name,
-                                    Mode = "Regenerate"
+                                    Object = obj.Name,
+                                    Mode = "Regenerate",
+                                    Result = resultRegenerate,
                                 });
-                            }
-
-                            lock (_lock)
-                            {
-                                Processes.Last().Result = session.RegenerateObject(Library.FilePath, Library.Objects[i].Name, Library.Objects[i].ObjectType.Value);
                             }
                         }
                     }
@@ -185,26 +189,26 @@
 
                     #region Build
 
-                    if (Librarys[l].Build)
+                    if (lib.Build)
                     {
+                        var resultBuild = session.CreateDynamicLibrary(lib.FilePath, "");
+
                         lock (_lock)
                         {
                             Processes.Add(new Data.Models.Process
                             {
                                 Target = this.Target.File,
                                 Library = this.Library.File,
-                                Mode = "Rebuild"
+                                Mode = "Rebuild",
+                                Result = resultBuild,
                             });
-                        }
-
-                        lock (_lock)
-                        {
-                            Processes.Last().Result = session.CreateDynamicLibrary(Librarys[l].FilePath, "");
                         }
                     }
 
                     #endregion Build
                 }
+
+            #endregion Rebuild&Regenerate
 
             End:
                 session.SessionClose();
@@ -245,7 +249,7 @@
         protected object _lock = new object();
 
         private LibraryModel _library;
-        private ObservableCollection<LibraryModel> _librarys;
+
         private bool _processError;
 
         private ObservableCollection<Data.Models.Process> _processes;
@@ -282,8 +286,8 @@
 
         public ObservableCollection<LibraryModel> Librarys
         {
-            get => _librarys;
-            set => SetProperty(ref _librarys, value);
+            get => new ObservableCollection<LibraryModel>(Target?.Librarys);
+            //set => SetProperty(ref _librarys, value);
         }
 
         public bool ProcessError

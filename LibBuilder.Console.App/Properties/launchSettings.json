@@ -2,7 +2,7 @@
   "profiles": {
     "LibBuilder.Console.App": {
       "commandName": "Project",
-      "commandLineArgs": "-w kunden.pbw -t tlfi_lokal.pbt -b true -l client_elinv.pbl;client_tlfiutils.pbl"
+      "commandLineArgs": "-w C:\\db\\Workspaces\\kunden.pbw -t tlfi_lokal.pbt -v 170 -b true -l client_elinv.pbl;client_tlfiutils.pbl"
     }
   }
 }

@@ -30,48 +30,43 @@ namespace LibBuilder.Console.Core.ViewModels
             // Workspace
             if (parameter.Workspace != null)
             {
-                // pfad
-                if (Path.IsPathFullyQualified(parameter.Workspace) && !Path.IsPathRooted(parameter.Workspace))
-                {
-                    string filePath = Path.GetFullPath(parameter.Workspace);
+                string filePath = Path.GetFullPath(parameter.Workspace);
+                string fileName = Path.GetFileName(parameter.Workspace);
 
-                    if (File.Exists(filePath))
+                // pfad
+                if (File.Exists(filePath))
+                {
+                    try
                     {
-                        try
-                        {
-                            Workspace = Workspaces.Single(w => w.FilePath.ToLower() == filePath.ToLower());
-                        }
-                        catch
-                        {
-                            // in Datenbank hinzufügen
-                            System.Console.WriteLine("Workspace-Pfad konnte in Datenbank nicht gefunden werden, daher wird dieser hinzugefügt");
-                            base.OpenWorkspace(filePath);
-                        }
+                        Workspace = Workspaces.Single(w => w.FilePath.ToLower() == filePath.ToLower());
                     }
-                    else
+                    catch
                     {
-                        System.Console.WriteLine("Der Workspace-Pfad " + filePath + " ist ungültig");
-                        return;
+                        // in Datenbank hinzufügen
+                        System.Console.WriteLine("Workspace-Pfad konnte in Datenbank nicht gefunden werden, daher wird dieser hinzugefügt");
+                        base.OpenWorkspace(filePath);
                     }
                 }
                 // Name
                 else
                 {
-                    string fileName = Path.GetFileName(parameter.Workspace);
-
                     try
                     {
                         Workspace = Workspaces.Single(w => w.File.ToLower() == fileName.ToLower());
                     }
                     catch (Exception exc)
                     {
-                        System.Console.WriteLine("Wokspace konnte in Datenbank nicht gefunden werden; " + exc.Message);
+                        System.Console.WriteLine("Workspace-Name konnte in Datenbank nicht gefunden werden; " + exc.Message);
                         return;
                     }
                 }
 
-                LoadWorkspace().Wait();
-                System.Console.WriteLine("Workspace " + Workspace.FilePath + " erfolgreich eingelesen");
+                // um mögliche ladefehler zu vermeiden
+                if (CheckWorkspaceAsync())
+                {
+                    LoadWorkspace().Wait();
+                    System.Console.WriteLine("Workspace " + Workspace.FilePath + " erfolgreich eingelesen");
+                }
             }
             else
             {
@@ -80,7 +75,7 @@ namespace LibBuilder.Console.Core.ViewModels
                 return;
             }
 
-            // Version
+            // Version angegeben
             if (parameter.Version != null)
             {
                 Workspace.PBVersion = parameter.Version;
@@ -90,6 +85,7 @@ namespace LibBuilder.Console.Core.ViewModels
 
                 System.Console.WriteLine("Version erfolgreich gesetzt");
             }
+            // Version nicht angegeben
             else
             {
                 if (!Workspace.PBVersion.HasValue)
@@ -104,36 +100,35 @@ namespace LibBuilder.Console.Core.ViewModels
             // Target
             if (parameter.Target != null)
             {
-                // pfad
-                if (Path.IsPathFullyQualified(parameter.Target) && !Path.IsPathRooted(parameter.Target))
-                {
-                    string filePath = Path.GetFullPath(parameter.Target);
+                string filePath = Path.GetFullPath(parameter.Target);
+                string fileName = Path.GetFileName(parameter.Target);
 
-                    if (File.Exists(filePath))
+                // pfad
+                if (File.Exists(filePath))
+                {
+                    try
                     {
-                        try
-                        {
-                            Target = Targets.Single(t => t.FilePath.ToLower() == filePath.ToLower());
-                        }
-                        catch
-                        {
-                            // in Datenbank hinzufügen
-                            System.Console.WriteLine("Target-Pfad konnte in dem Worspace nicht gefunden werden nicht gefunden werden");
-                            return;
-                        }
+                        Target = Targets.Single(t => t.FilePath.ToLower() == filePath.ToLower());
                     }
-                    else
+                    catch
                     {
-                        System.Console.WriteLine("Der Target-Pfad " + filePath + " ist ungültig");
+                        // in Datenbank hinzufügen
+                        System.Console.WriteLine("Target-Pfad konnte im Worspace nicht gefunden werden");
                         return;
                     }
                 }
                 // name
                 else
                 {
-                    string fileName = Path.GetFileName(parameter.Target);
-
-                    Target = Targets.Single(t => t.File.ToLower() == fileName.ToLower());
+                    try
+                    {
+                        Target = Targets.Single(t => t.File.ToLower() == fileName.ToLower());
+                    }
+                    catch (Exception exc)
+                    {
+                        System.Console.WriteLine("Target-Name konnte in Datenbank nicht gefunden werden; " + exc.Message);
+                        return;
+                    }
                 }
 
                 LoadTarget().Wait();
@@ -166,10 +161,6 @@ namespace LibBuilder.Console.Core.ViewModels
             // ausgewählte Librarys - Build/Regenerate
             if (!parameter.Librarys.IsNullOrEmpty() && (parameter.Build.HasValue || parameter.Regenerate.HasValue))
             {
-                // ausgewählte Librarys
-
-                System.Console.WriteLine("Librarys " + String.Join(", ", parameter.Librarys.ToArray()) + " selektiert");
-
                 // build deselktieren
                 base.DeselectAllLibrarys();
 
@@ -187,34 +178,25 @@ namespace LibBuilder.Console.Core.ViewModels
                 // ausgewählte Librarys
                 foreach (var lib in parameter.Librarys)
                 {
-                    // pfad
-                    if (Path.IsPathFullyQualified(lib) && !Path.IsPathRooted(lib))
-                    {
-                        string filePath = Path.GetFullPath(lib);
+                    string filePath = Path.GetFullPath(lib);
+                    string fileName = Path.GetFileName(lib);
 
-                        if (File.Exists(filePath))
+                    // pfad
+                    if (File.Exists(filePath))
+                    {
+                        try
                         {
-                            try
-                            {
-                                Library = Librarys.Single(l => l.FilePath.ToLower() == filePath.ToLower());
-                            }
-                            catch
-                            {
-                                System.Console.WriteLine("Library-Pfad; " + filePath + ", wurde nicht gefunden");
-                                return;
-                            }
+                            Library = Librarys.Single(l => l.FilePath.ToLower() == filePath.ToLower());
                         }
-                        else
+                        catch
                         {
-                            System.Console.WriteLine("Der Library-Pfad " + filePath + " ist ungültig");
+                            System.Console.WriteLine("Library-Pfad; " + filePath + ", wurde nicht gefunden");
                             return;
                         }
                     }
                     // Name
                     else
                     {
-                        string fileName = Path.GetFileName(lib);
-
                         try
                         {
                             Library = Librarys.Single(l => l.File.ToLower() == fileName.ToLower());
@@ -257,6 +239,8 @@ namespace LibBuilder.Console.Core.ViewModels
                         }
                     }
                 }
+
+                System.Console.WriteLine("Librarys " + String.Join(", ", parameter.Librarys.ToArray()) + " selektiert");
             }
             // alle Librarys - Build/Regenerate
             else

@@ -4,10 +4,15 @@
     <TargetFrameworks>net472;netcoreapp3.1</TargetFrameworks>
     <LangVersion>latest</LangVersion>
     <CodeAnalysisRuleSet>$(SolutionDir)\Code Rules.ruleset</CodeAnalysisRuleSet>
+    <Platforms>AnyCPU;x64;x86</Platforms>
+    <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
+  </PropertyGroup>
+
+  <PropertyGroup>
     <Company>Timeline Financials GmbH &amp; Co. KG</Company>
     <Authors>Tony Meißner</Authors>
-    <Platforms>AnyCPU;x64;x86</Platforms>
   </PropertyGroup>
+
 
   <Import Project="$(ProjectDir)netcore.targets" Condition=" $(TargetFramework.StartsWith('netcoreapp3'))" />
 
