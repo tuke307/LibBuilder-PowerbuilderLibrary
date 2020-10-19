@@ -15,7 +15,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LibBuilder.Core", "LibBuild
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PBDotNet", "PBDotNet\PBDotNet.csproj", "{79D600D2-3E59-4A8C-8B22-3BF0092D51AD}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LibBuilder.Console.App", "LibBuilder.Console.App\LibBuilder.Console.App.csproj", "{FF52936C-2315-4698-B961-AF0392E4091B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LibBuilder.Console.CoreApp", "LibBuilder.Console.CoreApp\LibBuilder.Console.CoreApp.csproj", "{FF52936C-2315-4698-B961-AF0392E4091B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LibBuilder.WPF.App", "LibBuilder.WPF.App\LibBuilder.WPF.App.csproj", "{D4C9E484-587D-4C65-99E6-F09D65C58609}"
 EndProject
@@ -43,6 +43,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "screenshots", "screenshots"
 		Screenshots\run without errors.png = Screenshots\run without errors.png
 		Screenshots\update.png = Screenshots\update.png
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LibBuilder.Console.App", "LibBuilder.Console.App\LibBuilder.Console.App.csproj", "{EF09C12D-0303-4E62-BD6A-69E78F3AB13A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -160,6 +162,18 @@ Global
 		{3A416F2C-1385-4CC9-A6F9-A79A103335E0}.Release|x64.Build.0 = Release|x64
 		{3A416F2C-1385-4CC9-A6F9-A79A103335E0}.Release|x86.ActiveCfg = Release|x86
 		{3A416F2C-1385-4CC9-A6F9-A79A103335E0}.Release|x86.Build.0 = Release|x86
+		{EF09C12D-0303-4E62-BD6A-69E78F3AB13A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EF09C12D-0303-4E62-BD6A-69E78F3AB13A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EF09C12D-0303-4E62-BD6A-69E78F3AB13A}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{EF09C12D-0303-4E62-BD6A-69E78F3AB13A}.Debug|x64.Build.0 = Debug|Any CPU
+		{EF09C12D-0303-4E62-BD6A-69E78F3AB13A}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{EF09C12D-0303-4E62-BD6A-69E78F3AB13A}.Debug|x86.Build.0 = Debug|Any CPU
+		{EF09C12D-0303-4E62-BD6A-69E78F3AB13A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EF09C12D-0303-4E62-BD6A-69E78F3AB13A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EF09C12D-0303-4E62-BD6A-69E78F3AB13A}.Release|x64.ActiveCfg = Release|Any CPU
+		{EF09C12D-0303-4E62-BD6A-69E78F3AB13A}.Release|x64.Build.0 = Release|Any CPU
+		{EF09C12D-0303-4E62-BD6A-69E78F3AB13A}.Release|x86.ActiveCfg = Release|Any CPU
+		{EF09C12D-0303-4E62-BD6A-69E78F3AB13A}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -174,6 +188,7 @@ Global
 		{D4C9E484-587D-4C65-99E6-F09D65C58609} = {F336EDFB-F52C-4BCC-8718-148685EFA979}
 		{4DF3B7BE-42CF-4C2B-8155-1686CC67A7CF} = {F336EDFB-F52C-4BCC-8718-148685EFA979}
 		{3A416F2C-1385-4CC9-A6F9-A79A103335E0} = {C36D6D5C-5B5C-4071-BE34-9822713D1494}
+		{EF09C12D-0303-4E62-BD6A-69E78F3AB13A} = {F336EDFB-F52C-4BCC-8718-148685EFA979}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {BE881140-8E07-4C63-9F3F-B37CAB6E2FC9}
