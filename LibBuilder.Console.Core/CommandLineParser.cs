@@ -1,9 +1,7 @@
 ﻿using CommandLine;
-using LibBuilder.Console.Core;
 using System.Collections.Generic;
-using System.Linq;
 
-namespace LibBuilder.Console.CoreApp
+namespace LibBuilder.Console.Core
 {
     /// <summary>
     /// CommandLineParser.
@@ -23,7 +21,17 @@ namespace LibBuilder.Console.CoreApp
             processSettingsViewModel.Prepare();
             processSettingsViewModel.Initialize();
 
-            // Parse Parameter
+            ReadLine(arguments);
+        }
+
+        public void ReadLine(string[] arguments = null)
+        {
+            if (arguments == null)
+            {
+                arguments = System.Console.ReadLine().Split(' ');
+            }
+
+            // Parse Parameters
             var result = Parser.Default.ParseArguments<LibBuilder.Console.Core.Options>(arguments)
            .WithParsed(this.RunOptions)
            .WithNotParsed(this.HandleParseError);
@@ -35,15 +43,21 @@ namespace LibBuilder.Console.CoreApp
         /// <param name="errs">The errs.</param>
         private void HandleParseError(IEnumerable<Error> errs)
         {
-            if (errs.Any(x => x is HelpRequestedError || x is VersionRequestedError))
-            {
-                // kein Fehler, da --help oder --version
-            }
-            else
-            {
-                System.Console.WriteLine("Fehler beim einlesen der Parameter; ");
-                System.Console.Write("{0} Fehler gefunden", errs.Count());
-            }
+            //if (errs.Any(x => x is HelpRequestedError || x is VersionRequestedError))
+            //{
+            //    // kein Fehler, da --help oder --version
+            //}
+            //else if (errs.Any(x => x is CommandLine.MissingRequiredOptionError || x is CommandLine.MissingValueOptionError || x is CommandLine.MissingGroupOptionError))
+            //{
+            //    //System.Console.WriteLine("Fehler beim einlesen der Parameter; etwas fehlt!");
+            //}
+            //else
+            //{
+            //    //System.Console.WriteLine("Fehler beim einlesen der Parameter; ");
+            //    //System.Console.Write("{0} Fehler gefunden", errs.Count());
+            //}
+
+            ReadLine();
         }
 
         /// <summary>
@@ -54,8 +68,7 @@ namespace LibBuilder.Console.CoreApp
         {
             processSettingsViewModel.ParameterStart(options);
 
-            System.Console.ReadKey();
-            //new WPFCore.ViewModels.ProcessMainViewModel().Prepare(parameter: options);
+            ReadLine();
         }
     }
 }

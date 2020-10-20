@@ -34,12 +34,14 @@ namespace LibBuilder.WPF.Core.ViewModels
         /// <returns>Initilisierung.</returns>
         public override Task Initialize()
         {
+            var task = base.Initialize();
+
             if (Target != null)
             {
                 RunProcedurCommand.Execute();
             }
 
-            return base.Initialize();
+            return task;
         }
 
         /// <summary>

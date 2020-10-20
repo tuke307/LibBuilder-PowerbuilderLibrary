@@ -96,6 +96,8 @@ namespace Data
         protected override void OnConfiguring(DbContextOptionsBuilder options)
         {
             options.UseSqlite($"Filename={Constants.DatabasePath}");
+
+            base.OnConfiguring(options);
         }
 
         /// <summary>
@@ -130,6 +132,8 @@ namespace Data
                 .HasConversion(
                     x => x.ToString(), // to converter
                     x => (Objecttype)Enum.Parse(typeof(Objecttype), x));// from converter
+
+            base.OnModelCreating(modelBuilder);
         }
     }
 }

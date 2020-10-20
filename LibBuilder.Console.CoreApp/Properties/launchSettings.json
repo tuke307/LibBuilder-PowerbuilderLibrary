@@ -1,8 +1,23 @@
 {
   "profiles": {
-    "LibBuilder.Console.App": {
+    "Workspace Target Version Build Librarys": {
       "commandName": "Project",
       "commandLineArgs": "-w C:\\db\\Workspaces\\kunden.pbw -t tlfi_lokal.pbt -v 170 -b true -l client_elinv.pbl;client_tlfiutils.pbl"
+    },
+    "ohne parameter": {
+      "commandName": "Project"
+    },
+    "ExistingWorkspace Target FullBuild": {
+      "commandName": "Project",
+      "commandLineArgs": "-w kunden.pbw -t tlfi_lokal.pbt -x 1"
+    },
+    "version": {
+      "commandName": "Project",
+      "commandLineArgs": "--version"
+    },
+    "help": {
+      "commandName": "Project",
+      "commandLineArgs": "--help"
     }
   }
 }

@@ -19,7 +19,10 @@ namespace Data
         /// Gets or sets the database path.
         /// </summary>
         /// <value>The database path.</value>
-        public static string DatabasePath { get; set; }
+        public static string DatabasePath
+        {
+            get => Path.Combine(Constants.FileDirectory, Data.Constants.DatabaseName);
+        }
 
         /// <summary>
         /// Gets the file directory.

@@ -20,16 +20,14 @@ namespace LibBuilder.WPF.Core
         {
             ApplicationChanges.LoadColors();
 
-            Constants.DatabasePath = Path.Combine(Constants.FileDirectory, Data.Constants.DatabaseName);
+            if (!Directory.Exists(Constants.FileDirectory))
+            {
+                Directory.CreateDirectory(Constants.FileDirectory);
+            }
 
             using (var db = new DatabaseContext())
             {
                 db.Database.Migrate();
-            }
-
-            if (!Directory.Exists(Constants.FileDirectory))
-            {
-                Directory.CreateDirectory(Constants.FileDirectory);
             }
 
             this.RegisterAppStart<WPF.Core.ViewModels.MainViewModel>();
@@ -52,6 +50,7 @@ namespace LibBuilder.WPF.Core
                 Process runProg = new Process();
                 try
                 {
+                    //Assembly.GetExecutingAssembly().Location
                     runProg.StartInfo.FileName = app;
                     runProg.StartInfo.Arguments = args;
                     runProg.Start();
