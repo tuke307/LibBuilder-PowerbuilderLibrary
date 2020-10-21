@@ -35,36 +35,36 @@ Multiple procedures can be run at once. All you have to do is select a different
 ## Command line
 It can be started from the command line. The order of the parameter specification as well as the upper and lower case is irrelevant.
 
-| Parameter (kurz) | Parameter (lang)   | Erklärung                           | Typ                     | Eingabe                 |
-|------------------|--------------------|-------------------------------------|-------------------------|-------------------------|
-| -w               | -Workspace         | Name oder Pfad des Workspace        | Zeichenkette            |                         | 
-| -t               | -Target            | Name oder Pfad des Targets          | Zeichenkette            |                         | 
-| -v               | -Version           | Powerbuilder Version des Workspace  | Enumerischer Wert       | PB105 = 105,  PB125 = 125,  PB170 = 170,  PB190 = 190  | 
-| -b               | -Build             | Build der Librarys                  | Boolescher Wert	        | true oder false         | 
-| -r               | -Regenerate        | Regenerate der Library Objects      | Boolescher Wert	        | true oder false         | 
-| -l               | -Librarys          | Auswahl der Librarys                | Liste von Zeichenketten |                         | 
-| -x               | -RebuildType       | Typ des Rebuild                     | Enumerischer Wert       | PBORCA_FULL_REBUILD = 1,  PBORCA_INCREMENTAL_REBUILD = 2,  PBORCA_MIGRATE = 3,  PBORCA_3PASS = 4         | 
+| parameter (short) | parameter (long)   | description                        | type                     | input                   |
+|------------------|--------------------|-------------------------------------|--------------------------|-------------------------|
+| -w               | -Workspace         | name or path of workspace           | string                   |                         | 
+| -t               | -Target            | name or path of target              | string                   |                         | 
+| -v               | -Version           | Powerbuilder Version des Workspace  | enum                     | PB105 = 105,  PB125 = 125,  PB170 = 170,  PB190 = 190  | 
+| -b               | -Build             | build of Librarys                   | boolean 	               | true oder false         | 
+| -r               | -Regenerate        | regenerate of library-objects       | boolean	                 | true oder false         | 
+| -l               | -Librarys          | choices of librarys                 | list of strings          |                         | 
+| -x               | -RebuildType       | type of rebuild                     | enum                     | PBORCA_FULL_REBUILD = 1,  PBORCA_INCREMENTAL_REBUILD = 2,  PBORCA_MIGRATE = 3,  PBORCA_3PASS = 4         | 
 
 
 
 **Samples:** 
 
-Letzte gespeicherte Prozedur erneut ausführen;  
+execute last saved procedure;  
 libbuilder.exe -w kunden.pbw
 
-Full Build des Targets „tlfi_lokal.pbt“;  
+Full Build of Target „tlfi_lokal.pbt“;  
 libbuilder.exe -w kunden.pbw -t tlfi_lokal.pbt -x 1
 
-Regenerieren aller Objekte der Librarys „client_elinv.pbl“ und „client_tlfiutils.pbl“ des Target „tlfi_lokal.pbt“: 
+regenerate all objects of library „client_elinv.pbl“ and „client_tlfiutils.pbl“ of target „tlfi_lokal.pbt“: 
 libbuilder.exe -w kunden.pbw -t tlfi_lokal.pbt -r true -l client_elinv.pbl;client_tlfiutils.pbl
 
-Erstmaliges Hinzufügen eines Workspace und ausführen eines Full Build eines Targets;  
+First time working of a workspace and a complete goal;  
 libbuilder.exe -w C:\db\Workspaces\kunden.pbw -t C:\tl_kunden\TL_13_Suedguss\fakt3_v13.pbt -v 170 –r true –b true
 
-Anzeige der Version;  
+show version;  
 libbuilder.exe --version
 
-Anzeige der Hilfe;  
+show help;  
 libbuilder.exe --help
 
 ![alt text](https://github.com/tuke307/LibBuilder/blob/master/Screenshots/cmd%20example.gif "cmd-example")
