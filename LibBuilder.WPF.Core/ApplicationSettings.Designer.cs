@@ -25,7 +25,8 @@ namespace LibBuilder.WPF.Core {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("file://///tlfi.de\\Freigaben\\lwi\\TL_Tools\\LibBuilder\\.NET\\AutoUpdater.xml")]
+        [global::System.Configuration.DefaultSettingValueAttribute("file://///tlfi.de\\Freigaben\\lwi\\TL_Tools\\LibBuilder\\Visual Studio (C#)\\AutoUpdate" +
+            "r.xml")]
         public string UpdatePath {
             get {
                 return ((string)(this["UpdatePath"]));
