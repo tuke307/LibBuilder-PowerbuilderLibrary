@@ -23,12 +23,12 @@ The database is located in the roaming directory; *„C:\Users\\%currentUser%\\A
 ## Powerbuilder
 Problems with the Powerbuilder can occur while the target is open there.
 
-## Ausführung
+## Runtime
 | Success              | Error      |
 | ------------------|:-------------:|
 | ![alt text](https://github.com/tuke307/LibBuilder/blob/master/Screenshots/run%20without%20errors.png "process success") | ![alt text](https://github.com/tuke307/LibBuilder/blob/master/Screenshots/run%20with%20errors.png "process with error")  | 
 
-## Mehrere Prozeduren
+## Multiple procedures
 Multiple procedures can be run at once. All you have to do is select a different target and start the process. The process of the target is added as a further tab.
 ![alt text](https://github.com/tuke307/LibBuilder/blob/master/Screenshots/multiple%20processes.gif "multiple processes")
 
@@ -47,7 +47,7 @@ It can be started from the command line. The order of the parameter specificatio
 
 
 
-**Beispiele:** 
+**Samples:** 
 
 Letzte gespeicherte Prozedur erneut ausführen;  
 libbuilder.exe -w kunden.pbw
@@ -70,6 +70,6 @@ libbuilder.exe --help
 ![alt text](https://github.com/tuke307/LibBuilder/blob/master/Screenshots/cmd%20example.gif "cmd-example")
 
 ## Features
-| Applikations Farbe und Theme              | Prozess-History      | AutoUpdater      |
+| application color/theme              | process history      | AutoUpdater      |
 | ------------------|:-------------:|:-------------:|
 | ![alt text](https://github.com/tuke307/LibBuilder/blob/master/Screenshots/colors.png "colors") | ![alt text](https://github.com/tuke307/LibBuilder/blob/master/Screenshots/history.png "history")  | ![alt text](https://github.com/tuke307/LibBuilder/blob/master/Screenshots/update.png "update")  | 
