@@ -1,3 +1,3 @@
 [German](README.de-DE.md)
 
-[Egnlish](README.en-EN.md)
+[English](README.en-EN.md)
