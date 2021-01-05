@@ -33,7 +33,7 @@
   </ItemGroup>
 
   <ItemGroup Condition=" $(TargetFramework.StartsWith('net47')) ">
-    <PackageReference Include="Dragablz" Version="0.0.3.203" />
+    <PackageReference Include="Dragablz" Version="0.0.3.223" />
   </ItemGroup>
 
 
