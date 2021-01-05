@@ -17,7 +17,7 @@
   <Import Project="$(ProjectDir)netcore.targets" Condition=" $(TargetFramework.StartsWith('netcoreapp3'))" />
 
   <ItemGroup>
-    <PackageReference Include="Autoupdater.NET.Official" Version="1.6.3" />
+    <PackageReference Include="Autoupdater.NET.Official" Version="1.6.4" />
     <PackageReference Include="MaterialDesignColors" Version="1.2.7" />
     <PackageReference Include="MaterialDesignThemes" Version="3.2.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.1.9">
