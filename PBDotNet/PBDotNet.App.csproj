@@ -151,7 +151,7 @@
       <Version>6.0.1</Version>
     </PackageReference>
     <PackageReference Include="Xceed.Products.Wpf.Toolkit.AvalonDock">
-      <Version>4.0.20417.1453</Version>
+      <Version>4.1.21122.16390</Version>
     </PackageReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
