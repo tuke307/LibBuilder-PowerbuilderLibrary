@@ -1,11 +1,13 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
 
   <PropertyGroup>
-    <TargetFrameworks>net472;netcoreapp3.1</TargetFrameworks>
+    <OutputType>Library</OutputType>
+    <TargetFrameworks>netcoreapp3.1;net472;net5.0-windows</TargetFrameworks>
     <LangVersion>latest</LangVersion>
     <CodeAnalysisRuleSet>$(SolutionDir)\Code Rules.ruleset</CodeAnalysisRuleSet>
-    <Platforms>AnyCPU;x64;x86</Platforms>
+    <Platforms>x86</Platforms>
     <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
+     <UseWPF>true</UseWPF>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -13,8 +15,23 @@
     <Authors>Tony Meißner</Authors>
   </PropertyGroup>
 
+  <!-- Conditionally obtain references for the .NET 5.0 target -->
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net5.0-windows' ">
+    <PackageReference Include="Dragablz.NetCore" Version="0.3.3" />
+  </ItemGroup>
 
-  <Import Project="$(ProjectDir)netcore.targets" Condition=" $(TargetFramework.StartsWith('netcoreapp3'))" />
+  <!-- Conditionally obtain references for the .NET Core 3.1 target -->
+  <ItemGroup Condition=" '$(TargetFramework)' == 'netcoreapp3.1' ">
+    <PackageReference Include="Dragablz.NetCore" Version="0.3.3" />
+  </ItemGroup>
+
+  <!-- Conditionally obtain references for the .NET Framework 4.7.2 target -->
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net472' ">
+    <PackageReference Include="Dragablz" Version="0.0.3.223" />
+    <PackageReference Include="SQLitePCLRaw.bundle_e_sqlite3" Version="2.0.4" />
+
+  </ItemGroup>
+
 
   <ItemGroup>
     <PackageReference Include="Autoupdater.NET.Official" Version="1.6.4" />
@@ -26,24 +43,13 @@
     </PackageReference>
     <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.31" />
     <PackageReference Include="MvvmCross.Platforms.Wpf" Version="7.1.2" />
+    <PackageReference Include="System.Net.Http" Version="4.3.4" />
   </ItemGroup>
-
-  <ItemGroup Condition=" $(TargetFramework.StartsWith('netcoreapp3')) ">
-    <PackageReference Include="Dragablz.NetCore" Version="0.3.3" />
-  </ItemGroup>
-
-  <ItemGroup Condition=" $(TargetFramework.StartsWith('net47')) ">
-    <PackageReference Include="Dragablz" Version="0.0.3.223" />
-  </ItemGroup>
-
 
   <ItemGroup>
     <ProjectReference Include="..\Data\Data.csproj" />
     <ProjectReference Include="..\LibBuilder.Core\LibBuilder.Core.csproj" />
   </ItemGroup>
-
-  
-
 
   <ItemGroup>
     <Compile Update="ApplicationSettings.Designer.cs">
@@ -69,25 +75,5 @@
     </None>
   </ItemGroup>
 
-  <ItemGroup Condition=" $(TargetFramework.StartsWith('net47')) ">
-    <None Remove="Dialogs\DialogSnackbarView.xaml" />
-    <None Remove="Views\ApplicationSettingsView.xaml" />
-    <None Remove="Views\ColorSettingsView.xaml" />
-    <None Remove="Views\MainView.xaml" />
-    <None Remove="Views\MainWindow.xaml" />
-    <None Remove="Views\OngoingProcessView.xaml" />
-    <None Remove="Views\ProcessHistoryView.xaml" />
-    <None Remove="Views\ProcessMainView.xaml" />
-    <None Remove="Views\ProcessSettingsView.xaml" />
-
-    <Page Include="Dialogs\DialogSnackbarView.xaml" />
-    <Page Include="Views\ApplicationSettingsView.xaml" />
-    <Page Include="Views\ColorSettingsView.xaml" />
-    <Page Include="Views\MainView.xaml" />
-    <Page Include="Views\MainWindow.xaml" />
-    <Page Include="Views\OngoingProcessView.xaml" />
-    <Page Include="Views\ProcessHistoryView.xaml" />
-    <Page Include="Views\ProcessMainView.xaml" />
-    <Page Include="Views\ProcessSettingsView.xaml" />
-  </ItemGroup>
+ 
 </Project>
