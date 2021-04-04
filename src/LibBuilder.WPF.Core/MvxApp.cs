@@ -41,7 +41,7 @@ namespace LibBuilder.WPF.Core
 
             if (arguments.Count() > 0 && arguments != null)
             {
-                if (arguments[0].ToLower().EndsWith("libbuilder.dll")) return base.Startup();
+                if (arguments[0].ToLower().Contains("libbuilder.dll") || arguments[0].ToLower().Contains("libbuilder.exe")) return base.Startup();
 
                 LibBuilder.Core.Utils.AttachConsole(-1);
 
