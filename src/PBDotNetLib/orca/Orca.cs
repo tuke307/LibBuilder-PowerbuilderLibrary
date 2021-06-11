@@ -2,11 +2,23 @@
 // Financials GmbH & Co. KG. All rights reserved.
 namespace PBDotNetLib.orca
 {
+    using PBDotNetLib.util;
     using System;
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.Runtime.InteropServices;
     using System.Text;
+
+    [AttributeUsage(AttributeTargets.Field)]
+    public class DllNameAttribute : Attribute
+    {
+        public string DllName { get; private set; }
+
+        public DllNameAttribute(string dllName)
+        {
+            this.DllName = dllName;
+        }
+    }
 
     /// <summary>
     /// wrapper to export objects from pbl with orca
@@ -134,11 +146,23 @@ namespace PBDotNetLib.orca
         /// </summary>
         public enum Version
         {
+            [DllName(PB105_DllName)]
             PB105 = 105,
+
+            [DllName(PB125_DllName)]
             PB125 = 125,
+
+            [DllName(PB170_DllName)]
             PB170 = 170,
+
+            [DllName(PB190_DllName)]
             PB190 = 190
         }
+
+        public const string PB105_DllName = "pborc105";
+        public const string PB125_DllName = "pborc125";
+        public const string PB170_DllName = "pborc170";
+        public const string PB190_DllName = "pborc";
 
         #region private
 
@@ -168,14 +192,14 @@ namespace PBDotNetLib.orca
 
         #region PB10.5
 
-        [DllImport("pborc105.dll", EntryPoint = "PBORCA_ApplicationRebuild", CharSet = CharSet.Unicode, SetLastError = true)]
+        [DllImport(PB105_DllName, EntryPoint = "PBORCA_ApplicationRebuild", CharSet = CharSet.Unicode, SetLastError = true)]
         private static extern int PBORCA_ApplicationRebuild105(
            int hORCASession,
            PBORCA_REBLD_TYPE eRebldType,
            [MarshalAs(UnmanagedType.FunctionPtr)] PBORCA_CALLBACK pCompErrorProc,
            IntPtr pUserData);
 
-        [DllImport("pborc105.dll", EntryPoint = "PBORCA_CompileEntryRegenerate", CharSet = CharSet.Unicode, SetLastError = true)]
+        [DllImport(PB105_DllName, EntryPoint = "PBORCA_CompileEntryRegenerate", CharSet = CharSet.Unicode, SetLastError = true)]
         private static extern int PBORCA_CompileEntryRegenerate105(
             int hORCASession,
             [MarshalAs(UnmanagedType.LPWStr)] string lpszLibraryName,
@@ -184,7 +208,7 @@ namespace PBDotNetLib.orca
             [MarshalAs(UnmanagedType.FunctionPtr)] PBORCA_CALLBACK pCompErrorProc,
             IntPtr pUserData);
 
-        [DllImport("pborc105.dll", EntryPoint = "PBORCA_DynamicLibraryCreate", CharSet = CharSet.Unicode, SetLastError = true)]
+        [DllImport(PB105_DllName, EntryPoint = "PBORCA_DynamicLibraryCreate", CharSet = CharSet.Unicode, SetLastError = true)]
         private static extern int PBORCA_DynamicLibraryCreate105(
             int hORCASession,
             [MarshalAs(UnmanagedType.LPTStr)] string lpszLibName,
@@ -192,10 +216,10 @@ namespace PBDotNetLib.orca
             IntPtr lFlags,
             IntPtr pbcPara);
 
-        [DllImport("pborc105.dll", EntryPoint = "PBORCA_LibraryCreate", CharSet = CharSet.Unicode, SetLastError = true)]
+        [DllImport(PB105_DllName, EntryPoint = "PBORCA_LibraryCreate", CharSet = CharSet.Unicode, SetLastError = true)]
         private static unsafe extern int PBORCA_LibraryCreate105(int hORCASession, [MarshalAs(UnmanagedType.LPTStr)] string lpszLibName, [MarshalAs(UnmanagedType.LPTStr)] string lpszLibComment);
 
-        [DllImport("pborc105.dll", EntryPoint = "PBORCA_LibraryDirectory", CharSet = CharSet.Unicode, SetLastError = true)]
+        [DllImport(PB105_DllName, EntryPoint = "PBORCA_LibraryDirectory", CharSet = CharSet.Unicode, SetLastError = true)]
         private static extern int PBORCA_LibraryDirectory105(
             int hORCASession,
             [MarshalAs(UnmanagedType.LPTStr)] string lpszLibName,
@@ -205,7 +229,7 @@ namespace PBDotNetLib.orca
             IntPtr pUserData
         );
 
-        [DllImport("pborc105.dll", EntryPoint = "PBORCA_LibraryEntryExport", CharSet = CharSet.Auto)]
+        [DllImport(PB105_DllName, EntryPoint = "PBORCA_LibraryEntryExport", CharSet = CharSet.Auto)]
         private static extern int PBORCA_LibraryEntryExport105(
             int hORCASession,
             [MarshalAs(UnmanagedType.LPWStr)] string lpszLibraryName,
@@ -214,30 +238,30 @@ namespace PBDotNetLib.orca
             [MarshalAs(UnmanagedType.LPWStr)] StringBuilder lpszExportBuffer,
             System.Int32 lExportBufferSize);
 
-        [DllImport("pborc105.dll", EntryPoint = "PBORCA_SessionClose", CharSet = CharSet.Unicode, SetLastError = true)]
+        [DllImport(PB105_DllName, EntryPoint = "PBORCA_SessionClose", CharSet = CharSet.Unicode, SetLastError = true)]
         private static unsafe extern void PBORCA_SessionClose105(int hORCASession);
 
-        [DllImport("pborc105.dll", EntryPoint = "PBORCA_SessionOpen", CharSet = CharSet.Unicode, SetLastError = true)]
+        [DllImport(PB105_DllName, EntryPoint = "PBORCA_SessionOpen", CharSet = CharSet.Unicode, SetLastError = true)]
         private static unsafe extern int PBORCA_SessionOpen105();
 
-        [DllImport("pborc105.dll", EntryPoint = "PBORCA_SessionSetCurrentAppl", CharSet = CharSet.Unicode, SetLastError = true)]
+        [DllImport(PB105_DllName, EntryPoint = "PBORCA_SessionSetCurrentAppl", CharSet = CharSet.Unicode, SetLastError = true)]
         private static unsafe extern int PBORCA_SessionSetCurrentAppl105(int hORCASession, [MarshalAs(UnmanagedType.LPTStr)] string pLibName, [MarshalAs(UnmanagedType.LPWStr)] string lpstApplName);
 
-        [DllImport("pborc105.dll", EntryPoint = "PBORCA_SessionSetLibraryList", CharSet = CharSet.Unicode, SetLastError = true)]
+        [DllImport(PB105_DllName, EntryPoint = "PBORCA_SessionSetLibraryList", CharSet = CharSet.Unicode, SetLastError = true)]
         private static unsafe extern int PBORCA_SessionSetLibraryList105(int hORCASession, [MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.LPWStr)] string[] lpszLibraryName, System.Int32 iNumberOfLibs);
 
         #endregion PB10.5
 
         #region PB12.5
 
-        [DllImport("pborc125.dll", EntryPoint = "PBORCA_ApplicationRebuild", CharSet = CharSet.Unicode, SetLastError = true)]
+        [DllImport(PB125_DllName, EntryPoint = "PBORCA_ApplicationRebuild", CharSet = CharSet.Unicode, SetLastError = true)]
         private static extern int PBORCA_ApplicationRebuild125(
            int hORCASession,
            PBORCA_REBLD_TYPE eRebldType,
            [MarshalAs(UnmanagedType.FunctionPtr)] PBORCA_CALLBACK pCompErrorProc,
            IntPtr pUserData);
 
-        [DllImport("pborc125.dll", EntryPoint = "PBORCA_CompileEntryRegenerate", CharSet = CharSet.Unicode, SetLastError = true)]
+        [DllImport(PB125_DllName, EntryPoint = "PBORCA_CompileEntryRegenerate", CharSet = CharSet.Unicode, SetLastError = true)]
         private static extern int PBORCA_CompileEntryRegenerate125(
             int hORCASession,
             [MarshalAs(UnmanagedType.LPWStr)] string lpszLibraryName,
@@ -246,7 +270,7 @@ namespace PBDotNetLib.orca
             [MarshalAs(UnmanagedType.FunctionPtr)] PBORCA_CALLBACK pCompErrorProc,
             IntPtr pUserData);
 
-        [DllImport("pborc125.dll", EntryPoint = "PBORCA_DynamicLibraryCreate", CharSet = CharSet.Unicode, SetLastError = true)]
+        [DllImport(PB125_DllName, EntryPoint = "PBORCA_DynamicLibraryCreate", CharSet = CharSet.Unicode, SetLastError = true)]
         private static extern int PBORCA_DynamicLibraryCreate125(
             int hORCASession,
             [MarshalAs(UnmanagedType.LPTStr)] string lpszLibName,
@@ -254,10 +278,10 @@ namespace PBDotNetLib.orca
             IntPtr lFlags,
             IntPtr pbcPara);
 
-        [DllImport("pborc125.dll", EntryPoint = "PBORCA_LibraryCreate", CharSet = CharSet.Unicode, SetLastError = true)]
+        [DllImport(PB125_DllName, EntryPoint = "PBORCA_LibraryCreate", CharSet = CharSet.Unicode, SetLastError = true)]
         private static unsafe extern int PBORCA_LibraryCreate125(int hORCASession, [MarshalAs(UnmanagedType.LPTStr)] string lpszLibName, [MarshalAs(UnmanagedType.LPTStr)] string lpszLibComment);
 
-        [DllImport("pborc125.dll", EntryPoint = "PBORCA_LibraryDirectory", CharSet = CharSet.Unicode, SetLastError = true)]
+        [DllImport(PB125_DllName, EntryPoint = "PBORCA_LibraryDirectory", CharSet = CharSet.Unicode, SetLastError = true)]
         private static extern int PBORCA_LibraryDirectory125(
             int hORCASession,
             [MarshalAs(UnmanagedType.LPTStr)] string lpszLibName,
@@ -267,7 +291,7 @@ namespace PBDotNetLib.orca
             IntPtr pUserData
         );
 
-        [DllImport("pborc125.dll", CharSet = CharSet.Auto)]
+        [DllImport(PB125_DllName, CharSet = CharSet.Auto)]
         private static extern int PBORCA_LibraryEntryExport125(
             int hORCASession,
             [MarshalAs(UnmanagedType.LPWStr)] string lpszLibraryName,
@@ -276,30 +300,30 @@ namespace PBDotNetLib.orca
             [MarshalAs(UnmanagedType.LPWStr)] StringBuilder lpszExportBuffer,
             System.Int32 lExportBufferSize);
 
-        [DllImport("pborc125.dll", EntryPoint = "PBORCA_SessionClose", CharSet = CharSet.Unicode, SetLastError = true)]
+        [DllImport(PB125_DllName, EntryPoint = "PBORCA_SessionClose", CharSet = CharSet.Unicode, SetLastError = true)]
         private static unsafe extern void PBORCA_SessionClose125(int hORCASession);
 
-        [DllImport("pborc125.dll", EntryPoint = "PBORCA_SessionOpen", CharSet = CharSet.Unicode, SetLastError = true)]
+        [DllImport(PB125_DllName, EntryPoint = "PBORCA_SessionOpen", CharSet = CharSet.Unicode, SetLastError = true)]
         private static unsafe extern int PBORCA_SessionOpen125();
 
-        [DllImport("pborc125.dll", EntryPoint = "PBORCA_SessionSetCurrentAppl", CharSet = CharSet.Unicode, SetLastError = true)]
+        [DllImport(PB125_DllName, EntryPoint = "PBORCA_SessionSetCurrentAppl", CharSet = CharSet.Unicode, SetLastError = true)]
         private static unsafe extern int PBORCA_SessionSetCurrentAppl125(int hORCASession, [MarshalAs(UnmanagedType.LPTStr)] string pLibNames, [MarshalAs(UnmanagedType.LPWStr)] string lpstApplName);
 
-        [DllImport("pborc125.dll", EntryPoint = "PBORCA_SessionSetLibraryList", CharSet = CharSet.Unicode, SetLastError = true)]
+        [DllImport(PB125_DllName, EntryPoint = "PBORCA_SessionSetLibraryList", CharSet = CharSet.Unicode, SetLastError = true)]
         private static unsafe extern int PBORCA_SessionSetLibraryList125(int hORCASession, [MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.LPWStr)] string[] lpszLibraryName, System.Int32 iNumberOfLibs);
 
         #endregion PB12.5
 
         #region PB17.0
 
-        [DllImport("pborc170.dll", EntryPoint = "PBORCA_ApplicationRebuild", CharSet = CharSet.Unicode, SetLastError = true)]
+        [DllImport(PB170_DllName, EntryPoint = "PBORCA_ApplicationRebuild", CharSet = CharSet.Unicode, SetLastError = true)]
         private static extern int PBORCA_ApplicationRebuild170(
          int hORCASession,
          PBORCA_REBLD_TYPE eRebldType,
          [MarshalAs(UnmanagedType.FunctionPtr)] PBORCA_CALLBACK pCompErrorProc,
          IntPtr pUserData);
 
-        [DllImport("pborc170.dll", EntryPoint = "PBORCA_CompileEntryRegenerate", CharSet = CharSet.Unicode, SetLastError = true)]
+        [DllImport(PB170_DllName, EntryPoint = "PBORCA_CompileEntryRegenerate", CharSet = CharSet.Unicode, SetLastError = true)]
         private static extern int PBORCA_CompileEntryRegenerate170(
             int hORCASession,
             [MarshalAs(UnmanagedType.LPWStr)] string lpszLibraryName,
@@ -308,7 +332,7 @@ namespace PBDotNetLib.orca
             [MarshalAs(UnmanagedType.FunctionPtr)] PBORCA_CALLBACK pCompErrorProc,
             IntPtr pUserData);
 
-        [DllImport("pborc170.dll", EntryPoint = "PBORCA_DynamicLibraryCreate", CharSet = CharSet.Unicode, SetLastError = true)]
+        [DllImport(PB170_DllName, EntryPoint = "PBORCA_DynamicLibraryCreate", CharSet = CharSet.Unicode, SetLastError = true)]
         private static extern int PBORCA_DynamicLibraryCreate170(
             int hORCASession,
             [MarshalAs(UnmanagedType.LPTStr)] string lpszLibName,
@@ -316,10 +340,10 @@ namespace PBDotNetLib.orca
             IntPtr lFlags,
             IntPtr pbcPara);
 
-        [DllImport("pborc170.dll", EntryPoint = "PBORCA_LibraryCreate", CharSet = CharSet.Unicode, SetLastError = true)]
+        [DllImport(PB170_DllName, EntryPoint = "PBORCA_LibraryCreate", CharSet = CharSet.Unicode, SetLastError = true)]
         private static unsafe extern int PBORCA_LibraryCreate170(int hORCASession, [MarshalAs(UnmanagedType.LPTStr)] string lpszLibName, [MarshalAs(UnmanagedType.LPTStr)] string lpszLibComment);
 
-        [DllImport("pborc170.dll", EntryPoint = "PBORCA_LibraryDirectory", CharSet = CharSet.Unicode, SetLastError = true)]
+        [DllImport(PB170_DllName, EntryPoint = "PBORCA_LibraryDirectory", CharSet = CharSet.Unicode, SetLastError = true)]
         private static extern int PBORCA_LibraryDirectory170(
             int hORCASession,
             [MarshalAs(UnmanagedType.LPTStr)] string lpszLibName,
@@ -329,7 +353,7 @@ namespace PBDotNetLib.orca
             IntPtr pUserData
         );
 
-        [DllImport("pborc170.dll", CharSet = CharSet.Auto, EntryPoint = "PBORCA_LibraryEntryExport")]
+        [DllImport(PB170_DllName, CharSet = CharSet.Auto, EntryPoint = "PBORCA_LibraryEntryExport")]
         private static extern int PBORCA_LibraryEntryExport170(
             int hORCASession,
             [MarshalAs(UnmanagedType.LPWStr)] string lpszLibraryName,
@@ -338,30 +362,30 @@ namespace PBDotNetLib.orca
             [MarshalAs(UnmanagedType.LPWStr)] StringBuilder lpszExportBuffer,
             System.Int32 lExportBufferSize);
 
-        [DllImport("pborc170.dll", EntryPoint = "PBORCA_SessionClose", CharSet = CharSet.Unicode, SetLastError = true)]
+        [DllImport(PB170_DllName, EntryPoint = "PBORCA_SessionClose", CharSet = CharSet.Unicode, SetLastError = true)]
         private static unsafe extern void PBORCA_SessionClose170(int hORCASession);
 
-        [DllImport("pborc170.dll", EntryPoint = "PBORCA_SessionOpen", CharSet = CharSet.Unicode, SetLastError = true)]
+        [DllImport(PB170_DllName, EntryPoint = "PBORCA_SessionOpen", CharSet = CharSet.Unicode, SetLastError = true)]
         private static unsafe extern int PBORCA_SessionOpen170();
 
-        [DllImport("pborc170.dll", EntryPoint = "PBORCA_SessionSetCurrentAppl", CharSet = CharSet.Unicode, SetLastError = true)]
+        [DllImport(PB170_DllName, EntryPoint = "PBORCA_SessionSetCurrentAppl", CharSet = CharSet.Unicode, SetLastError = true)]
         private static unsafe extern int PBORCA_SessionSetCurrentAppl170(int hORCASession, [MarshalAs(UnmanagedType.LPTStr)] string pLibNames, [MarshalAs(UnmanagedType.LPWStr)] string lpstApplName);
 
-        [DllImport("pborc170.dll", EntryPoint = "PBORCA_SessionSetLibraryList", CharSet = CharSet.Unicode, SetLastError = true)]
+        [DllImport(PB170_DllName, EntryPoint = "PBORCA_SessionSetLibraryList", CharSet = CharSet.Unicode, SetLastError = true)]
         private static unsafe extern int PBORCA_SessionSetLibraryList170(int hORCASession, [MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.LPWStr)] string[] lpszLibraryName, System.Int32 iNumberOfLibs);
 
         #endregion PB17.0
 
         #region PB19.0
 
-        [DllImport("pborc190.dll", EntryPoint = "PBORCA_ApplicationRebuild", CharSet = CharSet.Unicode, SetLastError = true)]
+        [DllImport(PB190_DllName, EntryPoint = "PBORCA_ApplicationRebuild", CharSet = CharSet.Unicode, SetLastError = true)]
         private static extern int PBORCA_ApplicationRebuild190(
          int hORCASession,
          PBORCA_REBLD_TYPE eRebldType,
          [MarshalAs(UnmanagedType.FunctionPtr)] PBORCA_CALLBACK pCompErrorProc,
          IntPtr pUserData);
 
-        [DllImport("pborc190.dll", EntryPoint = "PBORCA_CompileEntryRegenerate", CharSet = CharSet.Unicode, SetLastError = true)]
+        [DllImport(PB190_DllName, EntryPoint = "PBORCA_CompileEntryRegenerate", CharSet = CharSet.Unicode, SetLastError = true)]
         private static extern int PBORCA_CompileEntryRegenerate190(
             int hORCASession,
             [MarshalAs(UnmanagedType.LPWStr)] string lpszLibraryName,
@@ -370,7 +394,7 @@ namespace PBDotNetLib.orca
             [MarshalAs(UnmanagedType.FunctionPtr)] PBORCA_CALLBACK pCompErrorProc,
             IntPtr pUserData);
 
-        [DllImport("pborc190.dll", EntryPoint = "PBORCA_DynamicLibraryCreate", CharSet = CharSet.Unicode, SetLastError = true)]
+        [DllImport(PB190_DllName, EntryPoint = "PBORCA_DynamicLibraryCreate", CharSet = CharSet.Unicode, SetLastError = true)]
         private static extern int PBORCA_DynamicLibraryCreate190(
             int hORCASession,
             [MarshalAs(UnmanagedType.LPTStr)] string lpszLibName,
@@ -378,10 +402,10 @@ namespace PBDotNetLib.orca
             IntPtr lFlags,
             IntPtr pbcPara);
 
-        [DllImport("pborc190.dll", EntryPoint = "PBORCA_LibraryCreate", CharSet = CharSet.Unicode, SetLastError = true)]
+        [DllImport(PB190_DllName, EntryPoint = "PBORCA_LibraryCreate", CharSet = CharSet.Unicode, SetLastError = true)]
         private static unsafe extern int PBORCA_LibraryCreate190(int hORCASession, [MarshalAs(UnmanagedType.LPTStr)] string lpszLibName, [MarshalAs(UnmanagedType.LPTStr)] string lpszLibComment);
 
-        [DllImport("pborc190.dll", EntryPoint = "PBORCA_LibraryDirectory", CharSet = CharSet.Unicode, SetLastError = true)]
+        [DllImport(PB190_DllName, EntryPoint = "PBORCA_LibraryDirectory", CharSet = CharSet.Unicode, SetLastError = true)]
         private static extern int PBORCA_LibraryDirectory190(
             int hORCASession,
             [MarshalAs(UnmanagedType.LPTStr)] string lpszLibName,
@@ -391,7 +415,7 @@ namespace PBDotNetLib.orca
             IntPtr pUserData
         );
 
-        [DllImport("pborc190.dll", CharSet = CharSet.Auto, EntryPoint = "PBORCA_LibraryEntryExport")]
+        [DllImport(PB190_DllName, CharSet = CharSet.Auto, EntryPoint = "PBORCA_LibraryEntryExport")]
         private static extern int PBORCA_LibraryEntryExport190(
             int hORCASession,
             [MarshalAs(UnmanagedType.LPWStr)] string lpszLibraryName,
@@ -400,16 +424,16 @@ namespace PBDotNetLib.orca
             [MarshalAs(UnmanagedType.LPWStr)] StringBuilder lpszExportBuffer,
             System.Int32 lExportBufferSize);
 
-        [DllImport("pborc190.dll", EntryPoint = "PBORCA_SessionClose", CharSet = CharSet.Unicode, SetLastError = true)]
+        [DllImport(PB190_DllName, EntryPoint = "PBORCA_SessionClose", CharSet = CharSet.Unicode, SetLastError = true)]
         private static unsafe extern void PBORCA_SessionClose190(int hORCASession);
 
-        [DllImport("pborc190.dll", EntryPoint = "PBORCA_SessionOpen", CharSet = CharSet.Unicode, SetLastError = true)]
+        [DllImport(PB190_DllName, EntryPoint = "PBORCA_SessionOpen", CharSet = CharSet.Unicode, SetLastError = true)]
         private static unsafe extern int PBORCA_SessionOpen190();
 
-        [DllImport("pborc190.dll", EntryPoint = "PBORCA_SessionSetCurrentAppl", CharSet = CharSet.Unicode, SetLastError = true)]
+        [DllImport(PB190_DllName, EntryPoint = "PBORCA_SessionSetCurrentAppl", CharSet = CharSet.Unicode, SetLastError = true)]
         private static unsafe extern int PBORCA_SessionSetCurrentAppl190(int hORCASession, [MarshalAs(UnmanagedType.LPTStr)] string pLibNames, [MarshalAs(UnmanagedType.LPWStr)] string lpstApplName);
 
-        [DllImport("pborc190.dll", EntryPoint = "PBORCA_SessionSetLibraryList", CharSet = CharSet.Unicode, SetLastError = true)]
+        [DllImport(PB190_DllName, EntryPoint = "PBORCA_SessionSetLibraryList", CharSet = CharSet.Unicode, SetLastError = true)]
         private static unsafe extern int PBORCA_SessionSetLibraryList190(int hORCASession, [MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.LPWStr)] string[] lpszLibraryName, System.Int32 iNumberOfLibs);
 
         #endregion PB19.0
