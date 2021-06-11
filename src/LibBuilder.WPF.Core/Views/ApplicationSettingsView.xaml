@@ -36,7 +36,7 @@ Copyright (c) 2020 Timeline Financials GmbH & Co. KG. All rights reserved.
                     Margin="25">
 
             <TextBox Margin="10"
-                     Style="{StaticResource MaterialDesignOutlinedTextFieldTextBox}"
+                     Style="{StaticResource MaterialDesignOutlinedTextBox}"
                      Text="{Binding Source={x:Static local:ApplicationSettings.Default}, Path=UpdatePath, Mode=TwoWay}"
                      materialDesign:HintAssist.Hint="Update-Datei"
                      IsManipulationEnabled="False" />
