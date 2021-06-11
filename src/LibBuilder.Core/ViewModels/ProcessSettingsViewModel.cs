@@ -442,7 +442,6 @@ namespace LibBuilder.Core.ViewModels
         private bool _contentLoadingAnimation;
         private LibraryModel _library;
         private ObjectModel _object;
-        private PBVersionDllExist _pBVersionDllExist;
         private List<PBDotNetLib.orca.Orca.Version?> _pBVersions;
         private ObservableCollection<PBVersionDllExist> _pBVersionsDllExist;
         private TargetModel _target;
@@ -548,15 +547,13 @@ namespace LibBuilder.Core.ViewModels
 
         public PBVersionDllExist PBVersionDllExist
         {
-            get => _pBVersionDllExist;
+            get => PBVersionsDllExist.Where(x => x.PBVersion == (int)Workspace?.PBVersion).FirstOrDefault();
             set
             {
                 if (value != null)
                 {
                     WorkspacePBVersion = (PBDotNetLib.orca.Orca.Version?)value.PBVersion;
                 }
-
-                SetProperty(ref _pBVersionDllExist, value);
             }
         }
 
@@ -631,7 +628,7 @@ namespace LibBuilder.Core.ViewModels
             {
                 SetProperty(ref _workspace, value);
                 //WorkspaceSelectedCommand.Execute();
-                this.RaisePropertyChanged(() => this.WorkspacePBVersion);
+                this.RaisePropertyChanged(() => this.PBVersionDllExist);
                 this.RaisePropertyChanged(() => this.Targets);
             }
         }
