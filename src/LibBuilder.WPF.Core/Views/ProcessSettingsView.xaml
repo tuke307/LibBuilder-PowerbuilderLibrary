@@ -120,9 +120,8 @@ Copyright (c) 2020 Timeline Financials GmbH & Co. KG. All rights reserved.
                               materialDesign:HintAssist.Hint="Version"
                               materialDesign:TextFieldAssist.UnderlineBrush="{DynamicResource SecondaryAccentBrush}"
                               IsEditable="False"
+                              ItemsSource="{Binding PBVersionDllExist}"
                               Width="100"
-                              ItemsSource="{Binding Mode=OneTime, Path=PBVersions}"
-                              SelectedItem="{Binding Mode=TwoWay, Path=WorkspacePBVersion}"
                               Style="{StaticResource MaterialDesignFloatingHintComboBox}"
                               VerticalAlignment="Center">
                         <i:Interaction.Triggers>
@@ -131,6 +130,49 @@ Copyright (c) 2020 Timeline Financials GmbH & Co. KG. All rights reserved.
                                 <i:InvokeCommandAction Command="{Binding WorkspaceSelectedCommand}" />
                             </i:EventTrigger>
                         </i:Interaction.Triggers>
+
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition />
+                                        <ColumnDefinition />
+                                    </Grid.ColumnDefinitions>
+
+                                    <TextBlock Margin="0 0 0 0"
+                                               Grid.Column="0"
+                                               Text="{Binding PBVersion}" />
+
+                                    <Button HorizontalAlignment="Left"
+                                            VerticalAlignment="Center"
+                                            Visibility="{Binding Path=DllExist, Converter={StaticResource BooleanToVisibilityConverter}}"
+                                            Style="{StaticResource MaterialDesignFloatingActionButton}"
+                                            Margin="5 0 0 0"
+                                            Grid.Column="1"
+                                            Height="15"
+                                            Width="15">
+                                        <materialDesign:PackIcon Kind="Check"
+                                                                 Height="13"
+                                                                 Width="13" />
+                                    </Button>
+
+                                    <Button HorizontalAlignment="Left"
+                                            VerticalAlignment="Center"
+                                            Background="Red"
+                                            BorderBrush="Red"
+                                            Visibility="{Binding Path=DllExist, Converter={StaticResource negatedBoolToVisibilityConverter}}"
+                                            Style="{StaticResource MaterialDesignFloatingActionButton}"
+                                            Margin="5 0 0 0"
+                                            Grid.Column="1"
+                                            Height="15"
+                                            Width="15">
+                                        <materialDesign:PackIcon Kind="Cancel"
+                                                                 Height="13"
+                                                                 Width="13" />
+                                    </Button>
+                                </Grid>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
                     </ComboBox>
                 </Grid>
             </GroupBox>
