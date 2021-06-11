@@ -11,9 +11,14 @@ namespace Data
     public class Constants
     {
         /// <summary>
-        /// The database name
+        /// The database name.
         /// </summary>
         public const string DatabaseName = "libbuilder.db";
+
+        /// <summary>
+        /// The log name.
+        /// </summary>
+        public const string LogName = "libbuilder_log_{Date}.txt";
 
         /// <summary>
         /// Gets or sets the database path.
@@ -34,6 +39,15 @@ namespace Data
             {
                 return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "LibBuilder");
             }
+        }
+
+        /// <summary>
+        /// Gets the log path.
+        /// </summary>
+        /// <value>The log path.</value>
+        public static string LogPath
+        {
+            get => Path.Combine(Constants.FileDirectory, "logs", Data.Constants.LogName);
         }
     }
 }
