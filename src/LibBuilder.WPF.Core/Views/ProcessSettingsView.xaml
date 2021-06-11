@@ -120,7 +120,8 @@ Copyright (c) 2020 Timeline Financials GmbH & Co. KG. All rights reserved.
                               materialDesign:HintAssist.Hint="Version"
                               materialDesign:TextFieldAssist.UnderlineBrush="{DynamicResource SecondaryAccentBrush}"
                               IsEditable="False"
-                              ItemsSource="{Binding PBVersionDllExist}"
+                              ItemsSource="{Binding Mode=OneTime, Path=PBVersionsDllExist}"
+                              SelectedItem="{Binding Mode=TwoWay, Path=PBVersionDllExist}"
                               Width="100"
                               Style="{StaticResource MaterialDesignFloatingHintComboBox}"
                               VerticalAlignment="Center">

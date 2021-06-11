@@ -43,10 +43,10 @@ namespace LibBuilder.Core.ViewModels
             // VersionsListe
             PBVersions = Enum.GetValues(typeof(PBDotNetLib.orca.Orca.Version)).Cast<PBDotNetLib.orca.Orca.Version?>().ToList();
             // Dll-Check mit Versionen
-            PBVersionDllExist = new ObservableCollection<PBVersionDllExist>();
+            PBVersionsDllExist = new ObservableCollection<PBVersionDllExist>();
             foreach (var version in PBVersions)
             {
-                PBVersionDllExist.Add(new PBVersionDllExist(version));
+                PBVersionsDllExist.Add(new PBVersionDllExist(version));
             }
 
             // RebuildType
@@ -442,8 +442,9 @@ namespace LibBuilder.Core.ViewModels
         private bool _contentLoadingAnimation;
         private LibraryModel _library;
         private ObjectModel _object;
-        private ObservableCollection<PBVersionDllExist> _pBVersionDllExist;
+        private PBVersionDllExist _pBVersionDllExist;
         private List<PBDotNetLib.orca.Orca.Version?> _pBVersions;
+        private ObservableCollection<PBVersionDllExist> _pBVersionsDllExist;
         private TargetModel _target;
         private WorkspaceModel _workspace;
         private ObservableCollection<WorkspaceModel> _workspaces;
@@ -545,14 +546,18 @@ namespace LibBuilder.Core.ViewModels
             get => new ObservableCollection<ObjectModel>(Library?.Objects);
         }
 
-        /// <summary>
-        /// Gets or sets the pb version DLL exist.
-        /// </summary>
-        /// <value>The pb version DLL exist.</value>
-        public ObservableCollection<PBVersionDllExist> PBVersionDllExist
+        public PBVersionDllExist PBVersionDllExist
         {
             get => _pBVersionDllExist;
-            set => SetProperty(ref _pBVersionDllExist, value);
+            set
+            {
+                if (value != null)
+                {
+                    WorkspacePBVersion = (PBDotNetLib.orca.Orca.Version?)value.PBVersion;
+                }
+
+                SetProperty(ref _pBVersionDllExist, value);
+            }
         }
 
         /// <summary>
@@ -563,6 +568,16 @@ namespace LibBuilder.Core.ViewModels
         {
             get => _pBVersions;
             set => SetProperty(ref _pBVersions, value);
+        }
+
+        /// <summary>
+        /// Gets or sets the pb version DLL exist.
+        /// </summary>
+        /// <value>The pb version DLL exist.</value>
+        public ObservableCollection<PBVersionDllExist> PBVersionsDllExist
+        {
+            get => _pBVersionsDllExist;
+            set => SetProperty(ref _pBVersionsDllExist, value);
         }
 
         /// <summary>
