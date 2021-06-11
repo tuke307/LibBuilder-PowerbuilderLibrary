@@ -2,7 +2,7 @@
   "profiles": {
     "Workspace Target Version Build Librarys": {
       "commandName": "Project",
-      "commandLineArgs": "-w C:\\db\\Workspaces\\kunden.pbw -t tlfi_lokal.pbt -v 170 -b true -l client_elinv.pbl;client_tlfiutils.pbl"
+      "commandLineArgs": "-w D:\\db\\Workspaces\\kunden.pbw -t tlfi_lokal.pbt -v 170 -b true -l client_elinv.pbl;client_tlfiutils.pbl"
     },
     "ohne parameter": {
       "commandName": "Project"
