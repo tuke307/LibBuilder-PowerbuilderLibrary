@@ -4,11 +4,13 @@ using MvvmCross.Commands;
 using MvvmCross.Logging;
 using MvvmCross.Navigation;
 using MvvmCross.ViewModels;
+using PBDotNetLib.orca;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 
 namespace LibBuilder.Core.ViewModels
@@ -34,14 +36,20 @@ namespace LibBuilder.Core.ViewModels
             SelectAllEntrysCommand = new MvxCommand(SelectAllEntrys);
             DeselectAllEntrysCommand = new MvxCommand(DeselectAllEntrys);
 
-            //Speichern
+            // Speichern
             SaveWorkspaceCommand = new MvxAsyncCommand(SaveWorkspace);
             SaveTargetCommand = new MvxAsyncCommand(SaveTarget);
 
-            //VersionsListe
+            // VersionsListe
             PBVersions = Enum.GetValues(typeof(PBDotNetLib.orca.Orca.Version)).Cast<PBDotNetLib.orca.Orca.Version?>().ToList();
+            // Dll-Check mit Versionen
+            PBVersionDllExist = new ObservableCollection<PBVersionDllExist>();
+            foreach (var version in PBVersions)
+            {
+                PBVersionDllExist.Add(new PBVersionDllExist(version));
+            }
 
-            //RebuildType
+            // RebuildType
             ApplicationRebuild = Enum.GetValues(typeof(PBDotNetLib.orca.Orca.PBORCA_REBLD_TYPE)).Cast<PBDotNetLib.orca.Orca.PBORCA_REBLD_TYPE?>().ToList();
 
             using (var db = new DatabaseContext())
@@ -434,6 +442,7 @@ namespace LibBuilder.Core.ViewModels
         private bool _contentLoadingAnimation;
         private LibraryModel _library;
         private ObjectModel _object;
+        private ObservableCollection<PBVersionDllExist> _pBVersionDllExist;
         private List<PBDotNetLib.orca.Orca.Version?> _pBVersions;
         private TargetModel _target;
         private WorkspaceModel _workspace;
@@ -534,6 +543,16 @@ namespace LibBuilder.Core.ViewModels
         public ObservableCollection<ObjectModel> Objects
         {
             get => new ObservableCollection<ObjectModel>(Library?.Objects);
+        }
+
+        /// <summary>
+        /// Gets or sets the pb version DLL exist.
+        /// </summary>
+        /// <value>The pb version DLL exist.</value>
+        public ObservableCollection<PBVersionDllExist> PBVersionDllExist
+        {
+            get => _pBVersionDllExist;
+            set => SetProperty(ref _pBVersionDllExist, value);
         }
 
         /// <summary>
