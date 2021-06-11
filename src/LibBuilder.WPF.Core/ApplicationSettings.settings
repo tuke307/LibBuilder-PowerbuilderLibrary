@@ -3,7 +3,7 @@
   <Profiles />
   <Settings>
     <Setting Name="UpdatePath" Type="System.String" Scope="User">
-      <Value Profile="(Default)">file://///tlfi.de\Freigaben\lwi\TL_Tools\LibBuilder\Visual Studio (C#)\AutoUpdater.xml</Value>
+      <Value Profile="(Default)">I:\TL_Tools\LibBuilder\Visual Studio (C#)\AutoUpdater.xml;file://///tlfi.de\Freigaben\lwi\TL_Tools\LibBuilder\Visual Studio (C#)\AutoUpdater.xml;\\tlfi.de\Freigaben\lwi\TL_Tools\LibBuilder\Visual Studio (C#)\AutoUpdater.xml</Value>
     </Setting>
     <Setting Name="ApplicationRebuildOptions" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>

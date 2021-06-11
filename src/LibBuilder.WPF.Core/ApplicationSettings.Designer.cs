@@ -12,7 +12,7 @@ namespace LibBuilder.WPF.Core {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "16.7.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "16.10.0.0")]
     public sealed partial class ApplicationSettings : global::System.Configuration.ApplicationSettingsBase {
         
         private static ApplicationSettings defaultInstance = ((ApplicationSettings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new ApplicationSettings())));
@@ -25,8 +25,9 @@ namespace LibBuilder.WPF.Core {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("file://///tlfi.de\\Freigaben\\lwi\\TL_Tools\\LibBuilder\\Visual Studio (C#)\\AutoUpdate" +
-            "r.xml")]
+        [global::System.Configuration.DefaultSettingValueAttribute("I:\\TL_Tools\\LibBuilder\\Visual Studio (C#)\\AutoUpdater.xml;file://///tlfi.de\\Freig" +
+            "aben\\lwi\\TL_Tools\\LibBuilder\\Visual Studio (C#)\\AutoUpdater.xml;\\\\tlfi.de\\Freiga" +
+            "ben\\lwi\\TL_Tools\\LibBuilder\\Visual Studio (C#)\\AutoUpdater.xml")]
         public string UpdatePath {
             get {
                 return ((string)(this["UpdatePath"]));

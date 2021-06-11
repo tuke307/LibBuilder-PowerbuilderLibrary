@@ -6,6 +6,7 @@ namespace LibBuilder.WPF.Core.Views
     using LibBuilder.WPF.Core.Business;
     using LibBuilder.WPF.Core.ViewModels;
     using MvvmCross.Platforms.Wpf.Views;
+    using System.IO;
     using System.Windows;
     using System.Windows.Input;
 
@@ -21,7 +22,14 @@ namespace LibBuilder.WPF.Core.Views
         {
             InitializeComponent();
 
-            AutoUpdater.Start(ApplicationSettings.Default.UpdatePath);
+            foreach (var path in ApplicationSettings.Default.UpdatePath.Split(';', ','))
+            {
+                if (File.Exists(path))
+                {
+                    AutoUpdater.Start(path);
+                    break;
+                }
+            }
         }
 
         private void GridTop_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
