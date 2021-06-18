@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Runtime.InteropServices;
 
 namespace LibBuilder.Core
@@ -18,9 +19,24 @@ namespace LibBuilder.Core
         [DllImport("Kernel32.dll")]
         public static extern bool AttachConsole(int processId);
 
-        public static bool CheckLibrary(string fileName)
+        /// <summary>
+        /// Überprüft ob Orca DLL vorhanden ist, indem eine Session geöffnet und dann
+        /// wieder geschlossen wird.
+        /// </summary>
+        /// <param name="version">The version.</param>
+        /// <returns></returns>
+        public static bool CheckLibrary(PBDotNetLib.orca.Orca.Version version)
         {
-            return LoadLibrary(fileName) == IntPtr.Zero;
+            try
+            {
+                PBDotNetLib.orca.Orca orca = new PBDotNetLib.orca.Orca(version, true);
+                orca.Dispose();
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
         }
 
         /// <summary>
@@ -54,8 +70,5 @@ namespace LibBuilder.Core
         {
             return enumerable == null || !enumerable.Any();
         }
-
-        [DllImport("kernel32", SetLastError = true)]
-        private static extern IntPtr LoadLibrary(string lpFileName);
     }
 }

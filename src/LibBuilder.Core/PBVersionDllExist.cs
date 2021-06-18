@@ -15,7 +15,7 @@ namespace LibBuilder.Core
             if (version.HasValue)
             {
                 this.PBVersion = (int)version.Value;
-                this.DllExist = Utils.CheckLibrary(version.GetAttributeOfType<DllNameAttribute>().DllName);
+                this.DllExist = Utils.CheckLibrary(version.Value);
             }
         }
     }
