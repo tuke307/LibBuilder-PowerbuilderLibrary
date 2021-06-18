@@ -2,8 +2,8 @@
 {
     using Data;
     using Data.Models;
+    using Microsoft.Extensions.Logging;
     using MvvmCross.Commands;
-    using MvvmCross.Logging;
     using MvvmCross.Navigation;
     using MvvmCross.ViewModels;
     using System.Collections.ObjectModel;
@@ -22,8 +22,8 @@
         /// </summary>
         /// <param name="logProvider">The log provider.</param>
         /// <param name="navigationService">The navigation service.</param>
-        public OngoingProcessViewModel(IMvxLogProvider logProvider, IMvxNavigationService navigationService)
-                                                                                                    : base(logProvider, navigationService)
+        public OngoingProcessViewModel(ILoggerFactory logProvider, IMvxNavigationService navigationService)
+                : base(logProvider, navigationService)
         {
         }
 
@@ -71,11 +71,15 @@
         /// </summary>
         protected virtual async Task RunProcedurAsync()
         {
+            Log.LogInformation("---START RunProcedur---");
+
             RunProcedurTask = Task.Run(async () =>
             {
                 var session = new PBDotNetLib.orca.Orca(Workspace.PBVersion.Value);
 
                 #region ApplicationLibrarys
+
+                Log.LogInformation("ApplicationLibrarys");
 
                 // Apllication Library Liste
                 var resultApplicationLibrarys = session.SetLibraryList(Target.Librarys.Select(l => l.FilePath).ToArray(), Target.Librarys.Count);
@@ -93,6 +97,8 @@
                 #endregion ApplicationLibrarys
 
                 #region CurrentApplication
+
+                Log.LogInformation("CurrentApplication");
 
                 //Applikation setzen
                 // Applikationsname holen(bei TimeLine e2 immer main.pbd(Library) und
@@ -119,6 +125,8 @@
 
                 #region ApplicationRebuild
 
+                Log.LogInformation("ApplicationRebuild");
+
                 if (Target.ApplicationRebuild.HasValue)
                 {
                     var resultApplicationRebuild = session.ApplicationRebuild(Target.ApplicationRebuild.Value);
@@ -140,6 +148,8 @@
                 #endregion ApplicationRebuild
 
                 #region Rebuild&Regenerate
+
+                Log.LogInformation("Rebuild & Regenerate");
 
                 // für jede unkompilierte(.pbl) Library
                 foreach (var lib in Librarys)
@@ -208,19 +218,26 @@
                     #endregion Build
                 }
 
-            #endregion Rebuild&Regenerate
+                #endregion Rebuild&Regenerate
 
-            End:
-                session.SessionClose();
+                End:
 
                 #region Result
 
-                var sucess = Processes.Where(r => r.Result.Equals(PBDotNetLib.orca.Orca.Result.PBORCA_OK)).Count();
+                Log.LogInformation("Ergebniss auswerten");
+
+                int sucess = Processes.Where(r => r.Result.Equals(PBDotNetLib.orca.Orca.Result.PBORCA_OK)).Count();
 
                 if (sucess == Processes.Count)
+                {
+                    Log.LogInformation("Target: " + this.Target.File + ", " + sucess.ToString() + " erfolgreiche Prozeduren");
                     ProcessSucess = true;
+                }
                 else
+                {
+                    Log.LogError("Target: " + this.Target.File + ", " + (Processes.Count - sucess).ToString() + " fehlgeschlagene Prozeduren");
                     ProcessError = true;
+                }
 
                 using (var db = new DatabaseContext())
                 {
@@ -240,6 +257,8 @@
             });
 
             await RunProcedurTask;
+
+            Log.LogInformation("---END RunProcedur---");
         }
 
         #endregion Methods

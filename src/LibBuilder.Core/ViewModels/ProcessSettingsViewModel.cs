@@ -1,16 +1,14 @@
 ﻿using Data;
 using Data.Models;
+using Microsoft.Extensions.Logging;
 using MvvmCross.Commands;
-using MvvmCross.Logging;
 using MvvmCross.Navigation;
 using MvvmCross.ViewModels;
-using PBDotNetLib.orca;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 
 namespace LibBuilder.Core.ViewModels
@@ -27,9 +25,11 @@ namespace LibBuilder.Core.ViewModels
         /// </summary>
         /// <param name="logProvider">The log provider.</param>
         /// <param name="navigationService">The navigation service.</param>
-        public ProcessSettingsViewModel(IMvxLogProvider logProvider, IMvxNavigationService navigationService)
+        public ProcessSettingsViewModel(ILoggerFactory logProvider, IMvxNavigationService navigationService)
             : base(logProvider, navigationService)
         {
+            Log.LogInformation("---START Initialize ProcessSettingsViewModel---");
+
             // UI bezogen
             SelectAllLibrarysCommand = new MvxCommand(SelectAllLibrarys);
             DeselectAllLibrarysCommand = new MvxCommand(DeselectAllLibrarys);
@@ -42,12 +42,17 @@ namespace LibBuilder.Core.ViewModels
 
             // VersionsListe
             PBVersions = Enum.GetValues(typeof(PBDotNetLib.orca.Orca.Version)).Cast<PBDotNetLib.orca.Orca.Version?>().ToList();
+
             // Dll-Check mit Versionen
+            Log.LogInformation("Laden der Powerbuilder-Orca-DLL's");
             PBVersionsDllExist = new ObservableCollection<PBVersionDllExist>();
             foreach (var version in PBVersions)
             {
                 PBVersionsDllExist.Add(new PBVersionDllExist(version));
             }
+
+            if (!PBVersionsDllExist.Where(x => x.DllExist == true).Any())
+                Log.LogError("Fehler beim Einlesen der Powerbuilder-Orca-DLL's");
 
             // RebuildType
             ApplicationRebuild = Enum.GetValues(typeof(PBDotNetLib.orca.Orca.PBORCA_REBLD_TYPE)).Cast<PBDotNetLib.orca.Orca.PBORCA_REBLD_TYPE?>().ToList();
@@ -57,9 +62,21 @@ namespace LibBuilder.Core.ViewModels
                 //Workspace Liste laden
                 Workspaces = new ObservableCollection<WorkspaceModel>(db.Workspace.ToList());
             }
+
+            Log.LogInformation("---END Initialize ProcessSettingsViewModel---");
         }
 
         #region Methods
+
+        public override Task Initialize()
+        {
+            return base.Initialize();
+        }
+
+        public override void Prepare()
+        {
+            base.Prepare();
+        }
 
         /// <summary>
         /// Deselektiert alle Objects(Entrys)
@@ -116,6 +133,8 @@ namespace LibBuilder.Core.ViewModels
         /// <returns></returns>
         protected virtual async Task LoadLibrary()
         {
+            Log.LogInformation("---START LoadLibrary---");
+
             if (LoadLibraryTask != null && LoadLibraryTask.Status == TaskStatus.Running)
                 await LoadLibraryTask;
 
@@ -132,7 +151,7 @@ namespace LibBuilder.Core.ViewModels
                         await db.Entry(Library).Collection(l => l.Objects).LoadAsync();
 
                         //Update Objects
-                        Library = LibBuilder.Core.Orca.UpdateLibrayObjects(Library, Workspace.PBVersion.Value);
+                        Library = LibBuilder.Core.Orca.UpdateLibrayObjects(Library, Workspace.PBVersion.Value, Log);
                     }
                 });
 
@@ -144,6 +163,8 @@ namespace LibBuilder.Core.ViewModels
 
                 //Objects = new ObservableCollection<ObjectModel>(Library.Objects.ToList());
             }
+
+            Log.LogInformation("---END LoadLibrary---");
         }
 
         /// <summary>
@@ -153,6 +174,8 @@ namespace LibBuilder.Core.ViewModels
         /// <returns></returns>
         protected virtual async Task LoadTarget()
         {
+            Log.LogInformation("---START LoadTarget---");
+
             if (LoadTargetTask != null && LoadTargetTask.Status == TaskStatus.Running)
                 await LoadTargetTask;
 
@@ -167,7 +190,7 @@ namespace LibBuilder.Core.ViewModels
                     await db.Entry(Target).Collection(t => t.Librarys).LoadAsync();
 
                     //Update Collections
-                    Target = LibBuilder.Core.Orca.UpdateTargetLibraries(Target, Workspace.PBVersion.Value);
+                    Target = LibBuilder.Core.Orca.UpdateTargetLibraries(Target, Workspace.PBVersion.Value, Log);
                 }
             });
 
@@ -176,6 +199,8 @@ namespace LibBuilder.Core.ViewModels
             await SaveTarget();
 
             //Librarys = new ObservableCollection<LibraryModel>(Target.Librarys.Where(l => l.File.EndsWith(".pbl")).ToList());
+
+            Log.LogInformation("---END LoadTarget---");
         }
 
         /// <summary>
@@ -185,6 +210,8 @@ namespace LibBuilder.Core.ViewModels
         /// <returns></returns>
         protected virtual async Task LoadWorkspace()
         {
+            Log.LogInformation("---START LoadWorkspace---");
+
             if (LoadWorkspaceTask != null && LoadWorkspaceTask.Status == TaskStatus.Running)
             {
                 await LoadWorkspaceTask;
@@ -201,7 +228,7 @@ namespace LibBuilder.Core.ViewModels
                     //Load Targets
                     await db.Entry(Workspace).Collection(t => t.Target).LoadAsync();
 
-                    Workspace = LibBuilder.Core.Orca.UpdateWorkspaceTargets(Workspace);
+                    Workspace = LibBuilder.Core.Orca.UpdateWorkspaceTargets(Workspace, Log);
                 }
             });
 
@@ -213,22 +240,35 @@ namespace LibBuilder.Core.ViewModels
 
             //Einfügen der DB Targets
             //Targets = new ObservableCollection<TargetModel>(Workspace.Target.ToList());
+
+            Log.LogInformation("---END LoadWorkspace---");
         }
 
         /// <summary>
-        /// Verarbeitet gewählten Workspace aus dem OpenFileDialog Fügt Workspace in
+        /// Verarbeitet gewählten Workspace aus dem OpenFileDialog. Fügt Workspace in
         /// Datenbank hinzu
         /// </summary>
         /// <param name="filePath"></param>
         protected virtual void OpenWorkspace(string filePath)
         {
-            try
+            Log.LogInformation("---START OpenWorkspace---");
+
+            Log.LogInformation("Workspace: " + filePath);
+
+            // Contains(string, StringComparison) gibts in .net 2.0 nicht
+            // https://stackoverflow.com/questions/63371180/replacement-for-string-containsstring-stringcomparison-in-net-standard-2-0
+            var values = Workspaces.Where(w => w.FilePath.IndexOf(filePath, StringComparison.OrdinalIgnoreCase) >= 0);
+
+            if (values.Any())
             {
-                var exist = Workspaces.Single(w => w.FilePath.ToLower() == filePath.ToLower());
-                Workspace = exist;
+                Log.LogInformation("Workspace wurde bereits gespeichert");
+
+                Workspace = values.First();
             }
-            catch
+            else
             {
+                Log.LogInformation("Workspace wird neu eingelesen");
+
                 WorkspaceModel workspace = new WorkspaceModel()
                 {
                     Directory = Path.GetDirectoryName(filePath),
@@ -243,6 +283,8 @@ namespace LibBuilder.Core.ViewModels
                 Workspaces.Add(workspace);
                 Workspace = Workspaces.Last();
             }
+
+            Log.LogInformation("---END OpenWorkspace---");
         }
 
         /// <summary>
@@ -251,6 +293,8 @@ namespace LibBuilder.Core.ViewModels
         /// <returns></returns>
         protected async Task SaveLibrary()
         {
+            Log.LogInformation("---START SaveLibrary---");
+
             if (SaveLibraryTask != null && SaveLibraryTask.Status == TaskStatus.Running)
                 await SaveLibraryTask;
 
@@ -266,6 +310,8 @@ namespace LibBuilder.Core.ViewModels
             });
 
             await SaveLibraryTask;
+
+            Log.LogInformation("---END SaveLibrary---");
         }
 
         /// <summary>
@@ -274,6 +320,8 @@ namespace LibBuilder.Core.ViewModels
         /// <returns></returns>
         protected async Task SaveTarget()
         {
+            Log.LogInformation("---START SaveTarget---");
+
             if (SaveTargetTask != null && SaveTargetTask.Status == TaskStatus.Running)
                 await SaveTargetTask;
 
@@ -289,6 +337,8 @@ namespace LibBuilder.Core.ViewModels
             });
 
             await SaveTargetTask;
+
+            Log.LogInformation("---END SaveTarget---");
         }
 
         /// <summary>
@@ -297,6 +347,8 @@ namespace LibBuilder.Core.ViewModels
         /// <returns></returns>
         protected async Task SaveWorkspace()
         {
+            Log.LogInformation("---START SaveWorkspace---");
+
             if (SaveWorkspaceTask != null && SaveWorkspaceTask.Status == TaskStatus.Running)
                 await SaveWorkspaceTask;
 
@@ -312,6 +364,8 @@ namespace LibBuilder.Core.ViewModels
             });
 
             await SaveWorkspaceTask;
+
+            Log.LogInformation("---END SaveWorkspace---");
         }
 
         /// <summary>

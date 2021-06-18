@@ -3,6 +3,7 @@
 namespace LibBuilder.WPF.Core.ViewModels
 {
     using LibBuilder.WPF.Core.Business;
+    using Microsoft.Extensions.Logging;
     using MvvmCross.Commands;
     using MvvmCross.Logging;
     using MvvmCross.Navigation;
@@ -21,7 +22,7 @@ namespace LibBuilder.WPF.Core.ViewModels
         /// </summary>
         /// <param name="logProvider">The log provider.</param>
         /// <param name="navigationService">The navigation service.</param>
-        public MainViewModel(IMvxLogProvider logProvider, IMvxNavigationService navigationService)
+        public MainViewModel(ILoggerFactory logProvider, IMvxNavigationService navigationService)
             : base(logProvider, navigationService)
         {
             this._navigationService = navigationService;

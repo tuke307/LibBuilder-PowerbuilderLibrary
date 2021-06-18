@@ -1,5 +1,6 @@
 ﻿// project=LibBuilder.Core, file=MainWindowViewModel.cs, creation=2020:7:21 Copyright (c)
 // 2020 Timeline Financials GmbH & Co. KG. All rights reserved.
+using Microsoft.Extensions.Logging;
 using MvvmCross.Commands;
 using MvvmCross.Logging;
 using MvvmCross.Navigation;
@@ -34,7 +35,7 @@ namespace LibBuilder.Core.ViewModels
 
         public IMvxCommand OpenSettingsCommand { get; set; }
 
-        public MainViewModel(IMvxLogProvider logProvider, IMvxNavigationService navigationService)
+        public MainViewModel(ILoggerFactory logProvider, IMvxNavigationService navigationService)
             : base(logProvider, navigationService)
         {
         }

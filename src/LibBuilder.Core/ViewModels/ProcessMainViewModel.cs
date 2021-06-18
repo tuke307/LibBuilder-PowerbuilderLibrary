@@ -4,6 +4,7 @@ namespace LibBuilder.Core.ViewModels
 {
     using Data;
     using Data.Models;
+    using Microsoft.Extensions.Logging;
     using MvvmCross.Commands;
     using MvvmCross.Logging;
     using MvvmCross.Navigation;
@@ -32,7 +33,7 @@ namespace LibBuilder.Core.ViewModels
         /// <summary>
         /// Initializes a new instance of the <see cref="ProcessMainViewModel" /> class.
         /// </summary>
-        public ProcessMainViewModel(IMvxLogProvider logProvider, IMvxNavigationService navigationService)
+        public ProcessMainViewModel(ILoggerFactory logProvider, IMvxNavigationService navigationService)
             : base(logProvider, navigationService)
         {
         }

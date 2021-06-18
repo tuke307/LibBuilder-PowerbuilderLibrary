@@ -1,6 +1,7 @@
 ﻿// project=LibBuilder.WPF.Core, file=OngoingProcessViewModel.cs, creation=2020:8:24
 // Copyright (c) 2020 Timeline Financials GmbH & Co. KG. All rights reserved.
 using Data.Models;
+using Microsoft.Extensions.Logging;
 using MvvmCross.Commands;
 using MvvmCross.Logging;
 using MvvmCross.Navigation;
@@ -22,7 +23,7 @@ namespace LibBuilder.WPF.Core.ViewModels
         /// </summary>
         /// <param name="logProvider">The log provider.</param>
         /// <param name="navigationService">The navigation service.</param>
-        public OngoingProcessViewModel(IMvxLogProvider logProvider, IMvxNavigationService navigationService)
+        public OngoingProcessViewModel(ILoggerFactory logProvider, IMvxNavigationService navigationService)
             : base(logProvider, navigationService)
         {
             RunProcedurCommand = new MvxAsyncCommand(RunProcedurAsync);

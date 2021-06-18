@@ -6,6 +6,7 @@ namespace LibBuilder.WPF.Core.ViewModels
     using Data.Models;
     using LibBuilder.WPF.Core.Dialogs;
     using MaterialDesignThemes.Wpf;
+    using Microsoft.Extensions.Logging;
     using Microsoft.Win32;
     using MvvmCross.Commands;
     using MvvmCross.Logging;
@@ -23,7 +24,7 @@ namespace LibBuilder.WPF.Core.ViewModels
         /// </summary>
         /// <param name="logProvider"></param>
         /// <param name="navigationService"></param>
-        public ProcessSettingsViewModel(IMvxLogProvider logProvider, IMvxNavigationService navigationService)
+        public ProcessSettingsViewModel(ILoggerFactory logProvider, IMvxNavigationService navigationService)
             : base(logProvider, navigationService)
         {
             this._navigationService = navigationService;

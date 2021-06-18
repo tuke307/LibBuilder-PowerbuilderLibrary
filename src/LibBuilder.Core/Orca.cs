@@ -3,6 +3,7 @@
 namespace LibBuilder.Core
 {
     using Data.Models;
+    using Microsoft.Extensions.Logging;
     using PBDotNetLib.orca;
     using PBDotNetLib.pbuilder;
     using System.Collections.Generic;
@@ -21,8 +22,9 @@ namespace LibBuilder.Core
         /// </summary>
         /// <param name="dbLibrary">Die zu aktualisierende Library</param>
         /// <param name="version">Orca Version zum starten der Session</param>
+        /// <param name="log">logger.</param>
         /// <returns>Aktualisiert Library-Objects</returns>
-        public static LibraryModel UpdateLibrayObjects(LibraryModel dbLibrary, PBDotNetLib.orca.Orca.Version version)
+        public static LibraryModel UpdateLibrayObjects(LibraryModel dbLibrary, PBDotNetLib.orca.Orca.Version version, ILogger log)
         {
             //Powerbuilder-Objects für die selektierte Library holen
             List<LibEntry> pbObjects = new PBDotNetLib.orca.Orca(version).DirLibrary(dbLibrary.FilePath);
@@ -37,6 +39,9 @@ namespace LibBuilder.Core
             //beide Listen vergleichen
             var differenceToAdd = pbObjectList.Except(dbObjectList).ToList();
             var differenceToRemove = dbObjectList.Except(pbObjectList).ToList();
+
+            log.LogInformation(differenceToAdd.Count + " Objects werden für Library " + dbLibrary.File + " neu hinzugefügt");
+            log.LogInformation(differenceToRemove.Count + " Objects werden für Library " + dbLibrary.File + " entfernt");
 
             // neue Targets hinzufügen
             foreach (var item in differenceToAdd)
@@ -65,8 +70,9 @@ namespace LibBuilder.Core
         /// </summary>
         /// <param name="dbTarget">Das zu aktualisierende Target</param>
         /// <param name="version">Orca Version zum starten der Session</param>
+        /// <param name="log">logger.</param>
         /// <returns>Aktualisiert Target-Librarys</returns>
-        public static TargetModel UpdateTargetLibraries(TargetModel dbTarget, PBDotNetLib.orca.Orca.Version version)
+        public static TargetModel UpdateTargetLibraries(TargetModel dbTarget, PBDotNetLib.orca.Orca.Version version, ILogger log)
         {
             Target pbTarget = new Target(dbTarget.FilePath, version);
 
@@ -77,9 +83,12 @@ namespace LibBuilder.Core
             pbLibraryList = pbTarget.Libraries.Select(l => l?.FilePath).ToList();
             dbLibraryList = dbTarget?.Librarys?.Select(l => l?.FilePath).ToList();
 
-            //beide Listen vergleichen
+            // beide Listen vergleichen
             var differenceToAdd = pbLibraryList.Except(dbLibraryList).ToList();
             var differenceToRemove = dbLibraryList.Except(pbLibraryList).ToList();
+
+            log.LogInformation(differenceToAdd.Count + " Libraries werden für Target " + dbTarget.File + " neu hinzugefügt");
+            log.LogInformation(differenceToRemove.Count + " Libraries werden für Target " + dbTarget.File + " entfernt");
 
             // neue Librays hinzufügen
             foreach (var item in differenceToAdd)
@@ -111,7 +120,7 @@ namespace LibBuilder.Core
 
             //mit objects wieder hinzufügen
             dbLibrary.Objects = new List<ObjectModel>();
-            dbTarget.Librarys.Add(UpdateLibrayObjects(dbLibrary, version));
+            dbTarget.Librarys.Add(UpdateLibrayObjects(dbLibrary, version, log));
 
             #endregion Application
 
@@ -122,8 +131,9 @@ namespace LibBuilder.Core
         /// Fügt neue, noch nicht vorhandene Targets für ein Workspace hinzu
         /// </summary>
         /// <param name="dbWorkspace">Der zu aktualisierende Workspace</param>
+        /// <param name="log">logger.</param>
         /// <returns>Aktualisiert Workspace-Targets</returns>
-        public static WorkspaceModel UpdateWorkspaceTargets(WorkspaceModel dbWorkspace)
+        public static WorkspaceModel UpdateWorkspaceTargets(WorkspaceModel dbWorkspace, ILogger log)
         {
             //Orca Workspace öffnen
             Workspace pbWorkspace = new Workspace(dbWorkspace.FilePath, dbWorkspace.PBVersion.Value);
@@ -138,6 +148,9 @@ namespace LibBuilder.Core
             //beide Listen vergleichen
             var differenceToAdd = pbTargetList.Except(dbTargetList).ToList();
             var differenceToRemove = dbTargetList.Except(pbTargetList).ToList();
+
+            log.LogInformation(differenceToAdd.Count + " Targets werden für Workspace " + dbWorkspace.File + " neu hinzugefügt");
+            log.LogInformation(differenceToRemove.Count + " Targets werden für Workspace " + dbWorkspace.File + " entfernt");
 
             // neue Targets hinzufügen
             foreach (var item in differenceToAdd)

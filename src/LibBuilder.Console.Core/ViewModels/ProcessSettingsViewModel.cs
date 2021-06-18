@@ -1,5 +1,6 @@
 ﻿using ConsoleTables;
 using LibBuilder.Core;
+using Microsoft.Extensions.Logging;
 using MvvmCross.Commands;
 using MvvmCross.Logging;
 using MvvmCross.Navigation;
@@ -15,7 +16,7 @@ namespace LibBuilder.Console.Core.ViewModels
     {
         private Core.ViewModels.OngoingProcessViewModel ongoingProcessViewModel;
 
-        public ProcessSettingsViewModel(IMvxLogProvider logProvider, IMvxNavigationService navigationService)
+        public ProcessSettingsViewModel(ILoggerFactory logProvider, IMvxNavigationService navigationService)
             : base(logProvider, navigationService)
         {
         }
@@ -280,7 +281,7 @@ namespace LibBuilder.Console.Core.ViewModels
                 }
             }
 
-        Run:
+            Run:
 
             RunProcedur();
         }

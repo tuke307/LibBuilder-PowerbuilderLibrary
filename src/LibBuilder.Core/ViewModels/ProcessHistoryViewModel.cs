@@ -3,6 +3,7 @@
 using Data;
 using Data.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using MvvmCross.Commands;
 using MvvmCross.Logging;
 using MvvmCross.Navigation;
@@ -25,9 +26,11 @@ namespace LibBuilder.Core.ViewModels
             set => SetProperty(ref _processes, value);
         }
 
-        public ProcessHistoryViewModel(IMvxLogProvider logProvider, IMvxNavigationService navigationService)
+        public ProcessHistoryViewModel(ILoggerFactory logProvider, IMvxNavigationService navigationService)
             : base(logProvider, navigationService)
         {
+            Log.LogInformation("---START Initialize ProcessHistoryViewModel---");
+
             ClearProcessesCommand = new MvxCommand(ClearProcesses);
 
             using (var db = new DatabaseContext())
@@ -35,6 +38,8 @@ namespace LibBuilder.Core.ViewModels
                 //Workspace Liste laden
                 Processes = new ObservableCollection<ProcessModel>(db.Process.Include(p => p.Target).ToList());
             }
+
+            Log.LogInformation("---END Initialize ProcessHistoryViewModel---");
         }
 
         public override Task Initialize()
@@ -49,6 +54,8 @@ namespace LibBuilder.Core.ViewModels
 
         private void ClearProcesses()
         {
+            Log.LogInformation("---START ClearProcesses---");
+
             using (var db = new DatabaseContext())
             {
                 db.Process.RemoveRange(Processes);
@@ -56,6 +63,8 @@ namespace LibBuilder.Core.ViewModels
             }
 
             Processes.Clear();
+
+            Log.LogInformation("---END ClearProcesses---");
         }
     }
 }

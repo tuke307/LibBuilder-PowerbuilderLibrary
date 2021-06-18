@@ -4,25 +4,29 @@ namespace LibBuilder.WPF.Core.ViewModels
 {
     using LibBuilder.WPF.Core.Business;
     using MaterialDesignColors;
+    using Microsoft.Extensions.Logging;
     using MvvmCross.Commands;
     using MvvmCross.Logging;
     using MvvmCross.Navigation;
+    using MvvmCross.ViewModels;
     using System.Collections.Generic;
 
     /// <summary>
     /// ColorSettingsViewModel.
     /// </summary>
-    /// <seealso cref="LibBuilder.Core.ViewModels.ColorSettingsViewModel" />
-    public class ColorSettingsViewModel : LibBuilder.Core.ViewModels.ColorSettingsViewModel
+    /// <seealso cref="MvxNavigationViewModel" />
+    public class ColorSettingsViewModel : MvxNavigationViewModel
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="ColorSettingsViewModel" /> class.
         /// </summary>
         /// <param name="logProvider">The log provider.</param>
         /// <param name="navigationService">The navigation service.</param>
-        public ColorSettingsViewModel(IMvxLogProvider logProvider, IMvxNavigationService navigationService)
+        public ColorSettingsViewModel(ILoggerFactory logProvider, IMvxNavigationService navigationService)
             : base(logProvider, navigationService)
         {
+            Log.LogInformation("---START Initialize ColorSettingsViewModel---");
+
             //using (var db = new DatabaseContext())
             ToogleDarkmode = ApplicationChanges.IsDarkTheme();
             Swatches = new SwatchesProvider().Swatches;
@@ -30,6 +34,8 @@ namespace LibBuilder.WPF.Core.ViewModels
             //Swatches = new SwatchesProvider().Swatches;
             ApplyPrimaryCommand = new MvxCommand<Swatch>(ApplyPrimary);
             ApplyAccentCommand = new MvxCommand<Swatch>(ApplyAccent);
+
+            Log.LogInformation("---END Initialize ColorSettingsViewModel---");
         }
 
         protected void ApplyAccent(Swatch parameter)

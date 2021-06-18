@@ -1,5 +1,6 @@
 ﻿using ConsoleTables;
 using Data.Models;
+using Microsoft.Extensions.Logging;
 using MvvmCross.Logging;
 using MvvmCross.Navigation;
 using System;
@@ -18,7 +19,7 @@ namespace LibBuilder.Console.Core.ViewModels
         private ConsoleTable processTable;
         private int tableLineStart;
 
-        public OngoingProcessViewModel(IMvxLogProvider logProvider, IMvxNavigationService navigationService)
+        public OngoingProcessViewModel(ILoggerFactory logProvider, IMvxNavigationService navigationService)
             : base(logProvider, navigationService)
         {
         }
