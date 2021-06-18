@@ -2,10 +2,13 @@
 // Timeline Financials GmbH & Co. KG. All rights reserved.
 using Data;
 using LibBuilder.WPF.Core.Region;
+using Microsoft.Extensions.Logging;
+using MvvmCross.IoC;
 using MvvmCross.Logging;
 using MvvmCross.Platforms.Wpf.Presenters;
 using MvvmCross.ViewModels;
 using Serilog;
+using Serilog.Extensions.Logging;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Windows.Controls;
@@ -14,8 +17,6 @@ namespace LibBuilder.WPF.App
 {
     public class MvxWpfSetup<TApplication> : MvvmCross.Platforms.Wpf.Core.MvxWpfSetup<TApplication> where TApplication : class, IMvxApplication, new()
     {
-        public override MvxLogProviderType GetDefaultLogProviderType() => MvxLogProviderType.Serilog;
-
         public override IEnumerable<Assembly> GetViewAssemblies()
         {
             var list = new List<Assembly>();
@@ -24,14 +25,20 @@ namespace LibBuilder.WPF.App
             return list.ToArray();
         }
 
-        protected override IMvxLogProvider CreateLogProvider()
+        protected override ILoggerFactory CreateLogFactory()
         {
+            // serilog configuration
             Log.Logger = new LoggerConfiguration()
-              .MinimumLevel.Verbose()
-              .WriteTo.RollingFile(Constants.LogPath)
-              .CreateLogger();
+                .MinimumLevel.Information()
+                .WriteTo.RollingFile(Constants.LogPath)
+                .CreateLogger();
 
-            return base.CreateLogProvider();
+            return new SerilogLoggerFactory();
+        }
+
+        protected override ILoggerProvider CreateLogProvider()
+        {
+            return new SerilogLoggerProvider();
         }
 
         protected override IMvxWpfViewPresenter CreateViewPresenter(ContentControl root)
