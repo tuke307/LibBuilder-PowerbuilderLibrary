@@ -23,7 +23,7 @@ namespace PBDotNetLib.orca
     /// <summary>
     /// wrapper to export objects from pbl with orca
     /// </summary>
-    public class Orca
+    public class Orca : IDisposable
     {
         /// <summary>
         /// Rebuild Type.
@@ -488,20 +488,16 @@ namespace PBDotNetLib.orca
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="version">PB Version to use</param>
-        public Orca(Version version)
+        /// <param name="version">PB Version to use.</param>
+        /// <param name="version">Force to create new session.</param>
+        public Orca(Version version, bool newSession = false)
         {
             this.currentVersion = version;
 
-            if (session == 0)
+            if (session == 0 || newSession)
                 SessionOpen();
         }
 
-        /// <summary>
-        /// Applications the rebuild.
-        /// </summary>
-        /// <param name="type">The type.</param>
-        /// <returns></returns>
         public Result ApplicationRebuild(PBORCA_REBLD_TYPE rEBLD_TYPE)
         {
             PBORCA_CALLBACK staticCallbackDel = new PBORCA_CALLBACK(PBORCA_COMPERRCallback);
@@ -719,6 +715,17 @@ namespace PBDotNetLib.orca
         }
 
         /// <summary>
+        /// Performs application-defined tasks associated with freeing, releasing, or
+        /// resetting unmanaged resources.
+        /// </summary>
+        /// <exception cref="System.NotImplementedException"></exception>
+        public void Dispose()
+        {
+            if (session != 0)
+                SessionClose();
+        }
+
+        /// <summary>
         /// reads the source of an object
         /// </summary>
         /// <param name="libEntry">library entry to export</param>
@@ -829,58 +836,6 @@ namespace PBDotNetLib.orca
             }
 
             return result;
-        }
-
-        /// <summary>
-        /// Sessions the close.
-        /// </summary>
-        public void SessionClose()
-        {
-            switch (this.currentVersion)
-            {
-                case Version.PB105:
-                    PBORCA_SessionClose105(session);
-                    break;
-
-                case Version.PB125:
-                    PBORCA_SessionClose125(session);
-                    break;
-
-                case Version.PB170:
-                    PBORCA_SessionClose170(session);
-                    break;
-
-                case Version.PB190:
-                    PBORCA_SessionClose190(session);
-                    break;
-            }
-
-            session = 0;
-        }
-
-        /// <summary>
-        /// Sessions the open.
-        /// </summary>
-        public void SessionOpen()
-        {
-            switch (this.currentVersion)
-            {
-                case Version.PB105:
-                    session = PBORCA_SessionOpen105();
-                    break;
-
-                case Version.PB125:
-                    session = PBORCA_SessionOpen125();
-                    break;
-
-                case Version.PB170:
-                    session = PBORCA_SessionOpen170();
-                    break;
-
-                case Version.PB190:
-                    session = PBORCA_SessionOpen190();
-                    break;
-            }
         }
 
         /// <summary>
@@ -1067,6 +1022,66 @@ namespace PBDotNetLib.orca
             }
 
             return type;
+        }
+
+        /// <summary>
+        /// Sessions the close.
+        /// </summary>
+        private void SessionClose()
+        {
+            switch (this.currentVersion)
+            {
+                case Version.PB105:
+                    PBORCA_SessionClose105(session);
+                    break;
+
+                case Version.PB125:
+                    PBORCA_SessionClose125(session);
+                    break;
+
+                case Version.PB170:
+                    PBORCA_SessionClose170(session);
+                    break;
+
+                case Version.PB190:
+                    PBORCA_SessionClose190(session);
+                    break;
+            }
+
+            session = 0;
+        }
+
+        /// <summary>
+        /// Sessions the open.
+        /// </summary>
+        private void SessionOpen()
+        {
+            switch (this.currentVersion)
+            {
+                case Version.PB105:
+                    session = PBORCA_SessionOpen105();
+                    break;
+
+                case Version.PB125:
+                    session = PBORCA_SessionOpen125();
+                    break;
+
+                case Version.PB170:
+                    session = PBORCA_SessionOpen170();
+                    break;
+
+                case Version.PB190:
+                    session = PBORCA_SessionOpen190();
+                    break;
+            }
+        }
+
+        /// <summary>
+        /// Finalizes an instance of the <see cref="Orca" /> class.
+        /// </summary>
+        ~Orca()
+        {
+            Dispose();
         }
     }
 }
