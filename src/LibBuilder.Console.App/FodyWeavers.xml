@@ -1,4 +1,8 @@
-﻿<Weavers xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="FodyWeavers.xsd">
+﻿<!--
+project=LibBuilder.Console.App, file=FodyWeavers.xml, create=15:34
+Copyright (c) 2021 tuke productions. All rights reserved.
+-->
+<Weavers xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="FodyWeavers.xsd">
   <Costura IncludeDebugSymbols='false' IncludeRuntimeReferences='true' UseRuntimeReferencePaths='true'>
     <ExcludeAssemblies>
       SQLitePCLRaw.*

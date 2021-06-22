@@ -1,6 +1,6 @@
-﻿// project=LibBuilder.WPF.Core, file=MvxWpfSetup.cs, creation=2020:8:24 Copyright (c) 2020
-// Timeline Financials GmbH & Co. KG. All rights reserved.
-using Data;
+﻿// project=LibBuilder.WPF.App, file=MvxWpfSetup.cs, create=09:16 Copyright (c) 2021 tuke
+// productions. All rights reserved.
+using LibBuilder.Data;
 using LibBuilder.WPF.Core.Region;
 using Microsoft.Extensions.Logging;
 using MvvmCross.IoC;
@@ -30,7 +30,7 @@ namespace LibBuilder.WPF.App
             // serilog configuration
             Log.Logger = new LoggerConfiguration()
                 .MinimumLevel.Information()
-                .WriteTo.RollingFile(Constants.LogPath)
+                .WriteTo.File(Constants.LogPath)
                 .CreateLogger();
 
             return new SerilogLoggerFactory();

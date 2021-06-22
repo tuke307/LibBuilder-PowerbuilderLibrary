@@ -1,5 +1,5 @@
 ﻿using ConsoleTables;
-using Data.Models;
+using LibBuilder.Data.Models;
 using Microsoft.Extensions.Logging;
 using MvvmCross.Logging;
 using MvvmCross.Navigation;

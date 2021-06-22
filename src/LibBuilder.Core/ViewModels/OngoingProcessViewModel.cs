@@ -1,7 +1,9 @@
-﻿namespace LibBuilder.Core.ViewModels
+﻿// project=LibBuilder.Core, file=OngoingProcessViewModel.cs, create=09:16 Copyright (c)
+// 2021 tuke productions. All rights reserved.
+namespace LibBuilder.Core.ViewModels
 {
-    using Data;
-    using Data.Models;
+    using LibBuilder.Data;
+    using LibBuilder.Data.Models;
     using Microsoft.Extensions.Logging;
     using MvvmCross.Commands;
     using MvvmCross.Navigation;
@@ -75,7 +77,7 @@
 
             RunProcedurTask = Task.Run(async () =>
             {
-                var session = new PBDotNetLib.orca.Orca(Workspace.PBVersion.Value);
+                var session = new PBDotNet.Core.orca.Orca(Workspace.PBVersion.Value);
 
                 #region ApplicationLibrarys
 
@@ -105,7 +107,7 @@
                 // fakt3(Objekt))
                 using (var db = new DatabaseContext())
                 {
-                    ObjectModel applObj = db.Object.Where(o => o.Library.Target == this.Target && o.ObjectType == PBDotNetLib.orca.Objecttype.Application).First();
+                    ObjectModel applObj = db.Object.Where(o => o.Library.Target == this.Target && o.ObjectType == PBDotNet.Core.orca.Objecttype.Application).First();
                     await db.Entry(applObj).Reference(o => o.Library).LoadAsync();
 
                     var resultCurrentApplication = session.SetCurrentAppl(applObj.Library.FilePath, applObj.Name);
@@ -226,7 +228,7 @@
 
                 Log.LogInformation("Ergebniss auswerten");
 
-                int sucess = Processes.Where(r => r.Result.Equals(PBDotNetLib.orca.Orca.Result.PBORCA_OK)).Count();
+                int sucess = Processes.Where(r => r.Result.Equals(PBDotNet.Core.orca.Orca.Result.PBORCA_OK)).Count();
 
                 if (sucess == Processes.Count)
                 {

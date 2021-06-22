@@ -68,7 +68,7 @@ namespace LibBuilder.Console.Core
         public IEnumerable<string> Librarys { get; set; }
 
         [Option(shortName: 'x', longName: nameof(RebuildType), HelpText = "Typ des Rebuild; PBORCA_FULL_REBUILD(1), PBORCA_INCREMENTAL_REBUILD(2), PBORCA_MIGRATE(3), PBORCA_3PASS(4)")]
-        public PBDotNetLib.orca.Orca.PBORCA_REBLD_TYPE? RebuildType { get; set; }
+        public PBDotNet.Core.orca.Orca.PBORCA_REBLD_TYPE? RebuildType { get; set; }
 
         [Option(shortName: 'r', longName: nameof(Regenerate), HelpText = "Regenerate aller Objects einer Library; true, false")]
         public bool? Regenerate { get; set; }
@@ -77,7 +77,7 @@ namespace LibBuilder.Console.Core
         public string Target { get; set; }
 
         [Option(shortName: 'v', longName: nameof(Version), HelpText = "Powerbuilder Version des Workspace; PB105(105), PB125(125), PB170(170), PB190(190)")]
-        public PBDotNetLib.orca.Orca.Version? Version { get; set; }
+        public PBDotNet.Core.orca.Orca.Version? Version { get; set; }
 
         [Option(shortName: 'w', longName: nameof(Workspace), Required = true, HelpText = "Pfad bzw. Name des Workspace")]
         public string Workspace { get; set; }

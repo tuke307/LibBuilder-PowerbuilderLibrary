@@ -1,9 +1,9 @@
-﻿// project=LibBuilder.Core, file=ContentViewModel.cs, creation=2020:7:21 Copyright (c)
-// 2020 Timeline Financials GmbH & Co. KG. All rights reserved.
+﻿// project=LibBuilder.Core, file=ProcessMainViewModel.cs, create=09:16 Copyright (c) 2021
+// tuke productions. All rights reserved.
 namespace LibBuilder.Core.ViewModels
 {
-    using Data;
-    using Data.Models;
+    using LibBuilder.Data;
+    using LibBuilder.Data.Models;
     using Microsoft.Extensions.Logging;
     using MvvmCross.Commands;
     using MvvmCross.Logging;

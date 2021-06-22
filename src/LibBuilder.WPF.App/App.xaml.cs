@@ -1,4 +1,6 @@
-﻿using LibBuilder.WPF.Core;
+﻿// project=LibBuilder.WPF.App, file=App.xaml.cs, create=09:16 Copyright (c) 2021 tuke
+// productions. All rights reserved.
+using LibBuilder.WPF.Core;
 using MvvmCross.Core;
 using MvvmCross.Platforms.Wpf.Views;
 

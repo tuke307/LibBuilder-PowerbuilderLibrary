@@ -1,4 +1,6 @@
-﻿using LibBuilder.Console.Core;
+﻿// project=LibBuilder.Console.App, file=Program.cs, create=09:16 Copyright (c) 2021 tuke
+// productions. All rights reserved.
+using LibBuilder.Console.Core;
 
 namespace LibBuilder.Console.App
 {

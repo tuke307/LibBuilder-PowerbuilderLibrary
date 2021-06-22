@@ -1,4 +1,6 @@
-﻿using System;
+﻿// project=LibBuilder.Core, file=Utils.cs, create=09:16 Copyright (c) 2021 tuke
+// productions. All rights reserved.
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -25,11 +27,11 @@ namespace LibBuilder.Core
         /// </summary>
         /// <param name="version">The version.</param>
         /// <returns></returns>
-        public static bool CheckLibrary(PBDotNetLib.orca.Orca.Version version)
+        public static bool CheckLibrary(PBDotNet.Core.orca.Orca.Version version)
         {
             try
             {
-                PBDotNetLib.orca.Orca orca = new PBDotNetLib.orca.Orca(version, true);
+                PBDotNet.Core.orca.Orca orca = new PBDotNet.Core.orca.Orca(version, true);
                 orca.Dispose();
                 return true;
             }

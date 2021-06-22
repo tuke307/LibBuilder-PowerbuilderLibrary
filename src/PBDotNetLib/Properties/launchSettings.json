@@ -1,8 +1,0 @@
-{
-  "profiles": {
-    "PBDotNetLib": {
-      "commandName": "Project",
-      "nativeDebugging": true
-    }
-  }
-}

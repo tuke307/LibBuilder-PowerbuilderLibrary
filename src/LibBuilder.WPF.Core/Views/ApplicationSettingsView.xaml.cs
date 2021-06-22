@@ -1,5 +1,5 @@
-﻿// project=LibBuilder.WPF.Core, file=ApplicationSettingsView.xaml.cs, creation=2020:8:24
-// Copyright (c) 2020 Timeline Financials GmbH & Co. KG. All rights reserved.
+﻿// project=LibBuilder.WPF.Core, file=ApplicationSettingsView.xaml.cs, create=09:16
+// Copyright (c) 2021 tuke productions. All rights reserved.
 namespace LibBuilder.WPF.Core.Views
 {
     using LibBuilder.WPF.Core.Region;
@@ -7,7 +7,7 @@ namespace LibBuilder.WPF.Core.Views
     using MvvmCross.Platforms.Wpf.Views;
 
     /// <summary>
-    /// Interaction logic for Settings.xaml
+    /// ApplicationSettingsView.
     /// </summary>
     [MvxWpfPresenter("MainWindowRegion", mvxViewPosition.NewOrExsist)]
     public partial class ApplicationSettingsView : MvxWpfView<ApplicationSettingsViewModel>

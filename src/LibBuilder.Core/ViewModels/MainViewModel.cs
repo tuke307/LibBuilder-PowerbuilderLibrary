@@ -1,5 +1,5 @@
-﻿// project=LibBuilder.Core, file=MainWindowViewModel.cs, creation=2020:7:21 Copyright (c)
-// 2020 Timeline Financials GmbH & Co. KG. All rights reserved.
+﻿// project=LibBuilder.Core, file=MainViewModel.cs, create=09:16 Copyright (c) 2021 tuke
+// productions. All rights reserved.
 using Microsoft.Extensions.Logging;
 using MvvmCross.Commands;
 using MvvmCross.Logging;

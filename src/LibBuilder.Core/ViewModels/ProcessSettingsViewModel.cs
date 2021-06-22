@@ -1,5 +1,7 @@
-﻿using Data;
-using Data.Models;
+﻿// project=LibBuilder.Core, file=ProcessSettingsViewModel.cs, create=09:16 Copyright (c)
+// 2021 tuke productions. All rights reserved.
+using LibBuilder.Data;
+using LibBuilder.Data.Models;
 using Microsoft.Extensions.Logging;
 using MvvmCross.Commands;
 using MvvmCross.Navigation;
@@ -41,7 +43,7 @@ namespace LibBuilder.Core.ViewModels
             SaveTargetCommand = new MvxAsyncCommand(SaveTarget);
 
             // VersionsListe
-            PBVersions = Enum.GetValues(typeof(PBDotNetLib.orca.Orca.Version)).Cast<PBDotNetLib.orca.Orca.Version?>().ToList();
+            PBVersions = Enum.GetValues(typeof(PBDotNet.Core.orca.Orca.Version)).Cast<PBDotNet.Core.orca.Orca.Version?>().ToList();
 
             // Dll-Check mit Versionen
             Log.LogInformation("Laden der Powerbuilder-Orca-DLL's");
@@ -55,7 +57,7 @@ namespace LibBuilder.Core.ViewModels
                 Log.LogError("Fehler beim Einlesen der Powerbuilder-Orca-DLL's");
 
             // RebuildType
-            ApplicationRebuild = Enum.GetValues(typeof(PBDotNetLib.orca.Orca.PBORCA_REBLD_TYPE)).Cast<PBDotNetLib.orca.Orca.PBORCA_REBLD_TYPE?>().ToList();
+            ApplicationRebuild = Enum.GetValues(typeof(PBDotNet.Core.orca.Orca.PBORCA_REBLD_TYPE)).Cast<PBDotNet.Core.orca.Orca.PBORCA_REBLD_TYPE?>().ToList();
 
             using (var db = new DatabaseContext())
             {
@@ -492,11 +494,11 @@ namespace LibBuilder.Core.ViewModels
 
         #region private
 
-        private List<PBDotNetLib.orca.Orca.PBORCA_REBLD_TYPE?> _applicationRebuild;
+        private List<PBDotNet.Core.orca.Orca.PBORCA_REBLD_TYPE?> _applicationRebuild;
         private bool _contentLoadingAnimation;
         private LibraryModel _library;
         private ObjectModel _object;
-        private List<PBDotNetLib.orca.Orca.Version?> _pBVersions;
+        private List<PBDotNet.Core.orca.Orca.Version?> _pBVersions;
         private ObservableCollection<PBVersionDllExist> _pBVersionsDllExist;
         private TargetModel _target;
         private WorkspaceModel _workspace;
@@ -515,7 +517,7 @@ namespace LibBuilder.Core.ViewModels
         /// Gets or sets the application rebuild.
         /// </summary>
         /// <value>The application rebuild.</value>
-        public List<PBDotNetLib.orca.Orca.PBORCA_REBLD_TYPE?> ApplicationRebuild
+        public List<PBDotNet.Core.orca.Orca.PBORCA_REBLD_TYPE?> ApplicationRebuild
         {
             get => _applicationRebuild;
             set => SetProperty(ref _applicationRebuild, value);
@@ -606,7 +608,7 @@ namespace LibBuilder.Core.ViewModels
             {
                 if (value != null)
                 {
-                    WorkspacePBVersion = (PBDotNetLib.orca.Orca.Version?)value.PBVersion;
+                    WorkspacePBVersion = (PBDotNet.Core.orca.Orca.Version?)value.PBVersion;
                 }
             }
         }
@@ -615,7 +617,7 @@ namespace LibBuilder.Core.ViewModels
         /// Gets or sets the pb versions.
         /// </summary>
         /// <value>The pb versions.</value>
-        public List<PBDotNetLib.orca.Orca.Version?> PBVersions
+        public List<PBDotNet.Core.orca.Orca.Version?> PBVersions
         {
             get => _pBVersions;
             set => SetProperty(ref _pBVersions, value);
@@ -647,7 +649,7 @@ namespace LibBuilder.Core.ViewModels
             }
         }
 
-        public PBDotNetLib.orca.Orca.PBORCA_REBLD_TYPE? TargetApplicationRebuild
+        public PBDotNet.Core.orca.Orca.PBORCA_REBLD_TYPE? TargetApplicationRebuild
         {
             get => Target?.ApplicationRebuild;
             set
@@ -687,7 +689,7 @@ namespace LibBuilder.Core.ViewModels
             }
         }
 
-        public PBDotNetLib.orca.Orca.Version? WorkspacePBVersion
+        public PBDotNet.Core.orca.Orca.Version? WorkspacePBVersion
         {
             get => Workspace?.PBVersion;
             set

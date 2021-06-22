@@ -1,5 +1,5 @@
-﻿// project=LibBuilder.WPF.Core, file=MvxContainer.cs, creation=2020:8:24 Copyright (c)
-// 2020 Timeline Financials GmbH & Co. KG. All rights reserved.
+﻿// project=LibBuilder.WPF.Core, file=MvxContainer.cs, create=09:16 Copyright (c) 2021 tuke
+// productions. All rights reserved.
 using System;
 using System.Collections.Generic;
 using System.Windows;

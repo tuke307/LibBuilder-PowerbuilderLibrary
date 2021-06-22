@@ -1,16 +1,10 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFrameworks>netcoreapp3.1;net472;net5.0-windows</TargetFrameworks>
-    <LangVersion>latest</LangVersion>
-    <CodeAnalysisRuleSet>$(SolutionDir)\Code Rules.ruleset</CodeAnalysisRuleSet>
-    <Platforms>AnyCPU;x86;x64</Platforms>
-    <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
-  </PropertyGroup>
-
-  <PropertyGroup>
-    <Company>Timeline Financials GmbH &amp; Co. KG</Company>
-    <Authors>Tony Meißner</Authors>
+    <Platform>x86</Platform>
+    <AssemblyName>LibBuilder.Console.Core</AssemblyName>
+    <AssemblyTitle>LibBuilder.Console.Core</AssemblyTitle>
   </PropertyGroup>
 
   <ItemGroup>
@@ -19,9 +13,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Data\Data.csproj" />
+    <ProjectReference Include="..\LibBuilder.Data\LibBuilder.Data.csproj" />
     <ProjectReference Include="..\LibBuilder.Core\LibBuilder.Core.csproj" />
-    <ProjectReference Include="..\PBDotNetLib\PBDotNetLib.csproj" />
+    <ProjectReference Include="..\PBDotNet.Core\PBDotNet.Core.csproj" />
   </ItemGroup>
 
 </Project>

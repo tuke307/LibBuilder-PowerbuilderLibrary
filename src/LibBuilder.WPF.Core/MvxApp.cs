@@ -1,7 +1,6 @@
-﻿// project=LibBuilder.WPF.Core, file=App.xaml.cs, creation=2020:7:21 Copyright (c) 2020
-// Timeline Financials GmbH & Co. KG. All rights reserved.
-
-using Data;
+﻿// project=LibBuilder.WPF.Core, file=MvxApp.cs, create=09:16 Copyright (c) 2021 tuke
+// productions. All rights reserved.
+using LibBuilder.Data;
 using LibBuilder.WPF.Core.Business;
 using Microsoft.EntityFrameworkCore;
 using MvvmCross.ViewModels;

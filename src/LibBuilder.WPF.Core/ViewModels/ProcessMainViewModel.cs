@@ -1,23 +1,10 @@
-﻿// project=LibBuilder.WPF.Core, file=ProcessMainViewModel.cs, creation=2020:7:21 Copyright
-// (c) 2020 Timeline Financials GmbH & Co. KG. All rights reserved.
+﻿// project=LibBuilder.WPF.Core, file=ProcessMainViewModel.cs, create=09:16 Copyright (c)
+// 2021 tuke productions. All rights reserved.
 namespace LibBuilder.WPF.Core.ViewModels
 {
-    using Data.Models;
-    using LibBuilder.WPF.Core.Business;
-    using LibBuilder.WPF.Core.Dialogs;
-    using MaterialDesignThemes.Wpf;
     using Microsoft.Extensions.Logging;
-    using MvvmCross.Commands;
-    using MvvmCross.Logging;
     using MvvmCross.Navigation;
-    using System;
-    using System.Collections.ObjectModel;
-    using System.IO;
-    using System.Linq;
-    using System.Threading;
     using System.Threading.Tasks;
-    using System.Windows;
-    using System.Windows.Data;
 
     /// <summary>
     /// ContentViewModel.

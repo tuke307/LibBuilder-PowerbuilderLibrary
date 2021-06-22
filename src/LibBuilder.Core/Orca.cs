@@ -1,11 +1,11 @@
-﻿// project=LibBuilder.Core, file=Orca.cs, creation=2020:7:21 Copyright (c) 2020 Timeline
-// Financials GmbH & Co. KG. All rights reserved.
+﻿// project=LibBuilder.Core, file=Orca.cs, create=09:16 Copyright (c) 2021 tuke
+// productions. All rights reserved.
 namespace LibBuilder.Core
 {
-    using Data.Models;
+    using LibBuilder.Data.Models;
     using Microsoft.Extensions.Logging;
-    using PBDotNetLib.orca;
-    using PBDotNetLib.pbuilder;
+    using PBDotNet.Core.orca;
+    using PBDotNet.Core.pbuilder;
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
@@ -24,10 +24,10 @@ namespace LibBuilder.Core
         /// <param name="version">Orca Version zum starten der Session</param>
         /// <param name="log">logger.</param>
         /// <returns>Aktualisiert Library-Objects</returns>
-        public static LibraryModel UpdateLibrayObjects(LibraryModel dbLibrary, PBDotNetLib.orca.Orca.Version version, ILogger log)
+        public static LibraryModel UpdateLibrayObjects(LibraryModel dbLibrary, PBDotNet.Core.orca.Orca.Version version, ILogger log)
         {
             //Powerbuilder-Objects für die selektierte Library holen
-            List<LibEntry> pbObjects = new PBDotNetLib.orca.Orca(version).DirLibrary(dbLibrary.FilePath);
+            List<LibEntry> pbObjects = new PBDotNet.Core.orca.Orca(version).DirLibrary(dbLibrary.FilePath);
 
             List<string> pbObjectList = new List<string>();
             List<string> dbObjectList = new List<string>();
@@ -72,7 +72,7 @@ namespace LibBuilder.Core
         /// <param name="version">Orca Version zum starten der Session</param>
         /// <param name="log">logger.</param>
         /// <returns>Aktualisiert Target-Librarys</returns>
-        public static TargetModel UpdateTargetLibraries(TargetModel dbTarget, PBDotNetLib.orca.Orca.Version version, ILogger log)
+        public static TargetModel UpdateTargetLibraries(TargetModel dbTarget, PBDotNet.Core.orca.Orca.Version version, ILogger log)
         {
             Target pbTarget = new Target(dbTarget.FilePath, version);
 

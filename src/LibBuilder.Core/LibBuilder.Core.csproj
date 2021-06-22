@@ -1,16 +1,9 @@
-<Project Sdk="Microsoft.NET.Sdk">
-
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <Platforms>AnyCPU;x64;x86</Platforms>
-    <LangVersion>latest</LangVersion>
-    <CodeAnalysisRuleSet>$(SolutionDir)\Code Rules.ruleset</CodeAnalysisRuleSet>
-    <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
-  </PropertyGroup>
-
-  <PropertyGroup>
-    <Company>Timeline Financials GmbH &amp; Co. KG</Company>
-    <Authors>Tony Meißner</Authors>
+    <AssemblyName>LibBuilder.Core</AssemblyName>
+    <AssemblyTitle>LibBuilder.Core</AssemblyTitle>
+    <Platforms>x86;AnyCPU</Platforms>
   </PropertyGroup>
 
   <ItemGroup>
@@ -18,12 +11,12 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="MvvmCross" Version="8.0.1" />
     <PackageReference Include="Serilog.Extensions.Logging" Version="3.0.1" />
+    <PackageReference Include="MvvmCross" Version="8.0.1"/>
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Data\Data.csproj" />
-    <ProjectReference Include="..\PBDotNetLib\PBDotNetLib.csproj" />
+    <ProjectReference Include="..\LibBuilder.Data\LibBuilder.Data.csproj" />
+    <ProjectReference Include="..\PBDotNet.Core\PBDotNet.Core.csproj" />
   </ItemGroup>
 </Project>

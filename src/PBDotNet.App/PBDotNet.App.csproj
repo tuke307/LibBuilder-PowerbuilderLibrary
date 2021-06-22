@@ -1,0 +1,96 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFrameworks>netcoreapp3.1;net472;net5.0-windows</TargetFrameworks>
+    <UseWPF>true</UseWPF>
+    <ApplicationIcon>$(SolutionDir)\icon.ico</ApplicationIcon>
+    <AssemblyName>PBDotNet</AssemblyName>
+    <AssemblyTitle>PBDotNet</AssemblyTitle>
+    <Platforms>AnyCPU;x86</Platforms>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AvalonEdit" Version="6.1.2.30" />
+    <PackageReference Include="Dirkster.AvalonDock" Version="4.51.1" />
+    <PackageReference Include="Dirkster.AvalonDock.Themes.VS2013" Version="4.51.1" />
+    <PackageReference Include="MaterialDesignColors" Version="2.0.1" />
+    <PackageReference Include="MaterialDesignThemes" Version="4.1.0" />
+  </ItemGroup>
+
+  <!-- Conditionally obtain references for the .NET 5.0 target -->
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net5.0-windows' ">
+  </ItemGroup>
+
+  <!-- Conditionally obtain references for the .NET Core 3.1 target -->
+  <ItemGroup Condition=" '$(TargetFramework)' == 'netcoreapp3.1' ">
+  </ItemGroup>
+
+  <!-- Conditionally obtain references for the .NET Framework 4.7.2 target -->
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net472' ">
+    <PackageReference Include="System.Core" />
+    <PackageReference Include="System.Xml.Linq" />
+    <PackageReference Include="System.Data.DataSetExtensions" />
+    <PackageReference Include="WindowsBase" />
+    <PackageReference Include="PresentationFramework" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\PBDotNet.Core\PBDotNet.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="Images\16\Userobject.png" />
+    <None Remove="Images\Library.png" />
+    <None Remove="Images\Target.png" />
+    <None Remove="PBSyntax.xshd" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="PBSyntax.xshd" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Images\16\Userobject.png" />
+    <Resource Include="Images\Library.png" />
+    <Resource Include="Images\Target.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ApplicationDefinition Update="App.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </ApplicationDefinition>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="App.xaml.cs">
+      <SubType>Code</SubType>
+      <DependentUpon>App.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="MainWindow.xaml.cs">
+      <SubType>Code</SubType>
+      <DependentUpon>MainWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Properties\Settings.Designer.cs">
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="MainWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+
+</Project>

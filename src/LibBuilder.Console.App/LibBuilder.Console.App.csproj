@@ -1,23 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFrameworks>netcoreapp3.1;net472;net5.0-windows</TargetFrameworks>
-    <CodeAnalysisRuleSet>$(SolutionDir)\Code Rules.ruleset</CodeAnalysisRuleSet>
+    <ApplicationIcon>$(SolutionDir)\icon.ico</ApplicationIcon>
     <AssemblyName>LibBuilder.Console</AssemblyName>
-    <RootNamespace>LibBuilder.Console.App</RootNamespace>
-    <ApplicationIcon>icon.ico</ApplicationIcon>
-    <Platforms>x86</Platforms>
-    <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
-  </PropertyGroup>
-
-  <PropertyGroup>
-    <Company>Timeline Financials GmbH &amp; Co. KG</Company>
-    <Authors>Tony Meißner</Authors>
-    <PackageId>LibBuilder.Console</PackageId>
-    <Version>2.1.0.1</Version>
-    <AssemblyVersion>2.1.0.1</AssemblyVersion>
-    <FileVersion>2.1.0.1</FileVersion>
+    <AssemblyTitle>LibBuilder.Console</AssemblyTitle>
+    <Platforms>AnyCPU;x86</Platforms>
   </PropertyGroup>
 
   <!-- Conditionally obtain references for the .NET Framework 4.7.2 target -->
@@ -39,7 +27,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Data\Data.csproj" />
+    <ProjectReference Include="..\LibBuilder.Data\LibBuilder.Data.csproj" />
     <ProjectReference Include="..\LibBuilder.Console.Core\LibBuilder.Console.Core.csproj" />
     <ProjectReference Include="..\LibBuilder.Core\LibBuilder.Core.csproj" />
   </ItemGroup>

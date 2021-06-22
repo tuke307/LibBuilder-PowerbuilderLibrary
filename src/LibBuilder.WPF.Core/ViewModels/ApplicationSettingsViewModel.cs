@@ -1,10 +1,11 @@
-﻿// project=LibBuilder.WPF.Core, file=ApplicationSettingsViewModel.cs, creation=2020:8:25
-// Copyright (c) 2020 Timeline Financials GmbH & Co. KG. All rights reserved.
+﻿// project=LibBuilder.WPF.Core, file=ApplicationSettingsViewModel.cs, create=09:16
+// Copyright (c) 2021 tuke productions. All rights reserved.
 using MvvmCross.ViewModels;
 
 namespace LibBuilder.WPF.Core.ViewModels
 {
     /// <summary>
+    /// ApplicationSettingsViewModel.
     /// </summary>
     /// <seealso cref="MvvmCross.ViewModels.MvxViewModel" />
     public class ApplicationSettingsViewModel : MvxViewModel

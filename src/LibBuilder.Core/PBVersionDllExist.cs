@@ -1,6 +1,6 @@
-﻿// project=LibBuilder.Core, file=PBVersionDllExist.cs, creation=2021:6:11 Copyright (c)
-// 2021 Timeline Financials GmbH & Co. KG. All rights reserved.
-using PBDotNetLib.orca;
+﻿// project=LibBuilder.Core, file=PBVersionDllExist.cs, create=08:41 Copyright (c) 2021
+// tuke productions. All rights reserved.
+using PBDotNet.Core.orca;
 
 namespace LibBuilder.Core
 {
@@ -10,7 +10,7 @@ namespace LibBuilder.Core
 
         public int PBVersion { get; private set; }
 
-        public PBVersionDllExist(PBDotNetLib.orca.Orca.Version? version)
+        public PBVersionDllExist(PBDotNet.Core.orca.Orca.Version? version)
         {
             if (version.HasValue)
             {
