@@ -1,5 +1,5 @@
-﻿// project=PBDotNet.App2, file=App.xaml.cs, create=10:44 Copyright (c) 2021 tuke
-// productions. All rights reserved.
+﻿// project=PBDotNet.App, file=App.xaml.cs, create=10:44 Copyright (c) 2021 Timeline
+// Financials GmbH & Co. KG. All rights reserved.
 using System.Windows;
 
 namespace PBDotNet.App

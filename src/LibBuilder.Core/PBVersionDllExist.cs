@@ -1,5 +1,5 @@
 ﻿// project=LibBuilder.Core, file=PBVersionDllExist.cs, create=08:41 Copyright (c) 2021
-// tuke productions. All rights reserved.
+// Timeline Financials GmbH & Co. KG. All rights reserved.
 using PBDotNet.Core.orca;
 
 namespace LibBuilder.Core

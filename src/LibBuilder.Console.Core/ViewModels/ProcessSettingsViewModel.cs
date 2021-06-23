@@ -1,4 +1,6 @@
-﻿using ConsoleTables;
+﻿// project=LibBuilder.Console.Core, file=ProcessSettingsViewModel.cs, create=09:16
+// Copyright (c) 2021 Timeline Financials GmbH & Co. KG. All rights reserved.
+using ConsoleTables;
 using LibBuilder.Core;
 using Microsoft.Extensions.Logging;
 using MvvmCross.Commands;

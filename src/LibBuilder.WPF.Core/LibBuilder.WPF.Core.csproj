@@ -2,7 +2,7 @@
   <PropertyGroup>
     <OutputType>Library</OutputType>
     <TargetFrameworks>netcoreapp3.1;net472;net5.0-windows</TargetFrameworks>
-    <Platforms>x86;AnyCPU</Platforms>
+    <Platforms>x86</Platforms>
     <UseWPF>true</UseWPF>
     <AssemblyName>LibBuilder.WPF.Core</AssemblyName>
     <AssemblyTitle>LibBuilder.WPF.Core</AssemblyTitle>
@@ -22,9 +22,7 @@
   <ItemGroup Condition=" '$(TargetFramework)' == 'net472' ">
     <PackageReference Include="Dragablz" Version="0.0.3.223" />
     <PackageReference Include="SQLitePCLRaw.bundle_e_sqlite3" Version="2.0.4" />
-
   </ItemGroup>
-
 
   <ItemGroup>
     <PackageReference Include="Autoupdater.NET.Official" Version="1.6.4" />

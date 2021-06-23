@@ -12,7 +12,7 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Serilog.Extensions.Logging" Version="3.0.1" />
-    <PackageReference Include="MvvmCross" Version="8.0.1"/>
+    <PackageReference Include="MvvmCross" Version="8.0.1" />
   </ItemGroup>
 
   <ItemGroup>

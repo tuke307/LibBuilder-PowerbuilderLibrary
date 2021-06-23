@@ -1,5 +1,5 @@
-﻿// project=LibBuilder.Data, file=ProcessModel.cs, create=09:16 Copyright (c) 2021 tuke
-// productions. All rights reserved.
+﻿// project=LibBuilder.Data, file=ProcessModel.cs, create=09:16 Copyright (c) 2021 Timeline
+// Financials GmbH & Co. KG. All rights reserved.
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace LibBuilder.Data.Models

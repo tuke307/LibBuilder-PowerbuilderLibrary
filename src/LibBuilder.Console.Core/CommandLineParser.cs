@@ -1,4 +1,6 @@
-﻿using CommandLine;
+﻿// project=LibBuilder.Console.Core, file=CommandLineParser.cs, create=09:16 Copyright (c)
+// 2021 Timeline Financials GmbH & Co. KG. All rights reserved.
+using CommandLine;
 using System.Collections.Generic;
 
 namespace LibBuilder.Console.Core

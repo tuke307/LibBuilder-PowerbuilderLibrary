@@ -1,5 +1,5 @@
 ﻿// project=LibBuilder.WPF.Core, file=MvxCloseViewCommand.cs, create=09:16 Copyright (c)
-// 2021 tuke productions. All rights reserved.
+// 2021 Timeline Financials GmbH & Co. KG. All rights reserved.
 using MvvmCross;
 using System;
 using System.Windows;

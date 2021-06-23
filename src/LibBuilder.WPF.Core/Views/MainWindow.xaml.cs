@@ -1,5 +1,5 @@
 ﻿// project=LibBuilder.WPF.Core, file=MainWindow.xaml.cs, create=09:16 Copyright (c) 2021
-// tuke productions. All rights reserved.
+// Timeline Financials GmbH & Co. KG. All rights reserved.
 namespace LibBuilder.WPF.Core.Views
 {
     using AutoUpdaterDotNET;

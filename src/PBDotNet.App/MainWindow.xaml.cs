@@ -1,5 +1,5 @@
-﻿// project=PBDotNet.App2, file=MainWindow.xaml.cs, create=10:44 Copyright (c) 2021 tuke
-// productions. All rights reserved.
+﻿// project=PBDotNet.App, file=MainWindow.xaml.cs, create=10:44 Copyright (c) 2021 Timeline
+// Financials GmbH & Co. KG. All rights reserved.
 using ICSharpCode.AvalonEdit.Highlighting;
 using ICSharpCode.AvalonEdit.Highlighting.Xshd;
 using Microsoft.Win32;

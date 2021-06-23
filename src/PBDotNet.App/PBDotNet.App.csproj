@@ -7,7 +7,7 @@
     <ApplicationIcon>$(SolutionDir)\icon.ico</ApplicationIcon>
     <AssemblyName>PBDotNet</AssemblyName>
     <AssemblyTitle>PBDotNet</AssemblyTitle>
-    <Platforms>AnyCPU;x86</Platforms>
+    <Platforms>x86</Platforms>
   </PropertyGroup>
 
   <ItemGroup>

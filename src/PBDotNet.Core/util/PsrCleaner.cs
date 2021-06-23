@@ -1,5 +1,5 @@
-﻿// project=PBDotNet.Core, file=PsrCleaner.cs, create=09:16 Copyright (c) 2021 tuke
-// productions. All rights reserved.
+﻿// project=PBDotNet.Core, file=PsrCleaner.cs, create=09:16 Copyright (c) 2021 Timeline
+// Financials GmbH & Co. KG. All rights reserved.
 using System.Text;
 
 namespace PBDotNet.Core.util

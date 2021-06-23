@@ -5,7 +5,7 @@
     <ApplicationIcon>$(SolutionDir)\icon.ico</ApplicationIcon>
     <AssemblyName>LibBuilder.Console</AssemblyName>
     <AssemblyTitle>LibBuilder.Console</AssemblyTitle>
-    <Platforms>AnyCPU;x86</Platforms>
+    <Platforms>x86</Platforms>
   </PropertyGroup>
 
   <!-- Conditionally obtain references for the .NET Framework 4.7.2 target -->

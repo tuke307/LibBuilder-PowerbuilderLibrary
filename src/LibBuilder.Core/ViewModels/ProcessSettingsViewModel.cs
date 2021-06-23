@@ -1,5 +1,5 @@
 ﻿// project=LibBuilder.Core, file=ProcessSettingsViewModel.cs, create=09:16 Copyright (c)
-// 2021 tuke productions. All rights reserved.
+// 2021 Timeline Financials GmbH & Co. KG. All rights reserved.
 using LibBuilder.Data;
 using LibBuilder.Data.Models;
 using Microsoft.Extensions.Logging;

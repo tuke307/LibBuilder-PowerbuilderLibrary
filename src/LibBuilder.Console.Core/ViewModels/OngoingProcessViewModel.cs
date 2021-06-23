@@ -1,4 +1,6 @@
-﻿using ConsoleTables;
+﻿// project=LibBuilder.Console.Core, file=OngoingProcessViewModel.cs, create=09:16
+// Copyright (c) 2021 Timeline Financials GmbH & Co. KG. All rights reserved.
+using ConsoleTables;
 using LibBuilder.Data.Models;
 using Microsoft.Extensions.Logging;
 using MvvmCross.Logging;

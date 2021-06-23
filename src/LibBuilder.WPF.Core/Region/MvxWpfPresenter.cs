@@ -1,5 +1,5 @@
 ﻿// project=LibBuilder.WPF.Core, file=MvxWpfPresenter.cs, create=09:16 Copyright (c) 2021
-// tuke productions. All rights reserved.
+// Timeline Financials GmbH & Co. KG. All rights reserved.
 using MvvmCross.Commands;
 using MvvmCross.Platforms.Wpf.Presenters;
 using MvvmCross.Platforms.Wpf.Presenters.Attributes;

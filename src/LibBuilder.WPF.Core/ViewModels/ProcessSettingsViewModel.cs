@@ -1,5 +1,5 @@
 ﻿// project=LibBuilder.WPF.Core, file=ProcessSettingsViewModel.cs, create=09:16 Copyright
-// (c) 2021 tuke productions. All rights reserved.
+// (c) 2021 Timeline Financials GmbH & Co. KG. All rights reserved.
 namespace LibBuilder.WPF.Core.ViewModels
 {
     using LibBuilder.Data;

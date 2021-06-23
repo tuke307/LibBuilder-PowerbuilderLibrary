@@ -1,5 +1,5 @@
-﻿// project=LibBuilder.Data, file=Process.cs, create=09:16 Copyright (c) 2021 tuke
-// productions. All rights reserved.
+﻿// project=LibBuilder.Data, file=Process.cs, create=09:16 Copyright (c) 2021 Timeline
+// Financials GmbH & Co. KG. All rights reserved.
 using System;
 using System.Collections.Generic;
 using System.Text;

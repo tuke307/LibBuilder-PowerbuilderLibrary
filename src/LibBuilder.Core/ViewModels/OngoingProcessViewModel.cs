@@ -1,5 +1,5 @@
 ﻿// project=LibBuilder.Core, file=OngoingProcessViewModel.cs, create=09:16 Copyright (c)
-// 2021 tuke productions. All rights reserved.
+// 2021 Timeline Financials GmbH & Co. KG. All rights reserved.
 namespace LibBuilder.Core.ViewModels
 {
     using LibBuilder.Data;

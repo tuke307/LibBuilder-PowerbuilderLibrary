@@ -6,7 +6,7 @@
     <ApplicationIcon>$(SolutionDir)\icon.ico</ApplicationIcon>
     <AssemblyName>LibBuilder</AssemblyName>
     <AssemblyTitle>LibBuilder</AssemblyTitle>
-    <Platforms>AnyCPU;x86</Platforms>
+    <Platforms>x86</Platforms>
   </PropertyGroup>
 
   <!-- Conditionally obtain references for the .NET 5.0 target -->

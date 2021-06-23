@@ -1,4 +1,4 @@
-﻿// project=LibBuilder.WPFCore, file=Options.cs, creation=2020:8:17 Copyright (c) 2020
+﻿// project=LibBuilder.Console.Core, file=Options.cs, create=09:16 Copyright (c) 2021
 // Timeline Financials GmbH & Co. KG. All rights reserved.
 using CommandLine;
 using CommandLine.Text;

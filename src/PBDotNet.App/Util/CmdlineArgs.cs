@@ -1,4 +1,6 @@
-﻿using System;
+﻿// project=PBDotNet.App, file=CmdlineArgs.cs, create=10:45 Copyright (c) 2021 Timeline
+// Financials GmbH & Co. KG. All rights reserved.
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;

@@ -1,4 +1,6 @@
-﻿using System;
+﻿// project=LibBuilder.Console.Core, file=ConsoleSpinner.cs, create=09:16 Copyright (c)
+// 2021 Timeline Financials GmbH & Co. KG. All rights reserved.
+using System;
 using System.Threading;
 
 namespace LibBuilder.Console.Core
