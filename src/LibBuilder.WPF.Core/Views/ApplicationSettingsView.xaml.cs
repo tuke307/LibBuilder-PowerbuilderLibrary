@@ -2,9 +2,9 @@
 // Copyright (c) 2021 Timeline Financials GmbH & Co. KG. All rights reserved.
 namespace LibBuilder.WPF.Core.Views
 {
-    using LibBuilder.WPF.Core.Region;
     using LibBuilder.WPF.Core.ViewModels;
     using MvvmCross.Platforms.Wpf.Views;
+    using Mvx.Wpf.ItemsPresenter;
 
     /// <summary>
     /// ApplicationSettingsView.

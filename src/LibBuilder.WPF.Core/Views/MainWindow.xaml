@@ -8,7 +8,7 @@ Copyright (c) 2020 Timeline Financials GmbH & Co. KG. All rights reserved.
                   xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                   xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-                  xmlns:region="clr-namespace:LibBuilder.WPF.Core.Region"
+                  xmlns:region="clr-namespace:Mvx.Wpf.ItemsPresenter;assembly=Mvx.Wpf.ItemsPresenter"
                   xmlns:views="clr-namespace:MvvmCross.Platforms.Wpf.Views;assembly=MvvmCross.Platforms.Wpf"
                   mc:Ignorable="d"
                   MinHeight="730"

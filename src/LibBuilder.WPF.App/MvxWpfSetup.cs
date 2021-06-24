@@ -1,7 +1,6 @@
 ﻿// project=LibBuilder.WPF.App, file=MvxWpfSetup.cs, create=09:16 Copyright (c) 2021
 // Timeline Financials GmbH & Co. KG. All rights reserved.
 using LibBuilder.Data;
-using LibBuilder.WPF.Core.Region;
 using Microsoft.Extensions.Logging;
 using MvvmCross.IoC;
 using MvvmCross.Logging;
@@ -15,7 +14,7 @@ using System.Windows.Controls;
 
 namespace LibBuilder.WPF.App
 {
-    public class MvxWpfSetup<TApplication> : MvvmCross.Platforms.Wpf.Core.MvxWpfSetup<TApplication> where TApplication : class, IMvxApplication, new()
+    public class MvxWpfSetup<TApplication> : Mvx.Wpf.ItemsPresenter.MvxWpfSetup<LibBuilder.WPF.Core.MvxApp>
     {
         public override IEnumerable<Assembly> GetViewAssemblies()
         {
@@ -39,11 +38,6 @@ namespace LibBuilder.WPF.App
         protected override ILoggerProvider CreateLogProvider()
         {
             return new SerilogLoggerProvider();
-        }
-
-        protected override IMvxWpfViewPresenter CreateViewPresenter(ContentControl root)
-        {
-            return new MvxWpfPresenter(root);
         }
     }
 }
