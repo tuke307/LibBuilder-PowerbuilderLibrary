@@ -14,7 +14,7 @@ using System.Windows.Controls;
 
 namespace LibBuilder.WPF.App
 {
-    public class MvxWpfSetup<TApplication> : Mvx.Wpf.ItemsPresenter.MvxWpfSetup<LibBuilder.WPF.Core.MvxApp>
+    public class MvxWpfSetup : MvvmCross.Platforms.Wpf.Core.MvxWpfSetup<LibBuilder.WPF.Core.MvxApp>
     {
         public override IEnumerable<Assembly> GetViewAssemblies()
         {
@@ -38,6 +38,11 @@ namespace LibBuilder.WPF.App
         protected override ILoggerProvider CreateLogProvider()
         {
             return new SerilogLoggerProvider();
+        }
+
+        protected override IMvxWpfViewPresenter CreateViewPresenter(ContentControl root)
+        {
+            return new Mvx.Wpf.ItemsPresenter.MvxWpfPresenter(root);
         }
     }
 }

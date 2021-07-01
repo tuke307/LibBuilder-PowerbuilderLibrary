@@ -13,8 +13,7 @@ namespace LibBuilder.WPF.App
     {
         protected override void RegisterSetup()
         {
-            base.RegisterSetup();
-            this.RegisterSetupType<MvxWpfSetup<MvxApp>>();
+            this.RegisterSetupType<MvxWpfSetup>();
         }
     }
 }
