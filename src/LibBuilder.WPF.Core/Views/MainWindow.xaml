@@ -58,8 +58,8 @@ Copyright (c) 2020 Timeline Financials GmbH & Co. KG. All rights reserved.
                         VerticalAlignment="Stretch"
                         Foreground="White"
                         Style="{StaticResource MaterialDesignRaisedButton}">
-                    <materialDesign:PackIcon Width="30"
-                                             Height="30"
+                    <materialDesign:PackIcon Width="25"
+                                             Height="25"
                                              Kind="WindowMinimize" />
                 </Button>
                 <Button Grid.Column="1"
@@ -70,8 +70,8 @@ Copyright (c) 2020 Timeline Financials GmbH & Co. KG. All rights reserved.
                         Click="WindowMaximize_Click"
                         Foreground="White"
                         Style="{StaticResource MaterialDesignRaisedButton}">
-                    <materialDesign:PackIcon Width="30"
-                                             Height="30"
+                    <materialDesign:PackIcon Width="25"
+                                             Height="25"
                                              Kind="WindowMaximize" />
                 </Button>
                 <Button Grid.Column="2"
@@ -82,8 +82,8 @@ Copyright (c) 2020 Timeline Financials GmbH & Co. KG. All rights reserved.
                         Click="WindowClose_Click"
                         Foreground="White"
                         Style="{StaticResource MaterialDesignRaisedButton}">
-                    <materialDesign:PackIcon Width="30"
-                                             Height="30"
+                    <materialDesign:PackIcon Width="25"
+                                             Height="25"
                                              Kind="WindowClose" />
                 </Button>
             </StackPanel>
