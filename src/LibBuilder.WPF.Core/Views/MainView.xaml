@@ -9,14 +9,14 @@ Copyright (c) 2020 Timeline Financials GmbH & Co. KG. All rights reserved.
                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                    xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
                    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-                   xmlns:region="clr-namespace:Mvx.Wpf.ItemsPresenter;assembly=Mvx.Wpf.ItemsPresenter"
                    xmlns:viewModels="clr-namespace:LibBuilder.WPF.Core.ViewModels"
                    xmlns:views="clr-namespace:MvvmCross.Platforms.Wpf.Views;assembly=MvvmCross.Platforms.Wpf"
+                   xmlns:region="clr-namespace:Mvx.Wpf.ItemsPresenter;assembly=Mvx.Wpf.ItemsPresenter"
                    x:TypeArguments="viewModels:MainViewModel"
                    mc:Ignorable="d"
-                   MinHeight="30"
+                   MinHeight="40"
                    MinWidth="450"
-                   d:DesignHeight="30"
+                   d:DesignHeight="40"
                    d:DesignWidth="450">
     <views:MvxWpfView.Resources>
         <ResourceDictionary>
@@ -27,7 +27,7 @@ Copyright (c) 2020 Timeline Financials GmbH & Co. KG. All rights reserved.
     </views:MvxWpfView.Resources>
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="30" />
+            <RowDefinition Height="40" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
