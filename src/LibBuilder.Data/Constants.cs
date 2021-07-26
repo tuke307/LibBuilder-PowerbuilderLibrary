@@ -18,7 +18,7 @@ namespace LibBuilder.Data
         /// <summary>
         /// The log name.
         /// </summary>
-        public const string LogName = "libbuilder_log_{Date}.txt";
+        public const string LogName = "libbuilder_log_.txt";
 
         /// <summary>
         /// Gets or sets the database path.

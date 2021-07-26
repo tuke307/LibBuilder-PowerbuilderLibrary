@@ -162,7 +162,7 @@ namespace PBDotNet.Core.orca
         public const string PB105_DllName = "pborc105";
         public const string PB125_DllName = "pborc125";
         public const string PB170_DllName = "pborc170";
-        public const string PB190_DllName = "pborc";
+        public const string PB190_DllName = "pborc190";
 
         #region private
 
