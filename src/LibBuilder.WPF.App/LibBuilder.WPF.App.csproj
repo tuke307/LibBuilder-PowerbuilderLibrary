@@ -23,12 +23,6 @@
   <ItemGroup Condition=" '$(TargetFramework)' == 'net472' ">
     <PackageReference Include="Dragablz" Version="0.0.3.223" />
     <PackageReference Include="SQLitePCLRaw.bundle_e_sqlite3" Version="2.0.4" />
-    <PackageReference Include="System.Core" />
-    <PackageReference Include="System.Xml.Linq" />
-    <PackageReference Include="System.Data.DataSetExtensions" />
-    <PackageReference Include="System.Net.Http" />
-    <PackageReference Include="WindowsBase" />
-    <PackageReference Include="PresentationFramework" />
     <PackageReference Include="Costura.Fody" Version="5.3.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -40,7 +34,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Autoupdater.NET.Official" Version="1.6.4" />
+    <PackageReference Include="Autoupdater.NET.Official" Version="1.7.0" />
+    <PackageReference Include="Fody" Version="6.5.2">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="MaterialDesignColors" Version="2.0.1" />
     <PackageReference Include="MaterialDesignThemes" Version="4.1.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.1.9">
@@ -48,7 +46,7 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.31" />
-    <PackageReference Include="MvvmCross.Platforms.Wpf" Version="8.0.1" />
+    <PackageReference Include="MvvmCross.Platforms.Wpf" Version="8.0.2" />
     <PackageReference Include="System.Core" Version="3.5.21022.801" />
     <PackageReference Include="System.Net.Http" Version="4.3.4" />
     <PackageReference Include="System.Xml.Linq" Version="3.5.21022.801" />
