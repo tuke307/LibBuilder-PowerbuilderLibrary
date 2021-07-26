@@ -8,19 +8,19 @@ Copyright (c) 2020 Timeline Financials GmbH & Co. KG. All rights reserved.
                   xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                   xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-                  xmlns:region="clr-namespace:Mvx.Wpf.ItemsPresenter;assembly=Mvx.Wpf.ItemsPresenter"
                   xmlns:views="clr-namespace:MvvmCross.Platforms.Wpf.Views;assembly=MvvmCross.Platforms.Wpf"
+                  xmlns:region="clr-namespace:Mvx.Wpf.ItemsPresenter;assembly=Mvx.Wpf.ItemsPresenter"
                   mc:Ignorable="d"
-                  MinHeight="730"
                   MinWidth="900"
-                  Height="730"
-                  Width="900"
-                  d:DesignHeight="730"
+                  MinHeight="750"
+                  d:DesignHeight="750"
                   d:DesignWidth="900"
-                  WindowStyle="None"
-                  ResizeMode="CanResizeWithGrip"
+                  x:TypeArguments="viewModels:MainWindowViewModel"
                   AllowsTransparency="True"
-                  WindowStartupLocation="CenterScreen">
+                  ResizeMode="CanResizeWithGrip"
+                  WindowStartupLocation="CenterScreen"
+                  WindowStyle="None"
+                  mc:Ignorable="d">
     <views:MvxWindow.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -31,7 +31,7 @@ Copyright (c) 2020 Timeline Financials GmbH & Co. KG. All rights reserved.
 
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="30" />
+            <RowDefinition Height="40" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
@@ -44,50 +44,58 @@ Copyright (c) 2020 Timeline Financials GmbH & Co. KG. All rights reserved.
             </Grid.ColumnDefinitions>
 
             <ItemsControl Grid.Column="0"
-                          region:MvxContainer.Id="NavigationRegion"></ItemsControl>
+                          region:MvxContainer.Id="NavigationRegion" />
 
             <StackPanel Grid.Column="1"
-                        Orientation="Horizontal"
                         HorizontalAlignment="Right"
-                        Margin="10,0">
-                <Button Style="{StaticResource MaterialDesignFloatingActionMiniAccentButton}"
-                        Width="25"
-                        Height="25"
+                        Orientation="Horizontal">
+                <Button Grid.Column="0"
+                        MinHeight="40"
+                        MinWidth="70"
                         Background="{x:Null}"
                         BorderBrush="{x:Null}"
+                        Click="WindowMinimize_Click"
+                        VerticalAlignment="Stretch"
                         Foreground="White"
-                        Click="WindowMinimize_Click">
-                    <materialDesign:PackIcon Kind="WindowMinimize" />
+                        Style="{StaticResource MaterialDesignRaisedButton}">
+                    <materialDesign:PackIcon Width="25"
+                                             Height="25"
+                                             Kind="WindowMinimize" />
                 </Button>
-                <Button Style="{StaticResource MaterialDesignFloatingActionMiniAccentButton}"
-                        Width="25"
-                        Height="25"
+                <Button Grid.Column="1"
+                        MinHeight="40"
+                        MinWidth="70"
                         Background="{x:Null}"
                         BorderBrush="{x:Null}"
+                        Click="WindowMaximize_Click"
                         Foreground="White"
-                        Click="WindowMaximize_Click">
-                    <materialDesign:PackIcon Kind="WindowMaximize" />
+                        Style="{StaticResource MaterialDesignRaisedButton}">
+                    <materialDesign:PackIcon Width="25"
+                                             Height="25"
+                                             Kind="WindowMaximize" />
                 </Button>
-                <Button  Style="{StaticResource MaterialDesignFloatingActionMiniAccentButton}"
-                         Width="25"
-                         Height="25"
-                         Background="{x:Null}"
-                         BorderBrush="{x:Null}"
-                         Foreground="White"
-                         Click="WindowClose_Click">
-                    <materialDesign:PackIcon Kind="WindowClose" />
+                <Button Grid.Column="2"
+                        MinHeight="40"
+                        MinWidth="70"
+                        Background="{x:Null}"
+                        BorderBrush="{x:Null}"
+                        Click="WindowClose_Click"
+                        Foreground="White"
+                        Style="{StaticResource MaterialDesignRaisedButton}">
+                    <materialDesign:PackIcon Width="25"
+                                             Height="25"
+                                             Kind="WindowClose" />
                 </Button>
             </StackPanel>
         </Grid>
 
-        <!--FÜR USER-CONTROLS-->
+        <!--  FÜR USER-CONTROLS  -->
         <ItemsControl Grid.Row="1"
-                      region:MvxContainer.Id="MainWindowRegion"></ItemsControl>
+                      region:MvxContainer.Id="MainWindowRegion" />
 
-        <materialDesign:DialogHost  Grid.Row="1"
-                                    VerticalAlignment="Bottom"
-                                    HorizontalAlignment="Center"
-                                    Identifier="DialogSnackbar">
-        </materialDesign:DialogHost>
+        <materialDesign:DialogHost Grid.Row="1"
+                                   HorizontalAlignment="Center"
+                                   VerticalAlignment="Bottom"
+                                   Identifier="DialogSnackbar" />
     </Grid>
 </views:MvxWindow>
