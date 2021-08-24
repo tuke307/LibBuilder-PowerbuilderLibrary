@@ -3,7 +3,7 @@
     <OutputType>WinExe</OutputType>
     <TargetFrameworks>netcoreapp3.1;net472;net5.0-windows</TargetFrameworks>
     <UseWPF>true</UseWPF>
-    <ApplicationIcon>$(SolutionDir)\icon.ico</ApplicationIcon>
+    <ApplicationIcon>..\icon.ico</ApplicationIcon>
     <AssemblyName>LibBuilder</AssemblyName>
     <AssemblyTitle>LibBuilder</AssemblyTitle>
     <Platforms>x86</Platforms>
@@ -27,7 +27,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Fody" Version="6.5.1">
+    <PackageReference Include="Fody" Version="6.5.2">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
@@ -35,10 +35,6 @@
 
   <ItemGroup>
     <PackageReference Include="Autoupdater.NET.Official" Version="1.7.0" />
-    <PackageReference Include="Fody" Version="6.5.2">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
     <PackageReference Include="MaterialDesignColors" Version="2.0.1" />
     <PackageReference Include="MaterialDesignThemes" Version="4.1.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.1.9">
@@ -47,9 +43,6 @@
     </PackageReference>
     <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.31" />
     <PackageReference Include="MvvmCross.Platforms.Wpf" Version="8.0.2" />
-    <PackageReference Include="System.Core" Version="3.5.21022.801" />
-    <PackageReference Include="System.Net.Http" Version="4.3.4" />
-    <PackageReference Include="System.Xml.Linq" Version="3.5.21022.801" />
   </ItemGroup>
 
   <ItemGroup>

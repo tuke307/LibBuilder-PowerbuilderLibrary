@@ -1,26 +1,26 @@
 ﻿<!--
-project=LibBuilder.WPF.Core, file=MainWindow.xaml, creation=2020:7:21
-Copyright (c) 2020 Timeline Financials GmbH & Co. KG. All rights reserved.
+    project=LibBuilder.WPF.Core, file=MainWindow.xaml, creation=2020:7:21
+    Copyright (c) 2020 Timeline Financials GmbH & Co. KG. All rights reserved.
 -->
-<views:MvxWindow  x:Class="LibBuilder.WPF.Core.Views.MainWindow"
-                  xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-                  xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-                  xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-                  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-                  xmlns:views="clr-namespace:MvvmCross.Platforms.Wpf.Views;assembly=MvvmCross.Platforms.Wpf"
-                  xmlns:region="clr-namespace:Mvx.Wpf.ItemsPresenter;assembly=Mvx.Wpf.ItemsPresenter"
-                  mc:Ignorable="d"
-                  MinWidth="900"
-                  MinHeight="750"
-                  d:DesignHeight="750"
-                  d:DesignWidth="900"
-                  x:TypeArguments="viewModels:MainWindowViewModel"
-                  AllowsTransparency="True"
-                  ResizeMode="CanResizeWithGrip"
-                  WindowStartupLocation="CenterScreen"
-                  WindowStyle="None"
-                  mc:Ignorable="d">
+<views:MvxWindow x:Class="LibBuilder.WPF.Core.Views.MainWindow"
+                 xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                 xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+                 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                 xmlns:views="clr-namespace:MvvmCross.Platforms.Wpf.Views;assembly=MvvmCross.Platforms.Wpf"
+                 xmlns:region="clr-namespace:Mvx.Wpf.ItemsPresenter;assembly=Mvx.Wpf.ItemsPresenter"
+                 MinWidth="900"
+                 MinHeight="730"
+                 Width="900"
+                 Height="730"
+                 d:DesignHeight="730"
+                 d:DesignWidth="900"
+                 AllowsTransparency="True"
+                 ResizeMode="CanResizeWithGrip"
+                 WindowStartupLocation="CenterScreen"
+                 WindowStyle="None"
+                 mc:Ignorable="d">
     <views:MvxWindow.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -31,7 +31,7 @@ Copyright (c) 2020 Timeline Financials GmbH & Co. KG. All rights reserved.
 
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="40" />
+            <RowDefinition Height="30" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
@@ -50,12 +50,12 @@ Copyright (c) 2020 Timeline Financials GmbH & Co. KG. All rights reserved.
                         HorizontalAlignment="Right"
                         Orientation="Horizontal">
                 <Button Grid.Column="0"
-                        MinHeight="40"
                         MinWidth="70"
+                        MinHeight="30"
+                        VerticalAlignment="Stretch"
                         Background="{x:Null}"
                         BorderBrush="{x:Null}"
                         Click="WindowMinimize_Click"
-                        VerticalAlignment="Stretch"
                         Foreground="White"
                         Style="{StaticResource MaterialDesignRaisedButton}">
                     <materialDesign:PackIcon Width="25"
@@ -63,8 +63,8 @@ Copyright (c) 2020 Timeline Financials GmbH & Co. KG. All rights reserved.
                                              Kind="WindowMinimize" />
                 </Button>
                 <Button Grid.Column="1"
-                        MinHeight="40"
                         MinWidth="70"
+                        MinHeight="30"
                         Background="{x:Null}"
                         BorderBrush="{x:Null}"
                         Click="WindowMaximize_Click"
@@ -75,8 +75,8 @@ Copyright (c) 2020 Timeline Financials GmbH & Co. KG. All rights reserved.
                                              Kind="WindowMaximize" />
                 </Button>
                 <Button Grid.Column="2"
-                        MinHeight="40"
                         MinWidth="70"
+                        MinHeight="30"
                         Background="{x:Null}"
                         BorderBrush="{x:Null}"
                         Click="WindowClose_Click"

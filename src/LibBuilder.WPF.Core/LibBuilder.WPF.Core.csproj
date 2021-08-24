@@ -1,11 +1,12 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
   <PropertyGroup>
-    <OutputType>Library</OutputType>
+    <OutputType>WinExe</OutputType>
     <TargetFrameworks>netcoreapp3.1;net472;net5.0-windows</TargetFrameworks>
     <Platforms>x86</Platforms>
     <UseWPF>true</UseWPF>
-    <AssemblyName>LibBuilder.WPF.Core</AssemblyName>
-    <AssemblyTitle>LibBuilder.WPF.Core</AssemblyTitle>
+    <ApplicationIcon>..\icon.ico</ApplicationIcon>
+    <AssemblyName>LibBuilder</AssemblyName>
+    <AssemblyTitle>LibBuilder</AssemblyTitle>
   </PropertyGroup>
 
   <!-- Conditionally obtain references for the .NET 5.0 target -->
@@ -22,6 +23,14 @@
   <ItemGroup Condition=" '$(TargetFramework)' == 'net472' ">
     <PackageReference Include="Dragablz" Version="0.0.3.223" />
     <PackageReference Include="SQLitePCLRaw.bundle_e_sqlite3" Version="2.0.4" />
+    <PackageReference Include="Costura.Fody" Version="5.3.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Fody" Version="6.5.2">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
   </ItemGroup>
 
   <ItemGroup>

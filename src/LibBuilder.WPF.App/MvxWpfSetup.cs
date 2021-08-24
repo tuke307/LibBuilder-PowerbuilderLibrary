@@ -29,7 +29,7 @@ namespace LibBuilder.WPF.App
             // serilog configuration
             Log.Logger = new LoggerConfiguration()
                 .MinimumLevel.Information()
-                .WriteTo.File(Constants.LogPath)
+                .WriteTo.File(Constants.LogPath, rollingInterval: RollingInterval.Month)
                 .CreateLogger();
 
             return new SerilogLoggerFactory();

@@ -7,7 +7,8 @@
     <Owners>Tony Meißner</Owners>
     <Description>A Library to easily regenerate objects and build librarys.</Description>
     <PackageTags>powerbuilder, powerscript</PackageTags>
-    <NeutralLanguage>en-US</NeutralLanguage>
+    <NeutralLanguage>de</NeutralLanguage>
+    <SatelliteResourceLanguages>de</SatelliteResourceLanguages>
     <RepositoryUrl>https://github.com/tuke307/LibBuilder-PowerbuilderLibrary</RepositoryUrl>
     <PackageReleaseNotes>https://github.com/tuke307/LibBuilder-PowerbuilderLibrary/releases</PackageReleaseNotes>
     <RepositoryType>git</RepositoryType>
@@ -72,7 +73,7 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
 
-    <PackageReference Include="Roslynator.Analyzers" Version="3.2.0">
+    <PackageReference Include="Roslynator.Analyzers" Version="3.2.2">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>

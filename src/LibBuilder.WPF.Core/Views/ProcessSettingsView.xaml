@@ -11,15 +11,15 @@ Copyright (c) 2020 Timeline Financials GmbH & Co. KG. All rights reserved.
                    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                    xmlns:local="clr-namespace:LibBuilder.WPF.Core"
                    xmlns:behaviours="clr-namespace:LibBuilder.WPF.Core.Business"
-                   xmlns:region="clr-namespace:Mvx.Wpf.ItemsPresenter;assembly=Mvx.Wpf.ItemsPresenter"
                    xmlns:viewModels="clr-namespace:LibBuilder.WPF.Core.ViewModels"
                    xmlns:views="clr-namespace:MvvmCross.Platforms.Wpf.Views;assembly=MvvmCross.Platforms.Wpf"
+                   xmlns:region="clr-namespace:Mvx.Wpf.ItemsPresenter;assembly=Mvx.Wpf.ItemsPresenter"
                    x:TypeArguments="viewModels:ProcessSettingsViewModel"
                    region:MvxContainer.Header="Übersicht"
                    mc:Ignorable="d"
                    MinHeight="650"
                    MinWidth="900"
-                   Height="650"
+                   d:DesignHeight="650"
                    d:DesignWidth="900">
     <views:MvxWpfView.Resources>
 

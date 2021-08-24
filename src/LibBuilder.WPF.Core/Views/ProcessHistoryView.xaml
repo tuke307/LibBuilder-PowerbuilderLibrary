@@ -14,7 +14,7 @@ Copyright (c) 2020 Timeline Financials GmbH & Co. KG. All rights reserved.
                    Background="{DynamicResource MaterialDesignPaper}"
                    MinHeight="700"
                    MinWidth="900"
-                   Height="700"
+                   d:DesignHeight="700"
                    d:DesignWidth="900">
     <views:MvxWpfView.Resources>
         <ResourceDictionary>
