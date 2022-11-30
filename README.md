@@ -54,16 +54,16 @@ It can be started from the command line. The order of the parameter specificatio
 **Samples:** 
 
 execute last saved procedure;  
-libbuilder.exe -w kunden.pbw
+libbuilder.exe -w sample.pbw
 
-Full Build of Target „tlfi_lokal.pbt“;  
-libbuilder.exe -w kunden.pbw -t tlfi_lokal.pbt -x 1
+Full Build of Target „sample.pbt“;  
+libbuilder.exe -w sample.pbw -t sample.pbt -x 1
 
-regenerate all objects of library „client_elinv.pbl“ and „client_tlfiutils.pbl“ of target „tlfi_lokal.pbt“: 
-libbuilder.exe -w kunden.pbw -t tlfi_lokal.pbt -r true -l client_elinv.pbl;client_tlfiutils.pbl
+regenerate all objects of library „client_1.pbl“ and „client_2.pbl“ of target „sample.pbt“: 
+libbuilder.exe -w sample.pbw -t sample.pbt -r true -l client_1.pbl;client_2.pbl
 
 First time working of a workspace and a complete goal;  
-libbuilder.exe -w C:\db\Workspaces\kunden.pbw -t C:\tl_kunden\TL_13_Suedguss\fakt3_v13.pbt -v 170 –r true –b true
+libbuilder.exe -w C:\Workspaces\sample.pbw -t C:\sample\sample.pbt -v 170 –r true –b true
 
 show version;  
 libbuilder.exe --version
